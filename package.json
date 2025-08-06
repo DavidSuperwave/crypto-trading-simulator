@@ -1,0 +1,17 @@
+{
+  "name": "crypto-trading-simulator",
+  "version": "1.0.0",
+  "description": "AI-powered crypto trading simulator with admin dashboard",
+  "scripts": {
+    "start": "cd backend && npm start",
+    "build": "cd backend && npm install",
+    "backend": "cd backend && npm start",
+    "frontend": "cd frontend && npm start"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": ["crypto", "trading", "simulator", "dashboard"],
+  "author": "DavidSuperwave",
+  "license": "MIT"
+}
