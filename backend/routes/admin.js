@@ -5,17 +5,17 @@ const interestService = require('../services/interestService');
 const scheduler = require('../services/scheduler');
 
 // Get dashboard overview
-router.get('/dashboard', (req, res) => {
+router.get('/dashboard', async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
       return res.status(403).json({ error: 'Admin access required' });
     }
 
-    const users = database.getAllUsers();
-    const transactions = database.getAllTransactions();
-    const withdrawals = database.getAllWithdrawals();
-    const demos = database.getAllDemos();
-    const pendingDeposits = database.getPendingDeposits();
+    const users = await database.getAllUsers();
+    const transactions = await database.getAllTransactions();
+    const withdrawals = await database.getAllWithdrawals();
+    const demos = await database.getAllDemos();
+    const pendingDeposits = await database.getPendingDeposits();
 
     // Calculate overview statistics
     const totalUsers = users.filter(u => u.role === 'user').length;
@@ -47,7 +47,7 @@ router.get('/dashboard', (req, res) => {
     }).length;
 
     // Get pending messages count (messages from users to admin that are unread)
-    const allChatMessages = database.getAllChatMessages();
+    const allChatMessages = await database.getAllChatMessages();
     const pendingMessages = allChatMessages.filter(msg => 
       msg.senderType === 'user' && !msg.isRead
     ).length;
@@ -72,13 +72,13 @@ router.get('/dashboard', (req, res) => {
 });
 
 // Get all pending deposits
-router.get('/pending-deposits', (req, res) => {
+router.get('/pending-deposits', async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
       return res.status(403).json({ error: 'Admin access required' });
     }
 
-    const pendingDeposits = database.getPendingDeposits();
+    const pendingDeposits = await database.getPendingDeposits();
     
     res.json({
       pendingDeposits: pendingDeposits.map(d => ({
@@ -102,7 +102,7 @@ router.get('/pending-deposits', (req, res) => {
 });
 
 // Approve pending deposit
-router.put('/pending-deposits/:id/approve', (req, res) => {
+router.put('/pending-deposits/:id/approve', async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
       return res.status(403).json({ error: 'Admin access required' });
@@ -111,7 +111,7 @@ router.put('/pending-deposits/:id/approve', (req, res) => {
     const { id } = req.params;
     const adminId = req.user.id;
 
-    const approvedDeposit = database.approvePendingDeposit(id, adminId);
+    const approvedDeposit = await database.approvePendingDeposit(id, adminId);
     
     if (!approvedDeposit) {
       return res.status(404).json({ error: 'Pending deposit not found or already processed' });
@@ -128,7 +128,7 @@ router.put('/pending-deposits/:id/approve', (req, res) => {
 });
 
 // Reject pending deposit
-router.put('/pending-deposits/:id/reject', (req, res) => {
+router.put('/pending-deposits/:id/reject', async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
       return res.status(403).json({ error: 'Admin access required' });
@@ -138,7 +138,7 @@ router.put('/pending-deposits/:id/reject', (req, res) => {
     const { notes } = req.body;
     const adminId = req.user.id;
 
-    const rejectedDeposit = database.rejectPendingDeposit(id, adminId, notes);
+    const rejectedDeposit = await database.rejectPendingDeposit(id, adminId, notes);
     
     if (!rejectedDeposit) {
       return res.status(404).json({ error: 'Pending deposit not found' });
@@ -155,13 +155,13 @@ router.put('/pending-deposits/:id/reject', (req, res) => {
 });
 
 // Get all pending withdrawals
-router.get('/pending-withdrawals', (req, res) => {
+router.get('/pending-withdrawals', async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
       return res.status(403).json({ error: 'Admin access required' });
     }
 
-    const withdrawals = database.getAllWithdrawals();
+    const withdrawals = await database.getAllWithdrawals();
     const pendingWithdrawals = withdrawals.filter(w => w.status === 'pending');
     
     res.json({
@@ -184,7 +184,7 @@ router.get('/pending-withdrawals', (req, res) => {
 });
 
 // Approve withdrawal request
-router.put('/pending-withdrawals/:id/approve', (req, res) => {
+router.put('/pending-withdrawals/:id/approve', async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
       return res.status(403).json({ error: 'Admin access required' });
@@ -193,29 +193,29 @@ router.put('/pending-withdrawals/:id/approve', (req, res) => {
     const { id } = req.params;
     const adminId = req.user.id;
 
-    const withdrawal = database.getWithdrawalById(id);
+    const withdrawal = await database.getWithdrawalById(id);
     if (!withdrawal || withdrawal.status !== 'pending') {
       return res.status(404).json({ error: 'Pending withdrawal not found or already processed' });
     }
 
     // Deduct funds from user account
-    const user = database.getUserById(withdrawal.userId);
+    const user = await database.getUserById(withdrawal.userId);
     if (!user || user.balance < withdrawal.amount) {
       return res.status(400).json({ error: 'Insufficient user balance' });
     }
 
     const newBalance = user.balance - withdrawal.amount;
-    database.updateUser(withdrawal.userId, { balance: newBalance });
+    await database.updateUser(withdrawal.userId, { balance: newBalance });
 
     // Update withdrawal status
-    const updatedWithdrawal = database.updateWithdrawal(id, {
+    const updatedWithdrawal = await database.updateWithdrawal(id, {
       status: 'approved',
       processedAt: new Date().toISOString(),
       processedBy: adminId
     });
 
     // Create transaction record
-    database.createTransaction({
+    await database.createTransaction({
       type: 'withdrawal',
       amount: withdrawal.amount,
       userId: withdrawal.userId,
@@ -235,7 +235,7 @@ router.put('/pending-withdrawals/:id/approve', (req, res) => {
 });
 
 // Reject withdrawal request
-router.put('/pending-withdrawals/:id/reject', (req, res) => {
+router.put('/pending-withdrawals/:id/reject', async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
       return res.status(403).json({ error: 'Admin access required' });
@@ -245,7 +245,7 @@ router.put('/pending-withdrawals/:id/reject', (req, res) => {
     const { notes } = req.body;
     const adminId = req.user.id;
 
-    const updatedWithdrawal = database.updateWithdrawal(id, {
+    const updatedWithdrawal = await database.updateWithdrawal(id, {
       status: 'rejected',
       processedAt: new Date().toISOString(),
       processedBy: adminId,
@@ -267,7 +267,7 @@ router.put('/pending-withdrawals/:id/reject', (req, res) => {
 });
 
 // Update withdrawal status (generic endpoint for frontend)
-router.put('/withdrawals/:id', (req, res) => {
+router.put('/withdrawals/:id', async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
       return res.status(403).json({ error: 'Admin access required' });
@@ -281,23 +281,23 @@ router.put('/withdrawals/:id', (req, res) => {
       return res.status(400).json({ error: 'Invalid status. Must be approved or rejected' });
     }
 
-    const withdrawal = database.getWithdrawalById(id);
+    const withdrawal = await database.getWithdrawalById(id);
     if (!withdrawal || withdrawal.status !== 'pending') {
       return res.status(404).json({ error: 'Pending withdrawal not found or already processed' });
     }
 
     if (status === 'approved') {
       // Deduct funds from user account
-      const user = database.getUserById(withdrawal.userId);
+      const user = await database.getUserById(withdrawal.userId);
       if (!user || user.balance < withdrawal.amount) {
         return res.status(400).json({ error: 'Insufficient user balance' });
       }
 
       const newBalance = user.balance - withdrawal.amount;
-      database.updateUser(withdrawal.userId, { balance: newBalance });
+      await database.updateUser(withdrawal.userId, { balance: newBalance });
 
       // Create transaction record
-      database.createTransaction({
+      await database.createTransaction({
         type: 'withdrawal',
         amount: withdrawal.amount,
         userId: withdrawal.userId,
@@ -307,7 +307,7 @@ router.put('/withdrawals/:id', (req, res) => {
     }
 
     // Update withdrawal status
-    const updatedWithdrawal = database.updateWithdrawal(id, {
+    const updatedWithdrawal = await database.updateWithdrawal(id, {
       status: status,
       processedAt: new Date().toISOString(),
       processedBy: adminId
@@ -324,13 +324,13 @@ router.put('/withdrawals/:id', (req, res) => {
 });
 
 // Get all users
-router.get('/users', (req, res) => {
+router.get('/users', async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
       return res.status(403).json({ error: 'Admin access required' });
     }
 
-    const users = database.getAllUsers();
+    const users = await database.getAllUsers();
     res.json(users);
   } catch (error) {
     console.error('Get users error:', error);
@@ -356,7 +356,7 @@ router.post('/users', async (req, res) => {
     }
 
     // Check if user already exists
-    const existingUser = database.getUserByEmail(email);
+    const existingUser = await database.getUserByEmail(email);
     if (existingUser) {
       return res.status(400).json({ error: 'User with this email already exists' });
     }
@@ -365,7 +365,7 @@ router.post('/users', async (req, res) => {
     const bcrypt = require('bcryptjs');
     const hashedPassword = await bcrypt.hash(password, 12);
     
-    const newUser = database.createUser({
+    const newUser = await database.createUser({
       email,
       password: hashedPassword,
       role,
@@ -387,7 +387,7 @@ router.post('/users', async (req, res) => {
 });
 
 // Delete user
-router.delete('/users/:id', (req, res) => {
+router.delete('/users/:id', async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
       return res.status(403).json({ error: 'Admin access required' });
@@ -400,13 +400,13 @@ router.delete('/users/:id', (req, res) => {
       return res.status(400).json({ error: 'Cannot delete your own account' });
     }
 
-    const user = database.getUserById(id);
+    const user = await database.getUserById(id);
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
 
     // Delete the user
-    const deleted = database.deleteUser(id);
+    const deleted = await database.deleteUser(id);
     if (!deleted) {
       return res.status(500).json({ error: 'Failed to delete user' });
     }
@@ -422,13 +422,13 @@ router.delete('/users/:id', (req, res) => {
 });
 
 // Get all transactions
-router.get('/transactions', (req, res) => {
+router.get('/transactions', async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
       return res.status(403).json({ error: 'Admin access required' });
     }
 
-    const transactions = database.getAllTransactions();
+    const transactions = await database.getAllTransactions();
     res.json(transactions);
   } catch (error) {
     console.error('Get transactions error:', error);
@@ -437,13 +437,13 @@ router.get('/transactions', (req, res) => {
 });
 
 // Get all withdrawals
-router.get('/withdrawals', (req, res) => {
+router.get('/withdrawals', async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
       return res.status(403).json({ error: 'Admin access required' });
     }
 
-    const withdrawals = database.getAllWithdrawals();
+    const withdrawals = await database.getAllWithdrawals();
     res.json(withdrawals);
   } catch (error) {
     console.error('Get withdrawals error:', error);
@@ -452,13 +452,13 @@ router.get('/withdrawals', (req, res) => {
 });
 
 // Get all demo requests
-router.get('/demos', (req, res) => {
+router.get('/demos', async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
       return res.status(403).json({ error: 'Admin access required' });
     }
 
-    const demos = database.getAllDemos();
+    const demos = await database.getAllDemos();
     res.json(demos);
   } catch (error) {
     console.error('Get demos error:', error);
@@ -467,7 +467,7 @@ router.get('/demos', (req, res) => {
 });
 
 // Update demo status
-router.put('/demos/:id', (req, res) => {
+router.put('/demos/:id', async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
       return res.status(403).json({ error: 'Admin access required' });
@@ -476,7 +476,7 @@ router.put('/demos/:id', (req, res) => {
     const { id } = req.params;
     const updates = req.body;
 
-    const updatedDemo = database.updateDemo(id, updates);
+    const updatedDemo = await database.updateDemo(id, updates);
     if (!updatedDemo) {
       return res.status(404).json({ error: 'Demo request not found' });
     }
