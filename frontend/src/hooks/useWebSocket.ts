@@ -43,16 +43,22 @@ export const useWebSocket = (options: UseWebSocketOptions = {}) => {
       throw new Error('No authentication token found');
     }
 
-    // Determine WebSocket URL based on current environment
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const isProduction = window.location.hostname !== 'localhost';
+    // Use environment variable or fallback to auto-detection
+    const baseWsUrl = process.env.REACT_APP_WS_URL;
     
-    if (isProduction) {
-      // Production - use DigitalOcean backend
-      return `wss://coral-app-bh2u4.ondigitalocean.app/ws?token=${token}`;
+    if (baseWsUrl) {
+      // Use configured WebSocket URL from environment
+      return `${baseWsUrl}?token=${token}`;
     } else {
-      // Development - use local backend
-      return `ws://localhost:5001/ws?token=${token}`;
+      // Fallback to auto-detection for backwards compatibility
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const isProduction = window.location.hostname !== 'localhost';
+      
+      if (isProduction) {
+        return `wss://coral-app-bh2u4.ondigitalocean.app/ws?token=${token}`;
+      } else {
+        return `ws://localhost:5001/ws?token=${token}`;
+      }
     }
   }, []);
 

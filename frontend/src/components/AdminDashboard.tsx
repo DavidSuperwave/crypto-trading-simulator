@@ -5,6 +5,8 @@ import axios from 'axios';
 import { buildApiUrl, API_CONFIG } from '../config/api';
 import { useAuth } from '../context/AuthContext';
 import { useRealTimeNotifications } from '../hooks/useRealTimeNotifications';
+import ConnectionStatus from './ConnectionStatus';
+import NotificationBadge from './NotificationBadge';
 
 interface User {
   id: string;
@@ -115,7 +117,7 @@ const AdminDashboard: React.FC = () => {
   });
 
   // Real-time notifications for admin dashboard
-  const { isConnected, notifications, unreadCount, clearNotification } = useRealTimeNotifications({
+  const { isConnected, connectionStatus, notifications, unreadCount, clearNotification } = useRealTimeNotifications({
     onNewDeposit: (deposit) => {
       console.log('💰 New deposit request:', deposit);
       setPendingDeposits(prev => [deposit, ...prev]);
@@ -393,37 +395,52 @@ const AdminDashboard: React.FC = () => {
             boxShadow: '0 4px 6px rgba(0,0,0,0.05)',
             display: 'flex',
             alignItems: 'center',
-            gap: '1rem'
+            justifyContent: 'space-between'
           }}>
-            <BarChart3 size={32} style={{ color: '#667eea' }} />
-            <div>
-              <h1 style={{
-                margin: 0,
-                color: '#1F2937',
-                fontSize: '2.5rem',
-                fontWeight: '800'
-              }}>
-                {activeTab === 'overview' && 'Dashboard Overview'}
-                {activeTab === 'users' && 'User Management'}
-                {activeTab === 'pending-deposits' && 'Pending Deposits'}
-                {activeTab === 'withdrawals' && 'Withdrawal Requests'}
-                {activeTab === 'chat' && 'Chat Management'}
-                {activeTab === 'demos' && 'Demo Requests'}
-                {activeTab === 'transactions' && 'All Transactions'}
-              </h1>
-              <p style={{
-                color: '#000',
-                margin: 0,
-                fontSize: '1rem'
-              }}>
-                {activeTab === 'overview' && 'System overview and key metrics'}
-                {activeTab === 'users' && 'Manage user accounts and permissions'}
-                {activeTab === 'pending-deposits' && 'Review and approve deposit requests'}
-                {activeTab === 'withdrawals' && 'Process withdrawal requests'}
-                {activeTab === 'chat' && 'Monitor and respond to user conversations'}
-                {activeTab === 'demos' && 'Review demo access requests'}
-                {activeTab === 'transactions' && 'View all platform transactions'}
-              </p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <BarChart3 size={32} style={{ color: '#667eea' }} />
+              <div>
+                <h1 style={{
+                  margin: 0,
+                  color: '#1F2937',
+                  fontSize: '2.5rem',
+                  fontWeight: '800'
+                }}>
+                  {activeTab === 'overview' && 'Dashboard Overview'}
+                  {activeTab === 'users' && 'User Management'}
+                  {activeTab === 'pending-deposits' && 'Pending Deposits'}
+                  {activeTab === 'withdrawals' && 'Withdrawal Requests'}
+                  {activeTab === 'chat' && 'Chat Management'}
+                  {activeTab === 'demos' && 'Demo Requests'}
+                  {activeTab === 'transactions' && 'All Transactions'}
+                </h1>
+                <p style={{
+                  color: '#000',
+                  margin: 0,
+                  fontSize: '1rem'
+                }}>
+                  {activeTab === 'overview' && 'System overview and key metrics'}
+                  {activeTab === 'users' && 'Manage user accounts and permissions'}
+                  {activeTab === 'pending-deposits' && 'Review and approve deposit requests'}
+                  {activeTab === 'withdrawals' && 'Process withdrawal requests'}
+                  {activeTab === 'chat' && 'Monitor and respond to user conversations'}
+                  {activeTab === 'demos' && 'Review demo access requests'}
+                  {activeTab === 'transactions' && 'View all platform transactions'}
+                </p>
+              </div>
+            </div>
+            
+            {/* Status Indicators */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <ConnectionStatus 
+                isConnected={isConnected} 
+                connectionStatus={connectionStatus}
+              />
+              <NotificationBadge 
+                count={unreadCount} 
+                onClick={() => console.log('Show notifications panel')}
+                size="lg"
+              />
             </div>
           </div>
 

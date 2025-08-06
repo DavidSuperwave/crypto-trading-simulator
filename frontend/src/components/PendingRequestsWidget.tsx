@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 import axios from 'axios';
 import { buildApiUrl, API_CONFIG } from '../config/api';
+import { useRealTimeNotifications } from '../hooks/useRealTimeNotifications';
 
 interface PendingDeposit {
   id: string;
@@ -26,6 +27,34 @@ const PendingRequestsWidget: React.FC = () => {
   const [pendingDeposits, setPendingDeposits] = useState<PendingDeposit[]>([]);
   const [withdrawalRequests, setWithdrawalRequests] = useState<WithdrawalRequest[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Real-time notifications for status updates
+  const { isConnected } = useRealTimeNotifications({
+    onDepositStatusUpdate: (deposit) => {
+      console.log('💰 Pending deposits - status update:', deposit);
+      
+      // Update the deposit status in real-time
+      setPendingDeposits(prev => 
+        prev.map(d => 
+          d.id === deposit.id 
+            ? { ...d, status: deposit.status, updatedAt: new Date().toISOString() }
+            : d
+        )
+      );
+    },
+    onWithdrawalStatusUpdate: (withdrawal) => {
+      console.log('💸 Pending withdrawals - status update:', withdrawal);
+      
+      // Update the withdrawal status in real-time
+      setWithdrawalRequests(prev => 
+        prev.map(w => 
+          w.id === withdrawal.id 
+            ? { ...w, status: withdrawal.status, updatedAt: new Date().toISOString() }
+            : w
+        )
+      );
+    }
+  });
 
   const formatCurrency = (amount: number) => 
     `$${amount.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN`;

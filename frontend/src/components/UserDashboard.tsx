@@ -8,6 +8,8 @@ import PendingRequestsWidget from './PendingRequestsWidget';
 import UserSidebar from './UserSidebar';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 import { buildApiUrl, API_CONFIG } from '../config/api';
+import { useRealTimeNotifications } from '../hooks/useRealTimeNotifications';
+import ConnectionStatus from './ConnectionStatus';
 
 interface Transaction {
   id: string;
@@ -49,6 +51,64 @@ const MAX_SIMULATIONS = 50;
 const UserDashboard: React.FC = () => {
   const { user, updateUser } = useAuth();
   const [activeView, setActiveView] = useState('home');
+
+  // Real-time notifications for user updates
+  const { isConnected, connectionStatus } = useRealTimeNotifications({
+    onDepositStatusUpdate: (deposit) => {
+      console.log('💰 Deposit status update:', deposit);
+      
+      if (deposit.status === 'approved' && user) {
+        // Update user balance when deposit is approved
+        updateUser({ 
+          balance: (user.balance || 0) + deposit.amount 
+        });
+        
+        // Show notification
+        if (Notification.permission === 'granted') {
+          new Notification('Deposit Approved! 🎉', {
+            body: `Your deposit of $${deposit.amount} has been approved and added to your balance.`,
+            icon: '/favicon.ico'
+          });
+        }
+      } else if (deposit.status === 'rejected') {
+        // Show rejection notification
+        if (Notification.permission === 'granted') {
+          new Notification('Deposit Rejected', {
+            body: `Your deposit of $${deposit.amount} has been rejected. Please contact support for details.`,
+            icon: '/favicon.ico'
+          });
+        }
+      }
+    },
+    onWithdrawalStatusUpdate: (withdrawal) => {
+      console.log('💸 Withdrawal status update:', withdrawal);
+      
+      if (withdrawal.status === 'approved') {
+        // Show approval notification (balance already deducted during approval)
+        if (Notification.permission === 'granted') {
+          new Notification('Withdrawal Approved! ✅', {
+            body: `Your withdrawal of $${withdrawal.amount} has been approved and is being processed.`,
+            icon: '/favicon.ico'
+          });
+        }
+      } else if (withdrawal.status === 'rejected') {
+        // Show rejection notification
+        if (Notification.permission === 'granted') {
+          new Notification('Withdrawal Rejected', {
+            body: `Your withdrawal of $${withdrawal.amount} has been rejected. Please contact support for details.`,
+            icon: '/favicon.ico'
+          });
+        }
+      }
+    }
+  });
+
+  // Request notification permission on component mount
+  useEffect(() => {
+    if (Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+  }, []);
   const [transactionHistory, setTransactionHistory] = useState<Transaction[]>([]);
   const [isSimulatorRunning, setIsSimulatorRunning] = useState(false);
   const [activeTrades, setActiveTrades] = useState<Trade[]>([]);
@@ -706,6 +766,21 @@ const UserDashboard: React.FC = () => {
           flexDirection: 'column',
           gap: '2rem'
         }}>
+          {/* Connection Status */}
+          {activeView === 'home' && (
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'flex-end',
+              marginBottom: '1rem'
+            }}>
+              <ConnectionStatus 
+                isConnected={isConnected} 
+                connectionStatus={connectionStatus}
+                className="mr-4"
+              />
+            </div>
+          )}
+          
           {/* Content Area */}
           <div style={{
             display: 'flex',
