@@ -1,0 +1,62 @@
+[
+  {
+    "id": "test-deposit-1",
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "userEmail": "user@cryptosim.com",
+    "userName": "Test User",
+    "amount": 5000,
+    "plan": "advanced",
+    "method": "bank",
+    "status": "approved",
+    "createdAt": "2025-01-10T10:00:00.000Z",
+    "notes": "Initial test deposit for advanced plan",
+    "processedAt": "2025-08-06T02:29:10.889Z",
+    "processedBy": "9eee85eb-43df-45c1-8424-45ccf66791ca",
+    "updatedAt": "2025-08-06T02:29:10.889Z"
+  },
+  {
+    "id": "86e4420b-c408-4f71-8b10-dcda12b7cf55",
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "amount": 1000,
+    "plan": "basic",
+    "method": "bank_transfer",
+    "status": "pending",
+    "userEmail": "user@cryptosim.com",
+    "userName": "user",
+    "createdAt": "2025-08-06T02:28:47.352Z",
+    "updatedAt": "2025-08-06T02:28:47.352Z",
+    "processedAt": null,
+    "processedBy": null,
+    "notes": ""
+  },
+  {
+    "id": "560e509e-fcef-4d71-8e69-10cb69b3a7af",
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "amount": 1000,
+    "plan": "basic",
+    "method": "bank_transfer",
+    "status": "pending",
+    "userEmail": "user@cryptosim.com",
+    "userName": "user",
+    "createdAt": "2025-08-06T03:32:45.473Z",
+    "updatedAt": "2025-08-06T03:32:45.473Z",
+    "processedAt": null,
+    "processedBy": null,
+    "notes": ""
+  },
+  {
+    "id": "fcb70f85-9001-4f4e-9d04-24d0458dd622",
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "amount": 10000,
+    "plan": "basic",
+    "method": "bank_transfer",
+    "status": "approved",
+    "userEmail": "kevinmode@gmail.com",
+    "userName": "kevinmode",
+    "createdAt": "2025-08-06T04:30:03.890Z",
+    "updatedAt": "2025-08-06T04:30:41.308Z",
+    "processedAt": "2025-08-06T04:30:41.307Z",
+    "processedBy": "9eee85eb-43df-45c1-8424-45ccf66791ca",
+    "notes": ""
+  }
+]

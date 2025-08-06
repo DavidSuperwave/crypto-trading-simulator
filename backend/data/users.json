@@ -1,0 +1,96 @@
+[
+  {
+    "id": "9eee85eb-43df-45c1-8424-45ccf66791ca",
+    "email": "admin@cryptosim.com",
+    "password": "$2a$12$2hQCBYR8yg/6WQVoDrtl9OlRsIiJ2D7gzxurPkAoRJZ3.4W8hJj0m",
+    "role": "admin",
+    "balance": 2000,
+    "totalInterest": 0,
+    "createdAt": "2025-08-05T04:50:10.288Z",
+    "updatedAt": "2025-08-05T04:54:49.320Z"
+  },
+  {
+    "id": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "email": "user@cryptosim.com",
+    "password": "$2a$12$JIm8aeVphHoHWiUZbtZS3.unD0aynzm/B/7ajYS./Cry/3ilu//hW",
+    "role": "user",
+    "balance": 53888.53220725195,
+    "totalInterest": 1275.6176024740482,
+    "createdAt": "2025-08-05T04:50:10.526Z",
+    "updatedAt": "2025-08-06T04:50:00.014Z",
+    "currentPlan": "basic"
+  },
+  {
+    "id": "2a844030-b114-4a75-b8ac-993f97ff72f4",
+    "email": "testuser@demo.com",
+    "password": "$2a$12$WN.Vxdge6tzI6hLmsHdYC.5nMCSsONZPChKip09sjwqUdQ8bKFOu6",
+    "role": "user",
+    "balance": 0,
+    "totalInterest": 0,
+    "createdAt": "2025-08-06T03:38:49.953Z"
+  },
+  {
+    "id": "07de8a22-4aac-4b81-8683-795f4a26fb75",
+    "email": "Niggermode@gmail.com",
+    "password": "$2a$12$9Le7evX/dT593mtaBfJ7jujzxE5MmgtHWjEWno.d0p6sxJSnJ2IvO",
+    "role": "user",
+    "balance": 0,
+    "totalInterest": 0,
+    "createdAt": "2025-08-06T03:41:14.051Z"
+  },
+  {
+    "id": "d2267e96-3024-4f86-82e7-d9d547953670",
+    "email": "Niggermode420@gmail.com",
+    "password": "$2a$12$E1qKFJCuS1L6qxJRl699PuDvePjTk.MsvSjwDRj5qphUWAf1i8pQ6",
+    "role": "user",
+    "balance": 0,
+    "totalInterest": 0,
+    "createdAt": "2025-08-06T03:45:09.215Z"
+  },
+  {
+    "id": "96e856aa-5761-40c6-a402-e097b9e2b889",
+    "email": "david@superwave.ai",
+    "password": "$2a$12$ML018kyuFuNx4/hDviIW0uG/.on/WJub7I0sS/YhZ4yYnHt0b8zDG",
+    "role": "user",
+    "balance": 0,
+    "totalInterest": 0,
+    "createdAt": "2025-08-06T03:47:51.291Z"
+  },
+  {
+    "id": "f5a8f3f3-1e03-4cc2-93e6-d344e1ae0530",
+    "email": "newuser@test.com",
+    "password": "$2a$12$kBgBkMW39vkhk8cIXAFNLekcTtbqwnsm/hEJu.8OAyVJTYVVxE7wC",
+    "role": "user",
+    "balance": 0,
+    "totalInterest": 0,
+    "createdAt": "2025-08-06T03:49:15.064Z"
+  },
+  {
+    "id": "e44017a6-083d-4aa1-8e08-1778bb7b2c13",
+    "email": "axel90411@gmail.com",
+    "password": "$2a$12$u.9lqOpvB8E3HBvpyvEnaOw23eZdBe2BkgPAp0d0ctEZzT5xXDXae",
+    "role": "user",
+    "balance": 0,
+    "totalInterest": 0,
+    "createdAt": "2025-08-06T03:51:42.941Z"
+  },
+  {
+    "id": "4ec90fc3-4124-4f5a-ae15-50c30787b333",
+    "email": "david@superwave.io",
+    "password": "$2a$12$4TDSLr5Gegg98H3/oabiaeUN2wJGcM2O.r433bipfkUD1YcQYFkZm",
+    "role": "user",
+    "balance": 0,
+    "totalInterest": 0,
+    "createdAt": "2025-08-06T03:53:43.283Z"
+  },
+  {
+    "id": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "email": "kevinmode@gmail.com",
+    "password": "$2a$12$hFK.b68cn0fZUiLoyXPviOUDnzyO4yezBIUWbcxS8vrI0rb3xCtaS",
+    "role": "user",
+    "balance": 10184.183269771147,
+    "totalInterest": 0,
+    "createdAt": "2025-08-06T04:29:44.185Z",
+    "updatedAt": "2025-08-06T04:50:00.017Z"
+  }
+]

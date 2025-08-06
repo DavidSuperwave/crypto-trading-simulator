@@ -1,0 +1,32 @@
+[
+  {
+    "id": "b23154e6-750a-460a-ba30-9aefb38cf5f1",
+    "name": "John Smith",
+    "email": "john.smith@techcorp.com",
+    "company": "TechCorp Solutions",
+    "status": "requested",
+    "createdAt": "2025-08-05T04:50:10.526Z",
+    "phone": "+1-555-0123",
+    "message": "Interested in AI trading solutions for our investment fund."
+  },
+  {
+    "id": "2e252baa-a5d0-41ad-8bb1-feb2ab597323",
+    "name": "Sarah Johnson",
+    "email": "sarah.j@financeplus.com",
+    "company": "Finance Plus",
+    "status": "scheduled",
+    "createdAt": "2025-08-05T04:50:10.526Z",
+    "phone": "+1-555-0456",
+    "message": "Looking for automated trading platform for our clients."
+  },
+  {
+    "id": "22027e6f-5657-4ee3-80df-1dfb38a0cd00",
+    "name": "Mike Wilson",
+    "email": "mike.wilson@crypto-invest.io",
+    "company": "Crypto Invest",
+    "status": "completed",
+    "createdAt": "2025-08-05T04:50:10.527Z",
+    "phone": "+1-555-0789",
+    "message": "Want to explore AI-powered crypto trading for institutional clients."
+  }
+]

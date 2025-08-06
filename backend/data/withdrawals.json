@@ -1,0 +1,46 @@
+[
+  {
+    "id": "89bd6e75-3039-4bf3-853b-b28cd7231ac4",
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "amount": 1000,
+    "status": "approved",
+    "createdAt": "2025-08-05T04:50:10.527Z",
+    "processedAt": "2025-08-06T02:37:21.710Z",
+    "processedBy": "9eee85eb-43df-45c1-8424-45ccf66791ca",
+    "updatedAt": "2025-08-06T02:37:21.710Z"
+  },
+  {
+    "id": "17a78787-6b0c-41e8-81e0-8831998574a9",
+    "userId": "9eee85eb-43df-45c1-8424-45ccf66791ca",
+    "amount": 1000,
+    "status": "pending",
+    "createdAt": "2025-08-05T04:54:34.062Z"
+  },
+  {
+    "id": "8d6d4e9c-b02f-45e7-aef9-05d0bb0a7448",
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "amount": 5000,
+    "status": "pending",
+    "createdAt": "2025-08-06T01:25:38.658Z"
+  },
+  {
+    "id": "40daece5-a47a-4ec6-8300-0a994ae0a82f",
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "amount": 951,
+    "status": "pending",
+    "createdAt": "2025-08-06T02:31:11.616Z",
+    "method": "bank",
+    "userEmail": "user@cryptosim.com",
+    "userName": "user"
+  },
+  {
+    "id": "01f159fc-1d8d-42f1-b389-de8865901b3a",
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "amount": 10000,
+    "status": "pending",
+    "createdAt": "2025-08-06T03:35:07.278Z",
+    "method": "bank",
+    "userEmail": "user@cryptosim.com",
+    "userName": "user"
+  }
+]
