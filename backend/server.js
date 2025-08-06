@@ -19,7 +19,15 @@ const app = express();
 const PORT = process.env.PORT || 5001;
 
 // Middleware
-app.use(cors());
+const corsOptions = {
+  origin: [
+    'http://localhost:3000', // Development
+    'https://crypto-trading-simulator-duk9upmqa.vercel.app', // Production
+    process.env.FRONTEND_URL // Environment variable
+  ].filter(Boolean), // Remove undefined values
+  credentials: true
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
