@@ -16,7 +16,7 @@ router.post('/register', async (req, res) => {
     }
 
     // Check if user already exists
-    const existingUser = database.getUserByEmail(email);
+    const existingUser = await database.getUserByEmail(email);
     if (existingUser) {
       return res.status(409).json({ error: 'User with this email already exists' });
     }
@@ -25,7 +25,7 @@ router.post('/register', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 12);
 
     // Create user
-    const newUser = database.createUser({
+    const newUser = await database.createUser({
       email,
       password: hashedPassword,
       role
@@ -59,7 +59,7 @@ router.post('/login', async (req, res) => {
     }
 
     // Find user
-    const user = database.getUserByEmail(email);
+    const user = await database.getUserByEmail(email);
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
@@ -94,7 +94,7 @@ router.post('/create-admin', async (req, res) => {
     const adminPassword = 'admin123';
 
     // Check if admin already exists
-    const existingAdmin = database.getUserByEmail(adminEmail);
+    const existingAdmin = await database.getUserByEmail(adminEmail);
     if (existingAdmin) {
       return res.status(409).json({ error: 'Admin user already exists' });
     }
@@ -103,7 +103,7 @@ router.post('/create-admin', async (req, res) => {
     const hashedPassword = await bcrypt.hash(adminPassword, 12);
 
     // Create admin user
-    const adminUser = database.createUser({
+    const adminUser = await database.createUser({
       email: adminEmail,
       password: hashedPassword,
       role: 'admin'
