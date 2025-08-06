@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Send, User, Shield, Phone } from 'lucide-react';
 import axios from 'axios';
+import { buildApiUrl, API_CONFIG } from '../config/api';
 
 interface ChatMessage {
   id: string;
@@ -37,7 +38,7 @@ const ChatWidget: React.FC = () => {
         return;
       }
       
-      const response = await axios.get('http://localhost:5001/api/chat/messages', {
+      const response = await axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.CHAT_MESSAGES), {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -94,7 +95,7 @@ const ChatWidget: React.FC = () => {
         return;
       }
       
-      await axios.post('http://localhost:5001/api/chat/send', {
+      await axios.post(buildApiUrl(API_CONFIG.ENDPOINTS.CHAT_SEND), {
         message: messageText,
         recipientType: 'admin'
       }, {
