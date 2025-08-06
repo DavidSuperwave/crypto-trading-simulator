@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 import axios from 'axios';
+import { buildApiUrl, API_CONFIG } from '../config/api';
 
 interface PendingDeposit {
   id: string;
@@ -72,9 +73,19 @@ const PendingRequestsWidget: React.FC = () => {
   const fetchPendingRequests = async () => {
     setLoading(true);
     try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No authentication token found');
+        return;
+      }
+
       const [depositsRes, withdrawalsRes] = await Promise.all([
-        axios.get('http://localhost:5001/api/user/pending-deposits'),
-        axios.get('http://localhost:5001/api/user/withdrawals')
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.USER_PENDING_DEPOSITS), {
+          headers: { Authorization: `Bearer ${token}` }
+        }),
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.USER_WITHDRAWALS), {
+          headers: { Authorization: `Bearer ${token}` }
+        })
       ]);
 
       setPendingDeposits(depositsRes.data.pendingDeposits || []);
