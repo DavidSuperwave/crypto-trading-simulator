@@ -3,6 +3,7 @@ import { Users, DollarSign, Download, BarChart3, Check, X, Eye, Upload, MessageC
 import AdminSidebar from './AdminSidebar';
 import axios from 'axios';
 import { buildApiUrl, API_CONFIG } from '../config/api';
+import { useAuth } from '../context/AuthContext';
 
 interface User {
   id: string;
@@ -92,6 +93,7 @@ interface DashboardOverview {
 }
 
 const AdminDashboard: React.FC = () => {
+  const { user } = useAuth();
   const [overview, setOverview] = useState<DashboardOverview | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -111,20 +113,38 @@ const AdminDashboard: React.FC = () => {
     role: 'user'
   });
 
+  // Helper function to get auth headers
+  const getAuthHeaders = () => {
+    const token = localStorage.getItem('token');
+    return {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    };
+  };
+
   useEffect(() => {
     fetchDashboardData();
   }, []);
 
   const fetchDashboardData = async () => {
     try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No authentication token found');
+        return;
+      }
+
+      const authHeaders = getAuthHeaders();
+
       const [overviewRes, usersRes, transactionsRes, withdrawalsRes, demosRes, pendingDepositsRes, chatRes] = await Promise.all([
-        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_DASHBOARD)),
-        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_USERS)),
-        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_TRANSACTIONS)),
-        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_WITHDRAWALS)),
-        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_DEMOS)),
-        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_PENDING_DEPOSITS)),
-        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.CHAT_ADMIN_CONVERSATIONS))
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_DASHBOARD), authHeaders),
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_USERS), authHeaders),
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_TRANSACTIONS), authHeaders),
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_WITHDRAWALS), authHeaders),
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_DEMOS), authHeaders),
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_PENDING_DEPOSITS), authHeaders),
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.CHAT_ADMIN_CONVERSATIONS), authHeaders)
       ]);
 
       setOverview(overviewRes.data.overview);
@@ -142,7 +162,7 @@ const AdminDashboard: React.FC = () => {
   const handleWithdrawalUpdate = async (withdrawalId: string, status: string) => {
     setLoading(true);
     try {
-      await axios.put(`${buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_WITHDRAWALS)}/${withdrawalId}`, { status });
+      await axios.put(`${buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_WITHDRAWALS)}/${withdrawalId}`, { status }, getAuthHeaders());
       fetchDashboardData();
       alert(`Withdrawal ${status} successfully!`);
     } catch (error) {
@@ -155,7 +175,7 @@ const AdminDashboard: React.FC = () => {
   const handleDemoUpdate = async (demoId: string, status: string, notes: string = '') => {
     setLoading(true);
     try {
-      await axios.put(`${buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_DEMOS)}/${demoId}`, { status, notes });
+      await axios.put(`${buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_DEMOS)}/${demoId}`, { status, notes }, getAuthHeaders());
       fetchDashboardData();
       alert(`Demo request ${status} successfully!`);
     } catch (error) {
@@ -168,7 +188,7 @@ const AdminDashboard: React.FC = () => {
   const handleDepositUpdate = async (depositId: string, action: 'approve' | 'reject', notes: string = '') => {
     setLoading(true);
     try {
-      await axios.put(`${buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_PENDING_DEPOSITS)}/${depositId}/${action}`, { notes });
+      await axios.put(`${buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_PENDING_DEPOSITS)}/${depositId}/${action}`, { notes }, getAuthHeaders());
       fetchDashboardData();
       alert(`Deposit ${action}d successfully!`);
     } catch (error) {
@@ -186,7 +206,7 @@ const AdminDashboard: React.FC = () => {
       await axios.post(buildApiUrl(API_CONFIG.ENDPOINTS.CHAT_ADMIN_SEND), {
         message: newMessage,
         recipientUserId: userId
-      });
+      }, getAuthHeaders());
       setNewMessage('');
       fetchDashboardData();
     } catch (error) {
@@ -204,7 +224,7 @@ const AdminDashboard: React.FC = () => {
 
     setLoading(true);
     try {
-      await axios.post(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_USERS), newUserData);
+      await axios.post(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_USERS), newUserData, getAuthHeaders());
       setNewUserData({ email: '', password: '', role: 'user' });
       setShowCreateUserForm(false);
       fetchDashboardData();
@@ -221,7 +241,7 @@ const AdminDashboard: React.FC = () => {
     if (window.confirm(`Are you sure you want to delete user "${userEmail}"? This action cannot be undone.`)) {
       setLoading(true);
       try {
-        await axios.delete(`${buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_USERS)}/${userId}`);
+        await axios.delete(`${buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_USERS)}/${userId}`, getAuthHeaders());
         fetchDashboardData();
         alert('User deleted successfully!');
       } catch (error: any) {
