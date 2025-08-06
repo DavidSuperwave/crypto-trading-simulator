@@ -5,7 +5,7 @@ import axios from 'axios';
 import { buildApiUrl, API_CONFIG } from '../config/api';
 
 const UserSettings: React.FC = () => {
-  const { user, updateUser } = useAuth();
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import DepositPage from './DepositPage';
 import WithdrawalPage from './WithdrawalPage';
@@ -99,18 +99,18 @@ const UserDashboard: React.FC = () => {
   }, []);
 
   // Crypto price updates
-  const updateCryptoPrices = () => {
+  const updateCryptoPrices = useCallback(() => {
     setCryptoPrices(prev => prev.map(crypto => ({
       ...crypto,
       price: crypto.price * (1 + (Math.random() - 0.5) * 0.02), // ±1% change
       change: (Math.random() - 0.5) * 6 // -3% to +3% change
     })));
-  };
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(updateCryptoPrices, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [updateCryptoPrices]);
 
   // Update trading balance
   const updateBalance = async (amount: number, type: 'increase' | 'decrease') => {
@@ -131,7 +131,7 @@ const UserDashboard: React.FC = () => {
   const tradingBalance = user?.balance || 0;
 
   // Trading Simulator Functions
-  const openRandomTrade = () => {
+  const openRandomTrade = useCallback(() => {
     if (activeTrades.length >= 5 || tradingBalance < 50) {
       return; // Limit to 5 active trades and minimum balance
     }
@@ -165,9 +165,9 @@ const UserDashboard: React.FC = () => {
     setSimulationResults(prev => [...prev, result]);
 
     return trade;
-  };
+  }, [activeTrades.length, tradingBalance, cryptoPrices]);
 
-  const closeRandomTrade = () => {
+  const closeRandomTrade = useCallback(() => {
     if (activeTrades.length === 0) return;
 
     const tradeIndex = Math.floor(Math.random() * activeTrades.length);
@@ -194,7 +194,7 @@ const UserDashboard: React.FC = () => {
     setSimulationResults(prev => [...prev, result]);
 
     return { trade, profitLoss };
-  };
+  }, [activeTrades, cryptoPrices]);
 
   const startTradingSimulator = () => {
     if (simulationCount >= MAX_SIMULATIONS) {
@@ -294,18 +294,7 @@ const UserDashboard: React.FC = () => {
   }, 0);
 
   // Calculate account metrics
-  const totalProfit = simulationResults
-    .filter(r => r.type === 'closed' && (r.profitLoss || 0) > 0)
-    .reduce((sum, r) => sum + (r.profitLoss || 0), 0);
-
-  const totalLoss = simulationResults
-    .filter(r => r.type === 'closed' && (r.profitLoss || 0) < 0)
-    .reduce((sum, r) => sum + Math.abs(r.profitLoss || 0), 0);
-
-  // Recent transactions for the activity feed
-  const recentTransactions = transactionHistory
-    .slice(-3)
-    .reverse();
+  // Note: totalProfit, totalLoss, and recentTransactions were removed as they were unused
 
   // Render different views based on activeView
   const renderMainContent = () => {
