@@ -4,7 +4,7 @@ import AdminSidebar from './AdminSidebar';
 import axios from 'axios';
 import { buildApiUrl, API_CONFIG } from '../config/api';
 import { useAuth } from '../context/AuthContext';
-import { useRealTimeNotifications } from '../hooks/useRealTimeNotifications';
+import { useRealTimeNotifications, DepositNotification, WithdrawalNotification, ChatMessage } from '../hooks/useRealTimeNotifications';
 import ConnectionStatus from './ConnectionStatus';
 import NotificationBadge from './NotificationBadge';
 
@@ -27,13 +27,8 @@ interface Transaction {
   description?: string;
 }
 
-interface Withdrawal {
-  id: string;
-  userId: string;
-  amount: number;
-  status: string;
-  createdAt: string;
-}
+// Use shared type from useRealTimeNotifications hook  
+type Withdrawal = WithdrawalNotification;
 
 interface Demo {
   id: string;
@@ -46,19 +41,8 @@ interface Demo {
   createdAt: string;
 }
 
-interface PendingDeposit {
-  id: string;
-  userId: string;
-  userEmail: string;
-  userName: string;
-  amount: number;
-  plan: string;
-  method: string;
-  status: string;
-  createdAt: string;
-  updatedAt?: string;
-  notes?: string;
-}
+// Use shared type from useRealTimeNotifications hook
+type PendingDeposit = DepositNotification;
 
 interface ChatConversation {
   userId: string;
@@ -69,19 +53,8 @@ interface ChatConversation {
   unreadCount: number;
 }
 
-interface ChatMessage {
-  id: string;
-  senderId: string;
-  senderType: 'user' | 'admin';
-  senderName: string;
-  message: string;
-  timestamp: string;
-  isRead: boolean;
-  recipientId?: string;
-  recipientUserId?: string;
-  recipientType?: string;
-  createdAt?: string;
-}
+// Use shared type from useRealTimeNotifications hook
+// (Local ChatMessage interface removed - using shared type)
 
 interface DashboardOverview {
   totalUsers: number;

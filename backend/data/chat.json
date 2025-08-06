@@ -1734,5 +1734,29 @@
     "timestamp": "2025-08-06T23:40:00.767Z",
     "isRead": false,
     "createdAt": "2025-08-06T23:40:00.767Z"
+  },
+  {
+    "id": "aab772ad-f912-4f5a-93cc-d78689760079",
+    "senderId": "system",
+    "senderType": "admin",
+    "senderName": "Altura Capital System",
+    "recipientUserId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "recipientType": "user",
+    "message": "🎉 Great news! You've earned $236.54 in daily interest (0.24%). Your new balance is $98213.04. Keep investing to earn more!",
+    "timestamp": "2025-08-06T23:45:00.132Z",
+    "isRead": false,
+    "createdAt": "2025-08-06T23:45:00.132Z"
+  },
+  {
+    "id": "7fd74416-ce13-4f1a-aef6-5b40ae88c22a",
+    "senderId": "system",
+    "senderType": "admin",
+    "senderName": "Altura Capital System",
+    "recipientUserId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "recipientType": "user",
+    "message": "🎉 Great news! You've earned $270.38 in daily interest (1.17%). Your new balance is $23405.52. Keep investing to earn more!",
+    "timestamp": "2025-08-06T23:45:00.145Z",
+    "isRead": false,
+    "createdAt": "2025-08-06T23:45:00.145Z"
   }
 ]

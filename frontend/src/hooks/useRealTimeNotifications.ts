@@ -1,7 +1,7 @@
 import { useWebSocket } from './useWebSocket';
 import { useEffect, useCallback, useState } from 'react';
 
-interface ChatMessage {
+export interface ChatMessage {
   id: string;
   senderId: string;
   senderType: 'user' | 'admin';
@@ -12,22 +12,31 @@ interface ChatMessage {
   recipientUserId?: string;
 }
 
-interface DepositNotification {
+export interface DepositNotification {
   id: string;
   userId: string;
   amount: number;
+  plan: string;
+  method: string;
   status: string;
-  userEmail?: string;
+  userEmail: string;
+  userName: string;
   createdAt: string;
+  updatedAt?: string;
+  notes?: string;
 }
 
-interface WithdrawalNotification {
+export interface WithdrawalNotification {
   id: string;
   userId: string;
   amount: number;
+  method: string;
   status: string;
-  userEmail?: string;
+  userEmail: string;
+  userName: string;
   createdAt: string;
+  updatedAt?: string;
+  notes?: string;
 }
 
 interface NotificationCallbacks {
