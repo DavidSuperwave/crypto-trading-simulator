@@ -36,7 +36,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const fetchUserProfile = async (token: string) => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/user/profile`, {
+      const response = await axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.USER_PROFILE), {
         headers: { Authorization: `Bearer ${token}` }
       });
       setUser(response.data);
@@ -69,7 +69,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const register = async (email: string, password: string, role: string = 'user'): Promise<User | null> => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/auth/register`, {
+      const response = await axios.post(buildApiUrl(API_CONFIG.ENDPOINTS.REGISTER), {
         email,
         password,
         role
