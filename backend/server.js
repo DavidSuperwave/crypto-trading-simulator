@@ -22,7 +22,8 @@ const PORT = process.env.PORT || 5001;
 const corsOptions = {
   origin: [
     'http://localhost:3000', // Development
-    'https://crypto-trading-simulator-duk9upmqa.vercel.app', // Production
+    'https://crypto-trading-simulator-five.vercel.app', // Production
+    'https://crypto-trading-simulator-duk9upmqa.vercel.app', // Backup URL
     process.env.FRONTEND_URL // Environment variable
   ].filter(Boolean), // Remove undefined values
   credentials: true
