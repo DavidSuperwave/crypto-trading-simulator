@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { User, Lock, Mail, Shield, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
+import { buildApiUrl, API_CONFIG } from '../config/api';
 
 const UserSettings: React.FC = () => {
   const { user, updateUser } = useAuth();
@@ -34,9 +35,19 @@ const UserSettings: React.FC = () => {
 
     setLoading(true);
     try {
-      await axios.put('http://localhost:5001/api/user/change-password', {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setMessage({ type: 'error', text: 'Authentication required. Please log in again.' });
+        return;
+      }
+
+      await axios.put(buildApiUrl(API_CONFIG.ENDPOINTS.USER_CHANGE_PASSWORD), {
         currentPassword: passwordForm.currentPassword,
         newPassword: passwordForm.newPassword
+      }, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
 
       setMessage({ type: 'success', text: 'Contraseña actualizada exitosamente' });

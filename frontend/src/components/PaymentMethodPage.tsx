@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { ArrowLeft, Building, Smartphone, CreditCard, CheckCircle, Copy, Clock, Shield } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import { buildApiUrl, API_CONFIG } from '../config/api';
 
 interface PaymentMethod {
   id: string;
@@ -126,10 +127,20 @@ const PaymentMethodPage: React.FC = () => {
 
     setLoading(true);
     try {
-      await axios.post('http://localhost:5001/api/user/deposit', {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Authentication required. Please log in again.');
+        return;
+      }
+
+      await axios.post(buildApiUrl(API_CONFIG.ENDPOINTS.USER_DEPOSIT), {
         amount: amount,
         plan: plan,
         method: selectedMethod
+      }, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
 
       // Navigate back to dashboard with success

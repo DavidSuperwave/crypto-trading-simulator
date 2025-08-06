@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { ArrowLeft, CreditCard, Building, Bitcoin, Smartphone, CheckCircle, Clock, Shield, Phone } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { buildApiUrl, API_CONFIG } from '../config/api';
 
 interface WithdrawalMethod {
   id: string;
@@ -89,13 +90,27 @@ const WithdrawalPage: React.FC = () => {
 
     setLoading(true);
     try {
-      await axios.post('http://localhost:5001/api/user/withdraw', {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Authentication required. Please log in again.');
+        return;
+      }
+
+      await axios.post(buildApiUrl(API_CONFIG.ENDPOINTS.USER_WITHDRAW), {
         amount: parseFloat(withdrawAmount),
         method: selectedMethod
+      }, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
 
       // Update user data
-      const profileRes = await axios.get('http://localhost:5001/api/user/profile');
+      const profileRes = await axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.USER_PROFILE), {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       updateUser(profileRes.data);
 
       // Show confirmation but don't update user data immediately
