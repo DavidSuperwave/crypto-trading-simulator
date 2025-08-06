@@ -10,38 +10,85 @@ class WebSocketService {
   }
 
   initialize(server) {
+    // Production-ready WebSocket configuration
     this.wss = new WebSocket.Server({ 
       server,
-      path: '/ws'
+      path: '/ws',
+      // Production configuration
+      perMessageDeflate: false,
+      maxPayload: 16 * 1024, // 16KB max message size
+      // Origin validation for security
+      verifyClient: (info) => {
+        const allowedOrigins = [
+          'http://localhost:3000',
+          'https://crypto-trading-simulator-five.vercel.app',
+          'https://crypto-trading-simulator-duk9upmqa.vercel.app',
+          process.env.FRONTEND_URL
+        ].filter(Boolean);
+        
+        const origin = info.origin;
+        const isValidOrigin = allowedOrigins.includes(origin) || 
+                             (process.env.NODE_ENV === 'development' && origin?.includes('localhost'));
+        
+        if (!isValidOrigin) {
+          console.warn(`❌ WebSocket connection rejected - Invalid origin: ${origin}`);
+          return false;
+        }
+        
+        console.log(`✅ WebSocket connection allowed from origin: ${origin}`);
+        return true;
+      }
     });
 
-    console.log('🔌 WebSocket server initialized');
+    console.log('🔌 WebSocket server initialized with production config');
+    console.log(`🌐 Allowed origins: ${JSON.stringify([
+      'http://localhost:3000',
+      'https://crypto-trading-simulator-five.vercel.app', 
+      'https://crypto-trading-simulator-duk9upmqa.vercel.app',
+      process.env.FRONTEND_URL
+    ].filter(Boolean))}`);
 
     this.wss.on('connection', (ws, request) => {
       this.handleConnection(ws, request);
     });
 
     this.wss.on('error', (error) => {
-      console.error('WebSocket server error:', error);
+      console.error('❌ WebSocket server error:', error);
     });
+
+    this.wss.on('listening', () => {
+      console.log('🎧 WebSocket server is listening for connections');
+    });
+
+    // Log connection stats periodically
+    if (process.env.NODE_ENV === 'production') {
+      setInterval(() => {
+        console.log(`📊 WebSocket Stats - Connected clients: ${this.clients.size}, Admin clients: ${this.adminClients.size}`);
+      }, 60000); // Every minute
+    }
   }
 
   async handleConnection(ws, request) {
+    const clientIp = request.headers['x-forwarded-for'] || request.connection.remoteAddress;
+    console.log(`🔄 New WebSocket connection attempt from ${clientIp}`);
+    
     try {
       // Extract token from query parameters or headers
       const url = new URL(request.url, `http://${request.headers.host}`);
       const token = url.searchParams.get('token') || request.headers.authorization?.replace('Bearer ', '');
 
       if (!token) {
+        console.warn(`❌ WebSocket connection rejected - No token provided from ${clientIp}`);
         ws.close(1008, 'Authentication required');
         return;
       }
 
       // Verify JWT token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-in-production');
       const user = await database.getUserById(decoded.id);
 
       if (!user) {
+        console.warn(`❌ WebSocket connection rejected - Invalid user ID: ${decoded.id} from ${clientIp}`);
         ws.close(1008, 'Invalid user');
         return;
       }
@@ -50,6 +97,17 @@ class WebSocketService {
       ws.userId = user.id;
       ws.userRole = user.role;
       ws.userEmail = user.email;
+      ws.clientIp = clientIp;
+      ws.connectedAt = new Date();
+
+      // Close any existing connection for this user (prevent duplicates)
+      if (this.clients.has(user.id)) {
+        const existingWs = this.clients.get(user.id);
+        if (existingWs.readyState === WebSocket.OPEN) {
+          console.log(`🔄 Closing existing connection for user: ${user.email}`);
+          existingWs.close(1000, 'New connection established');
+        }
+      }
 
       // Add to appropriate client collections
       this.clients.set(user.id, ws);
@@ -57,29 +115,52 @@ class WebSocketService {
         this.adminClients.add(ws);
       }
 
-      console.log(`✅ WebSocket connected: ${user.email} (${user.role})`);
+      console.log(`✅ WebSocket connected: ${user.email} (${user.role}) from ${clientIp}`);
+      console.log(`📊 Total connections: ${this.clients.size} (${this.adminClients.size} admins)`);
 
       // Send connection confirmation
       this.sendToClient(ws, {
         type: 'connected',
         message: 'WebSocket connection established',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        userId: user.id,
+        userRole: user.role
       });
+
+      // Set connection timeout for inactive connections
+      const connectionTimeout = setTimeout(() => {
+        if (ws.readyState === WebSocket.OPEN) {
+          console.log(`⏰ Closing inactive WebSocket connection for ${user.email}`);
+          ws.close(1000, 'Connection timeout');
+        }
+      }, 30 * 60 * 1000); // 30 minutes
+
+      ws.connectionTimeout = connectionTimeout;
 
       // Handle incoming messages
       ws.on('message', (data) => {
+        // Reset timeout on activity
+        clearTimeout(ws.connectionTimeout);
+        ws.connectionTimeout = setTimeout(() => {
+          if (ws.readyState === WebSocket.OPEN) {
+            ws.close(1000, 'Connection timeout');
+          }
+        }, 30 * 60 * 1000);
+        
         this.handleMessage(ws, data);
       });
 
       // Handle disconnection
-      ws.on('close', () => {
-        this.handleDisconnection(ws);
+      ws.on('close', (code, reason) => {
+        clearTimeout(ws.connectionTimeout);
+        this.handleDisconnection(ws, code, reason);
       });
 
-      // Handle errors
+      // Handle connection errors
       ws.on('error', (error) => {
-        console.error(`WebSocket error for user ${user.email}:`, error);
-        this.handleDisconnection(ws);
+        console.error(`❌ WebSocket error for ${user.email}:`, error);
+        clearTimeout(ws.connectionTimeout);
+        this.handleDisconnection(ws, 1006, 'Connection error');
       });
 
     } catch (error) {
@@ -114,11 +195,20 @@ class WebSocketService {
     }
   }
 
-  handleDisconnection(ws) {
+  handleDisconnection(ws, code = 'unknown', reason = 'unknown') {
     if (ws.userId) {
-      console.log(`❌ WebSocket disconnected: ${ws.userEmail}`);
+      const connectionDuration = ws.connectedAt ? 
+        Math.round((Date.now() - ws.connectedAt.getTime()) / 1000) : 'unknown';
+      
+      console.log(`❌ WebSocket disconnected: ${ws.userEmail} (${ws.userRole}) - Code: ${code}, Reason: ${reason}, Duration: ${connectionDuration}s`);
+      
+      // Clean up connection tracking
       this.clients.delete(ws.userId);
       this.adminClients.delete(ws);
+      
+      console.log(`📊 Remaining connections: ${this.clients.size} (${this.adminClients.size} admins)`);
+    } else {
+      console.log(`❌ WebSocket disconnected: Unknown user - Code: ${code}, Reason: ${reason}`);
     }
   }
 

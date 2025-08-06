@@ -7,6 +7,7 @@ import { useAuth } from '../context/AuthContext';
 import { useRealTimeNotifications, DepositNotification, WithdrawalNotification, ChatMessage } from '../hooks/useRealTimeNotifications';
 import ConnectionStatus from './ConnectionStatus';
 import NotificationBadge from './NotificationBadge';
+import WebSocketDebug from './WebSocketDebug';
 
 interface User {
   id: string;
@@ -1354,6 +1355,11 @@ const AdminDashboard: React.FC = () => {
             </button>
           </div>
         </div>
+      )}
+      
+      {/* WebSocket Debug Component - Only show in development or for debugging */}
+      {(process.env.NODE_ENV === 'development' || window.location.search.includes('debug=ws')) && (
+        <WebSocketDebug />
       )}
       </div>
     </div>

@@ -28,7 +28,10 @@ const corsOptions = {
     'https://crypto-trading-simulator-duk9upmqa.vercel.app', // Backup URL
     process.env.FRONTEND_URL // Environment variable
   ].filter(Boolean), // Remove undefined values
-  credentials: true
+  credentials: true,
+  // WebSocket specific headers
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH']
 };
 app.use(cors(corsOptions));
 app.use(express.json());
@@ -41,14 +44,30 @@ app.use('/api/admin', authenticateToken, adminRoutes);
 app.use('/api/demo', demoRoutes);
 app.use('/api/chat', authenticateToken, chatRoutes);
 
-// Health check endpoint
+// Health check endpoints
 app.get('/api/health', (req, res) => {
   res.json({ 
-    status: 'OK', 
-    message: 'Crypto Trading Simulator API is running',
+    status: 'healthy', 
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+
+// WebSocket health check
+app.get('/api/websocket/health', (req, res) => {
+  const wsService = require('./services/websocketService');
+  res.json({ 
+    status: 'healthy',
+    websocket: {
+      initialized: wsService.wss !== null,
+      clientCount: wsService.clients ? wsService.clients.size : 0,
+      adminCount: wsService.adminClients ? wsService.adminClients.size : 0
+    },
     timestamp: new Date().toISOString()
   });
 });
+
+
 
 // Error handling middleware
 app.use((err, req, res, next) => {
