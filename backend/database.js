@@ -480,6 +480,69 @@ class DatabaseManager {
     }
   }
 
+  // Additional helper methods for user-specific data
+  async getTransactionsByUserId(userId) {
+    if (this.usePostgreSQL) {
+      return await this.db.getTransactionsByUserId(userId);
+    } else {
+      const transactions = this.readFile(TRANSACTIONS_FILE);
+      return transactions.filter(transaction => transaction.userId === userId);
+    }
+  }
+
+  async getWithdrawalsByUserId(userId) {
+    if (this.usePostgreSQL) {
+      return await this.db.getWithdrawalsByUserId(userId);
+    } else {
+      const withdrawals = this.readFile(WITHDRAWALS_FILE);
+      return withdrawals.filter(withdrawal => withdrawal.userId === userId);
+    }
+  }
+
+  async getPendingDepositsByUserId(userId) {
+    if (this.usePostgreSQL) {
+      return await this.db.getPendingDepositsByUserId(userId);
+    } else {
+      const pendingDeposits = this.readFile(PENDING_DEPOSITS_FILE);
+      return pendingDeposits.filter(deposit => deposit.userId === userId);
+    }
+  }
+
+  async markMessagesAsRead(userId, messageIds) {
+    if (this.usePostgreSQL) {
+      return await this.db.markMessagesAsRead(userId, messageIds);
+    } else {
+      const messages = this.readFile(CHAT_FILE);
+      let updatedCount = 0;
+
+      messages.forEach(msg => {
+        if (messageIds.includes(msg.id) && 
+            ((msg.senderType === 'admin' && msg.recipientUserId === userId) ||
+             (msg.senderType === 'user' && msg.senderId === userId))) {
+          msg.isRead = true;
+          updatedCount++;
+        }
+      });
+
+      this.writeFile(CHAT_FILE, messages);
+      return updatedCount;
+    }
+  }
+
+  async getUnreadMessageCount(userId) {
+    if (this.usePostgreSQL) {
+      return await this.db.getUnreadMessageCount(userId);
+    } else {
+      const messages = this.readFile(CHAT_FILE);
+      
+      return messages.filter(msg => 
+        !msg.isRead && 
+        ((msg.senderType === 'admin' && msg.recipientUserId === userId) ||
+         (msg.senderType === 'user' && msg.senderId === userId))
+      ).length;
+    }
+  }
+
   // Initialize database (PostgreSQL only)
   async initialize() {
     if (this.usePostgreSQL) {

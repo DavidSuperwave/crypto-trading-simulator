@@ -495,6 +495,89 @@ class PostgreSQLDatabase {
     }
   }
 
+  // Additional helper methods for user-specific data
+  async getTransactionsByUserId(userId) {
+    const query = 'SELECT * FROM transactions WHERE user_id = $1 ORDER BY created_at DESC';
+    const result = await this.query(query, [userId]);
+    return result.rows.map(row => ({
+      id: row.id,
+      type: row.type,
+      amount: parseFloat(row.amount),
+      userId: row.user_id,
+      status: row.status,
+      description: row.description,
+      createdAt: row.created_at,
+      withdrawalId: row.withdrawal_id
+    }));
+  }
+
+  async getWithdrawalsByUserId(userId) {
+    const query = 'SELECT * FROM withdrawals WHERE user_id = $1 ORDER BY created_at DESC';
+    const result = await this.query(query, [userId]);
+    return result.rows.map(row => ({
+      id: row.id,
+      userId: row.user_id,
+      amount: parseFloat(row.amount),
+      method: row.method,
+      status: row.status,
+      userEmail: row.user_email,
+      userName: row.user_name,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at,
+      processedAt: row.processed_at,
+      processedBy: row.processed_by,
+      notes: row.notes
+    }));
+  }
+
+  async getPendingDepositsByUserId(userId) {
+    const query = 'SELECT * FROM pending_deposits WHERE user_id = $1 ORDER BY created_at DESC';
+    const result = await this.query(query, [userId]);
+    return result.rows.map(row => ({
+      id: row.id,
+      userId: row.user_id,
+      amount: parseFloat(row.amount),
+      plan: row.plan,
+      method: row.method,
+      status: row.status,
+      userEmail: row.user_email,
+      userName: row.user_name,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at,
+      processedAt: row.processed_at,
+      processedBy: row.processed_by,
+      notes: row.notes
+    }));
+  }
+
+  async markMessagesAsRead(userId, messageIds) {
+    const query = `
+      UPDATE chat_messages 
+      SET is_read = true 
+      WHERE id = ANY($1) 
+      AND (
+        (sender_type = 'admin' AND recipient_user_id = $2) OR
+        (sender_type = 'user' AND sender_id = $2)
+      )
+    `;
+    const result = await this.query(query, [messageIds, userId]);
+    return result.rowCount;
+  }
+
+  async getUnreadMessageCount(userId) {
+    const query = `
+      SELECT COUNT(*) as count 
+      FROM chat_messages 
+      WHERE is_read = false 
+      AND (
+        (sender_type = 'admin' AND recipient_user_id = $1) OR
+        (sender_type = 'user' AND sender_id = $1)
+      )
+    `;
+    const result = await this.query(query, [userId]);
+    return parseInt(result.rows[0].count);
+  }
+
   // Seed initial data
   async seedInitialData() {
     // Check if admin user exists
