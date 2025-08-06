@@ -14,6 +14,7 @@ export const API_CONFIG = {
     USER_CHANGE_PASSWORD: '/user/change-password',
     USER_PENDING_DEPOSITS: '/user/pending-deposits',
     USER_WITHDRAWALS: '/user/withdrawals',
+    USER_TRANSACTIONS: '/user/transactions',
     
     // Admin endpoints
     ADMIN_DASHBOARD: '/admin/dashboard',

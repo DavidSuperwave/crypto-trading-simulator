@@ -7,6 +7,7 @@ import ChatWidget from './ChatWidget';
 import PendingRequestsWidget from './PendingRequestsWidget';
 import UserSidebar from './UserSidebar';
 import { TrendingUp, TrendingDown } from 'lucide-react';
+import { buildApiUrl, API_CONFIG } from '../config/api';
 
 interface Transaction {
   id: string;
@@ -74,9 +75,15 @@ const UserDashboard: React.FC = () => {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const response = await fetch('/api/user/transactions', {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          console.log('No auth token found, skipping transactions fetch');
+          return;
+        }
+
+        const response = await fetch(buildApiUrl(API_CONFIG.ENDPOINTS.USER_TRANSACTIONS), {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${token}`
           }
         });
         if (response.ok) {
