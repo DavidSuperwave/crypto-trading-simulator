@@ -141,13 +141,13 @@ const AdminDashboard: React.FC = () => {
       
       // Make API calls individually with detailed error reporting
       const apiCalls = [
-        { name: 'Admin Dashboard', endpoint: API_CONFIG.ENDPOINTS.ADMIN_DASHBOARD, setter: (data) => setOverview(data.overview) },
+        { name: 'Admin Dashboard', endpoint: API_CONFIG.ENDPOINTS.ADMIN_DASHBOARD, setter: (data: any) => setOverview(data.overview) },
         { name: 'Admin Users', endpoint: API_CONFIG.ENDPOINTS.ADMIN_USERS, setter: setUsers },
         { name: 'Admin Transactions', endpoint: API_CONFIG.ENDPOINTS.ADMIN_TRANSACTIONS, setter: setTransactions },
         { name: 'Admin Withdrawals', endpoint: API_CONFIG.ENDPOINTS.ADMIN_WITHDRAWALS, setter: setWithdrawals },
         { name: 'Admin Demos', endpoint: API_CONFIG.ENDPOINTS.ADMIN_DEMOS, setter: setDemos },
-        { name: 'Admin Pending Deposits', endpoint: API_CONFIG.ENDPOINTS.ADMIN_PENDING_DEPOSITS, setter: (data) => setPendingDeposits(data.pendingDeposits || []) },
-        { name: 'Chat Admin Conversations', endpoint: API_CONFIG.ENDPOINTS.CHAT_ADMIN_CONVERSATIONS, setter: (data) => setChatConversations(data.conversations || []) }
+        { name: 'Admin Pending Deposits', endpoint: API_CONFIG.ENDPOINTS.ADMIN_PENDING_DEPOSITS, setter: (data: any) => setPendingDeposits(data.pendingDeposits || []) },
+        { name: 'Chat Admin Conversations', endpoint: API_CONFIG.ENDPOINTS.CHAT_ADMIN_CONVERSATIONS, setter: (data: any) => setChatConversations(data.conversations || []) }
       ];
 
       const results = await Promise.allSettled(
@@ -161,17 +161,17 @@ const AdminDashboard: React.FC = () => {
       let hasErrors = false;
       results.forEach((result, index) => {
         if (result.status === 'fulfilled') {
-          const { success, name, data, setter, error, endpoint } = result.value;
-          if (success) {
-            console.log(`✅ ${name}: SUCCESS`);
-            setter(data);
+          const resultValue = result.value as any;
+          if (resultValue.success) {
+            console.log(`✅ ${resultValue.name}: SUCCESS`);
+            resultValue.setter(resultValue.data);
           } else {
             hasErrors = true;
-            console.error(`❌ ${name}: FAILED`);
-            console.error(`   Endpoint: ${endpoint}`);
-            console.error(`   Status: ${error.response?.status || 'Network Error'}`);
-            console.error(`   Message: ${error.response?.data?.error || error.message}`);
-            console.error(`   Full Error:`, error);
+            console.error(`❌ ${resultValue.name}: FAILED`);
+            console.error(`   Endpoint: ${resultValue.endpoint}`);
+            console.error(`   Status: ${resultValue.error.response?.status || 'Network Error'}`);
+            console.error(`   Message: ${resultValue.error.response?.data?.error || resultValue.error.message}`);
+            console.error(`   Full Error:`, resultValue.error);
           }
         } else {
           hasErrors = true;
