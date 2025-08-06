@@ -17,40 +17,65 @@ router.get('/dashboard', async (req, res) => {
     const demos = await database.getAllDemos();
     const pendingDeposits = await database.getPendingDeposits();
 
-    // Calculate overview statistics
-    const totalUsers = users.filter(u => u.role === 'user').length;
+    // Calculate overview statistics with safety checks
+    const safeUsers = Array.isArray(users) ? users : [];
+    const safeTransactions = Array.isArray(transactions) ? transactions : [];
+    const safeWithdrawals = Array.isArray(withdrawals) ? withdrawals : [];
+    const safeDemos = Array.isArray(demos) ? demos : [];
+    const safePendingDeposits = Array.isArray(pendingDeposits) ? pendingDeposits : [];
+    
+    const totalUsers = safeUsers.filter(u => u && u.role === 'user').length;
     
     // Calculate total balance from pending + approved deposits
-    const totalBalance = pendingDeposits
-      .filter(d => d.status === 'pending' || d.status === 'approved')
-      .reduce((sum, deposit) => sum + (deposit.amount || 0), 0);
+    const totalBalance = safePendingDeposits
+      .filter(d => d && (d.status === 'pending' || d.status === 'approved'))
+      .reduce((sum, deposit) => sum + (parseFloat(deposit.amount) || 0), 0);
     
-    const pendingWithdrawals = withdrawals.filter(w => w.status === 'pending').length;
-    const pendingDemos = demos.filter(d => d.status === 'requested').length;
-    const pendingDepositsCount = pendingDeposits.filter(d => d.status === 'pending').length;
-    const totalTransactions = transactions.length;
+    const pendingWithdrawals = safeWithdrawals.filter(w => w && w.status === 'pending').length;
+    const pendingDemos = safeDemos.filter(d => d && d.status === 'requested').length;
+    const pendingDepositsCount = safePendingDeposits.filter(d => d && d.status === 'pending').length;
+    const totalTransactions = safeTransactions.length;
 
-    // Calculate signup metrics
+    // Calculate signup metrics with safety checks
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
 
-    const regularUsers = users.filter(u => u.role === 'user');
+    const regularUsers = safeUsers.filter(u => u && u.role === 'user');
     const dailySignups = regularUsers.filter(u => {
-      const userDate = new Date(u.createdAt);
-      return userDate >= today;
+      try {
+        if (!u.createdAt) return false;
+        const userDate = new Date(u.createdAt);
+        return !isNaN(userDate.getTime()) && userDate >= today;
+      } catch (error) {
+        return false;
+      }
     }).length;
 
     const weeklySignups = regularUsers.filter(u => {
-      const userDate = new Date(u.createdAt);
-      return userDate >= weekAgo;
+      try {
+        if (!u.createdAt) return false;
+        const userDate = new Date(u.createdAt);
+        return !isNaN(userDate.getTime()) && userDate >= weekAgo;
+      } catch (error) {
+        return false;
+      }
     }).length;
 
     // Get pending messages count (messages from users to admin that are unread)
-    const allChatMessages = await database.getAllChatMessages();
-    const pendingMessages = allChatMessages.filter(msg => 
-      msg.senderType === 'user' && !msg.isRead
-    ).length;
+    let pendingMessages = 0;
+    try {
+      const allChatMessages = await database.getAllChatMessages();
+      if (Array.isArray(allChatMessages)) {
+        pendingMessages = allChatMessages.filter(msg => 
+          msg && msg.senderType === 'user' && !msg.isRead
+        ).length;
+      }
+    } catch (chatError) {
+      console.error('Error fetching chat messages for dashboard:', chatError);
+      // Set pendingMessages to 0 if chat messages can't be fetched
+      pendingMessages = 0;
+    }
 
     const overview = {
       totalUsers,
