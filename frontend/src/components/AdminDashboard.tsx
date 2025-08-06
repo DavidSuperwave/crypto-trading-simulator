@@ -233,7 +233,10 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
-  const formatCurrency = (amount: number) => `$${amount.toFixed(2)}`;
+  const formatCurrency = (amount: number | string | null | undefined) => {
+    const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
+    return `$${(numAmount || 0).toFixed(2)}`;
+  };
   const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString();
 
   const getStatusBadge = (status: string) => {
