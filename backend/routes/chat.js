@@ -3,12 +3,12 @@ const router = express.Router();
 const database = require('../database');
 
 // Get chat messages for a user
-router.get('/messages', (req, res) => {
+router.get('/messages', async (req, res) => {
   try {
     const userId = req.user.id;
     
     // Get all messages for this user (both sent and received)
-    const messages = database.getChatMessages(userId);
+    const messages = await database.getChatMessages(userId);
     
     res.json({
       messages: messages.map(msg => ({
@@ -28,7 +28,7 @@ router.get('/messages', (req, res) => {
 });
 
 // Send a new chat message
-router.post('/send', (req, res) => {
+router.post('/send', async (req, res) => {
   try {
     const { message, recipientType } = req.body;
     const userId = req.user.id;
@@ -38,10 +38,10 @@ router.post('/send', (req, res) => {
     }
     
     // Get user info for sender name
-    const user = database.getUserById(userId);
+    const user = await database.getUserById(userId);
     
     // Create the message
-    const chatMessage = database.createChatMessage({
+    const chatMessage = await database.createChatMessage({
       senderId: userId,
       senderType: 'user',
       senderName: user.email,
@@ -70,7 +70,7 @@ router.post('/send', (req, res) => {
 });
 
 // Mark messages as read
-router.put('/mark-read', (req, res) => {
+router.put('/mark-read', async (req, res) => {
   try {
     const { messageIds } = req.body;
     const userId = req.user.id;
@@ -80,7 +80,7 @@ router.put('/mark-read', (req, res) => {
     }
     
     // Mark messages as read for this user
-    const updatedCount = database.markMessagesAsRead(userId, messageIds);
+    const updatedCount = await database.markMessagesAsRead(userId, messageIds);
     
     res.json({
       message: 'Messages marked as read',
@@ -93,11 +93,11 @@ router.put('/mark-read', (req, res) => {
 });
 
 // Get unread message count
-router.get('/unread-count', (req, res) => {
+router.get('/unread-count', async (req, res) => {
   try {
     const userId = req.user.id;
     
-    const unreadCount = database.getUnreadMessageCount(userId);
+    const unreadCount = await database.getUnreadMessageCount(userId);
     
     res.json({
       unreadCount
@@ -109,14 +109,14 @@ router.get('/unread-count', (req, res) => {
 });
 
 // Admin routes (require admin role)
-router.get('/admin/conversations', (req, res) => {
+router.get('/admin/conversations', async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
       return res.status(403).json({ error: 'Admin access required' });
     }
     
     // Get all conversations grouped by user
-    const conversations = database.getAllConversations();
+    const conversations = await database.getAllConversations();
     
     res.json({
       conversations
@@ -128,7 +128,7 @@ router.get('/admin/conversations', (req, res) => {
 });
 
 // Admin send message
-router.post('/admin/send', (req, res) => {
+router.post('/admin/send', async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
       return res.status(403).json({ error: 'Admin access required' });
@@ -142,10 +142,10 @@ router.post('/admin/send', (req, res) => {
     }
     
     // Get admin info for sender name
-    const admin = database.getUserById(adminId);
+    const admin = await database.getUserById(adminId);
     
     // Create the message
-    const chatMessage = database.createChatMessage({
+    const chatMessage = await database.createChatMessage({
       senderId: adminId,
       senderType: 'admin',
       senderName: admin.email,

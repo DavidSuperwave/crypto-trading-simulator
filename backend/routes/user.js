@@ -9,9 +9,9 @@ const router = express.Router();
 router.use(authenticateToken);
 
 // Get user profile and balance
-router.get('/profile', (req, res) => {
+router.get('/profile', async (req, res) => {
   try {
-    const user = database.getUserById(req.user.id);
+    const user = await database.getUserById(req.user.id);
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
@@ -25,7 +25,7 @@ router.get('/profile', (req, res) => {
 });
 
 // Send funds (deposit) - Creates pending request
-router.post('/deposit', (req, res) => {
+router.post('/deposit', async (req, res) => {
   try {
     const { amount, plan, method } = req.body;
     const userId = req.user.id;
@@ -35,13 +35,13 @@ router.post('/deposit', (req, res) => {
     }
 
     // Get user info
-    const user = database.getUserById(userId);
+    const user = await database.getUserById(userId);
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
 
     // Create pending deposit request instead of immediate deposit
-    const pendingDeposit = database.createPendingDeposit({
+    const pendingDeposit = await database.createPendingDeposit({
       userId,
       amount: parseFloat(amount),
       plan: plan || 'basic',
@@ -67,7 +67,7 @@ router.post('/deposit', (req, res) => {
 });
 
 // Make withdrawal request - Only creates request, doesn't deduct funds
-router.post('/withdraw', (req, res) => {
+router.post('/withdraw', async (req, res) => {
   try {
     const { amount, method } = req.body;
     const userId = req.user.id;
@@ -80,13 +80,13 @@ router.post('/withdraw', (req, res) => {
       return res.status(400).json({ error: 'Withdrawal method is required' });
     }
 
-    const user = database.getUserById(userId);
+    const user = await database.getUserById(userId);
     if (user.balance < amount) {
       return res.status(400).json({ error: 'Insufficient balance' });
     }
 
     // Create withdrawal request with method - IMPORTANT: Does not deduct funds yet
-    const withdrawal = database.createWithdrawal({
+    const withdrawal = await database.createWithdrawal({
       userId,
       amount: parseFloat(amount),
       method: method,
@@ -112,10 +112,10 @@ router.post('/withdraw', (req, res) => {
 });
 
 // Get user transactions
-router.get('/transactions', (req, res) => {
+router.get('/transactions', async (req, res) => {
   try {
     const userId = req.user.id;
-    const transactions = database.getTransactionsByUserId(userId);
+    const transactions = await database.getTransactionsByUserId(userId);
     res.json(transactions);
   } catch (error) {
     console.error('Transactions fetch error:', error);
@@ -124,10 +124,10 @@ router.get('/transactions', (req, res) => {
 });
 
 // Get user withdrawals
-router.get('/withdrawals', (req, res) => {
+router.get('/withdrawals', async (req, res) => {
   try {
     const userId = req.user.id;
-    const withdrawals = database.getWithdrawalsByUserId(userId);
+    const withdrawals = await database.getWithdrawalsByUserId(userId);
     res.json(withdrawals);
   } catch (error) {
     console.error('Withdrawals fetch error:', error);
@@ -136,10 +136,10 @@ router.get('/withdrawals', (req, res) => {
 });
 
 // Get user pending deposits
-router.get('/pending-deposits', (req, res) => {
+router.get('/pending-deposits', async (req, res) => {
   try {
     const userId = req.user.id;
-    const pendingDeposits = database.getPendingDepositsByUserId(userId);
+    const pendingDeposits = await database.getPendingDepositsByUserId(userId);
     
     res.json({
       pendingDeposits: pendingDeposits.map(d => ({
@@ -159,10 +159,10 @@ router.get('/pending-deposits', (req, res) => {
 });
 
 // Calculate and add interest (simulated AI trading gains)
-router.post('/calculate-interest', (req, res) => {
+router.post('/calculate-interest', async (req, res) => {
   try {
     const userId = req.user.id;
-    const user = database.getUserById(userId);
+    const user = await database.getUserById(userId);
 
     if (!user || user.balance <= 0) {
       return res.status(400).json({ error: 'No balance to calculate interest on' });
@@ -173,7 +173,7 @@ router.post('/calculate-interest', (req, res) => {
     const interestAmount = user.balance * interestRate;
 
     // Create interest transaction
-    const transaction = database.createTransaction({
+    const transaction = await database.createTransaction({
       type: 'interest',
       amount: interestAmount,
       userId,
@@ -184,7 +184,7 @@ router.post('/calculate-interest', (req, res) => {
     // Update user balance and total interest
     const newBalance = user.balance + interestAmount;
     const newTotalInterest = user.totalInterest + interestAmount;
-    database.updateUser(userId, { 
+    await database.updateUser(userId, { 
       balance: newBalance, 
       totalInterest: newTotalInterest 
     });
@@ -217,7 +217,7 @@ router.put('/change-password', async (req, res) => {
     }
 
     // Get user
-    const user = database.getUserById(userId);
+    const user = await database.getUserById(userId);
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
@@ -233,7 +233,7 @@ router.put('/change-password', async (req, res) => {
     const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
 
     // Update password
-    database.updateUser(userId, { password: hashedNewPassword });
+    await database.updateUser(userId, { password: hashedNewPassword });
 
     res.json({ message: 'Password changed successfully' });
   } catch (error) {

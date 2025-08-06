@@ -4,7 +4,7 @@ const database = require('../database');
 const router = express.Router();
 
 // Request a demo (public endpoint)
-router.post('/request', (req, res) => {
+router.post('/request', async (req, res) => {
   try {
     const { name, email, company, phone, message } = req.body;
 
@@ -14,7 +14,7 @@ router.post('/request', (req, res) => {
     }
 
     // Create demo request
-    const demo = database.createDemo({
+    const demo = await database.createDemo({
       name,
       email,
       company: company || '',
