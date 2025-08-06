@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Users, DollarSign, Download, BarChart3, Check, X, Eye, Upload, MessageCircle } from 'lucide-react';
 import AdminSidebar from './AdminSidebar';
 import axios from 'axios';
+import { buildApiUrl, API_CONFIG } from '../config/api';
 
 interface User {
   id: string;
@@ -117,13 +118,13 @@ const AdminDashboard: React.FC = () => {
   const fetchDashboardData = async () => {
     try {
       const [overviewRes, usersRes, transactionsRes, withdrawalsRes, demosRes, pendingDepositsRes, chatRes] = await Promise.all([
-        axios.get('http://localhost:5001/api/admin/dashboard'),
-        axios.get('http://localhost:5001/api/admin/users'),
-        axios.get('http://localhost:5001/api/admin/transactions'),
-        axios.get('http://localhost:5001/api/admin/withdrawals'),
-        axios.get('http://localhost:5001/api/admin/demos'),
-        axios.get('http://localhost:5001/api/admin/pending-deposits'),
-        axios.get('http://localhost:5001/api/chat/admin/conversations')
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_DASHBOARD)),
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_USERS)),
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_TRANSACTIONS)),
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_WITHDRAWALS)),
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_DEMOS)),
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_PENDING_DEPOSITS)),
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.CHAT_ADMIN_CONVERSATIONS))
       ]);
 
       setOverview(overviewRes.data.overview);
@@ -141,7 +142,7 @@ const AdminDashboard: React.FC = () => {
   const handleWithdrawalUpdate = async (withdrawalId: string, status: string) => {
     setLoading(true);
     try {
-      await axios.put(`http://localhost:5001/api/admin/withdrawals/${withdrawalId}`, { status });
+      await axios.put(`${buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_WITHDRAWALS)}/${withdrawalId}`, { status });
       fetchDashboardData();
       alert(`Withdrawal ${status} successfully!`);
     } catch (error) {
@@ -154,7 +155,7 @@ const AdminDashboard: React.FC = () => {
   const handleDemoUpdate = async (demoId: string, status: string, notes: string = '') => {
     setLoading(true);
     try {
-      await axios.put(`http://localhost:5001/api/admin/demos/${demoId}`, { status, notes });
+      await axios.put(`${buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_DEMOS)}/${demoId}`, { status, notes });
       fetchDashboardData();
       alert(`Demo request ${status} successfully!`);
     } catch (error) {
@@ -167,7 +168,7 @@ const AdminDashboard: React.FC = () => {
   const handleDepositUpdate = async (depositId: string, action: 'approve' | 'reject', notes: string = '') => {
     setLoading(true);
     try {
-      await axios.put(`http://localhost:5001/api/admin/pending-deposits/${depositId}/${action}`, { notes });
+      await axios.put(`${buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_PENDING_DEPOSITS)}/${depositId}/${action}`, { notes });
       fetchDashboardData();
       alert(`Deposit ${action}d successfully!`);
     } catch (error) {
@@ -182,7 +183,7 @@ const AdminDashboard: React.FC = () => {
     
     setLoading(true);
     try {
-      await axios.post('http://localhost:5001/api/chat/admin/send', {
+      await axios.post(buildApiUrl(API_CONFIG.ENDPOINTS.CHAT_ADMIN_SEND), {
         message: newMessage,
         recipientUserId: userId
       });
@@ -203,7 +204,7 @@ const AdminDashboard: React.FC = () => {
 
     setLoading(true);
     try {
-      await axios.post('http://localhost:5001/api/admin/users', newUserData);
+      await axios.post(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_USERS), newUserData);
       setNewUserData({ email: '', password: '', role: 'user' });
       setShowCreateUserForm(false);
       fetchDashboardData();
@@ -220,7 +221,7 @@ const AdminDashboard: React.FC = () => {
     if (window.confirm(`Are you sure you want to delete user "${userEmail}"? This action cannot be undone.`)) {
       setLoading(true);
       try {
-        await axios.delete(`http://localhost:5001/api/admin/users/${userId}`);
+        await axios.delete(`${buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_USERS)}/${userId}`);
         fetchDashboardData();
         alert('User deleted successfully!');
       } catch (error: any) {
