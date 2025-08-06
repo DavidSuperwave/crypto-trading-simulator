@@ -3,6 +3,7 @@ const router = express.Router();
 const database = require('../database');
 const interestService = require('../services/interestService');
 const scheduler = require('../services/scheduler');
+const websocketService = require('../services/websocketService');
 
 // Get dashboard overview
 router.get('/dashboard', async (req, res) => {
@@ -142,6 +143,9 @@ router.put('/pending-deposits/:id/approve', async (req, res) => {
       return res.status(404).json({ error: 'Pending deposit not found or already processed' });
     }
 
+    // Send real-time notification
+    websocketService.notifyDepositStatusUpdate(approvedDeposit);
+
     res.json({
       message: 'Deposit approved successfully',
       deposit: approvedDeposit
@@ -168,6 +172,9 @@ router.put('/pending-deposits/:id/reject', async (req, res) => {
     if (!rejectedDeposit) {
       return res.status(404).json({ error: 'Pending deposit not found' });
     }
+
+    // Send real-time notification
+    websocketService.notifyDepositStatusUpdate(rejectedDeposit);
 
     res.json({
       message: 'Deposit rejected',
@@ -248,6 +255,9 @@ router.put('/pending-withdrawals/:id/approve', async (req, res) => {
       withdrawalId: id
     });
 
+    // Send real-time notification
+    websocketService.notifyWithdrawalStatusUpdate(updatedWithdrawal);
+
     res.json({
       message: 'Withdrawal approved successfully',
       withdrawal: updatedWithdrawal,
@@ -280,6 +290,9 @@ router.put('/pending-withdrawals/:id/reject', async (req, res) => {
     if (!updatedWithdrawal) {
       return res.status(404).json({ error: 'Withdrawal request not found' });
     }
+
+    // Send real-time notification
+    websocketService.notifyWithdrawalStatusUpdate(updatedWithdrawal);
 
     res.json({
       message: 'Withdrawal rejected',

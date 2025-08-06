@@ -14,10 +14,10 @@
     "email": "user@cryptosim.com",
     "password": "$2a$12$JIm8aeVphHoHWiUZbtZS3.unD0aynzm/B/7ajYS./Cry/3ilu//hW",
     "role": "user",
-    "balance": 65964.91789078794,
+    "balance": 94986.80877437216,
     "totalInterest": 1275.6176024740482,
     "createdAt": "2025-08-05T04:50:10.526Z",
-    "updatedAt": "2025-08-06T07:30:00.057Z",
+    "updatedAt": "2025-08-06T23:30:00.115Z",
     "currentPlan": "basic"
   },
   {
@@ -88,9 +88,9 @@
     "email": "kevinmode@gmail.com",
     "password": "$2a$12$hFK.b68cn0fZUiLoyXPviOUDnzyO4yezBIUWbcxS8vrI0rb3xCtaS",
     "role": "user",
-    "balance": 13287.752939214071,
+    "balance": 22530.352554553236,
     "totalInterest": 0,
     "createdAt": "2025-08-06T04:29:44.185Z",
-    "updatedAt": "2025-08-06T07:30:00.064Z"
+    "updatedAt": "2025-08-06T23:30:00.125Z"
   }
 ]

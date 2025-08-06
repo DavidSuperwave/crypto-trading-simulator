@@ -644,5 +644,635 @@
     "status": "completed",
     "description": "Daily interest: 2.33%",
     "createdAt": "2025-08-06T07:30:00.065Z"
+  },
+  {
+    "id": "80128fa8-dccc-448b-8748-38801e5c3508",
+    "type": "interest",
+    "amount": 1286.2020602725001,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 1.95%",
+    "createdAt": "2025-08-06T07:35:00.354Z"
+  },
+  {
+    "id": "61b42e8e-310f-4fdd-9367-afc7fd8f9320",
+    "type": "interest",
+    "amount": 175.23733938803704,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 1.32%",
+    "createdAt": "2025-08-06T07:35:00.391Z"
+  },
+  {
+    "id": "afabd34a-f573-4451-8ab0-4ea3fadfdde1",
+    "type": "interest",
+    "amount": 543.2257348359065,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 0.81%",
+    "createdAt": "2025-08-06T07:40:00.207Z"
+  },
+  {
+    "id": "ad39e8c7-dd8c-4fe8-aceb-8894f64dc611",
+    "type": "interest",
+    "amount": 194.52791771376084,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 1.44%",
+    "createdAt": "2025-08-06T07:40:00.220Z"
+  },
+  {
+    "id": "12d16eda-4b17-4dbf-b01d-27284c446a30",
+    "type": "interest",
+    "amount": 441.2595418913848,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 0.65%",
+    "createdAt": "2025-08-06T07:45:00.153Z"
+  },
+  {
+    "id": "31202f6e-2604-4cf0-8f01-861d2a6e281b",
+    "type": "interest",
+    "amount": 266.5119850524029,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 1.95%",
+    "createdAt": "2025-08-06T07:45:00.203Z"
+  },
+  {
+    "id": "7f9d5434-1500-4c01-a54d-5aa2d0ae140c",
+    "type": "interest",
+    "amount": 1157.1152059022875,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 1.70%",
+    "createdAt": "2025-08-06T07:50:00.032Z"
+  },
+  {
+    "id": "13a9459c-abeb-498d-864f-159072f5a183",
+    "type": "interest",
+    "amount": 231.88528799076886,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 1.67%",
+    "createdAt": "2025-08-06T07:50:00.045Z"
+  },
+  {
+    "id": "bb49d377-21e1-4efd-9fba-78cc1c940796",
+    "type": "interest",
+    "amount": 467.3110848480485,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 0.67%",
+    "createdAt": "2025-08-06T09:30:00.081Z"
+  },
+  {
+    "id": "cf9fe441-5c3a-4baf-8f56-25e95f4cef3b",
+    "type": "interest",
+    "amount": 252.05350233295232,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 1.78%",
+    "createdAt": "2025-08-06T09:30:00.087Z"
+  },
+  {
+    "id": "95c401d8-a558-419d-9e43-ba4389ded90e",
+    "type": "interest",
+    "amount": 969.0347043050253,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 1.39%",
+    "createdAt": "2025-08-06T12:40:00.730Z"
+  },
+  {
+    "id": "f0b48918-03c0-47e6-893a-44ce04f07745",
+    "type": "interest",
+    "amount": 255.36139873725588,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 1.77%",
+    "createdAt": "2025-08-06T12:40:00.733Z"
+  },
+  {
+    "id": "f202bf44-3e82-4282-9c9c-aa0324fb9dac",
+    "type": "interest",
+    "amount": 434.95274732829677,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 0.61%",
+    "createdAt": "2025-08-06T12:55:00.017Z"
+  },
+  {
+    "id": "451bcc03-6d75-4b6b-bda5-47e499d08768",
+    "type": "interest",
+    "amount": 93.62868312005381,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 0.64%",
+    "createdAt": "2025-08-06T12:55:00.023Z"
+  },
+  {
+    "id": "d6900853-dd3b-4604-be19-8dfd9023d9ec",
+    "type": "interest",
+    "amount": 503.49147469389254,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 0.71%",
+    "createdAt": "2025-08-06T17:45:00.773Z"
+  },
+  {
+    "id": "721ba7a6-ebe9-42bb-9f66-c294e60e2820",
+    "type": "interest",
+    "amount": 37.49546066657235,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 0.25%",
+    "createdAt": "2025-08-06T17:45:00.786Z"
+  },
+  {
+    "id": "36a3236d-5b14-43fe-a3ee-85a7c45bae9a",
+    "type": "interest",
+    "amount": 1760.9588866584857,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 2.45%",
+    "createdAt": "2025-08-06T21:20:01.338Z"
+  },
+  {
+    "id": "0676d9a7-628a-48b6-a57e-4c40d5188cff",
+    "type": "interest",
+    "amount": 76.09816643425467,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 0.51%",
+    "createdAt": "2025-08-06T21:20:01.354Z"
+  },
+  {
+    "id": "76038616-e811-4e9f-887b-4fc4fd98ecb3",
+    "type": "interest",
+    "amount": 171.29300702754662,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 0.23%",
+    "createdAt": "2025-08-06T21:25:00.748Z"
+  },
+  {
+    "id": "ac20cf43-df1d-428a-b7da-0c6ea3a102a0",
+    "type": "interest",
+    "amount": 368.6572607257646,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 2.48%",
+    "createdAt": "2025-08-06T21:25:00.786Z"
+  },
+  {
+    "id": "9e76b67c-61bb-4192-9cbe-cafcd6a194d2",
+    "type": "interest",
+    "amount": 571.4737956515843,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 0.78%",
+    "createdAt": "2025-08-06T21:30:00.416Z"
+  },
+  {
+    "id": "f5467431-c574-4428-81b8-e5d89032fc94",
+    "type": "interest",
+    "amount": 34.19904188783323,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 0.22%",
+    "createdAt": "2025-08-06T21:30:00.446Z"
+  },
+  {
+    "id": "2c2dbcd4-df7e-48ec-aff3-09a0870a04fb",
+    "type": "interest",
+    "amount": 771.0113851888161,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 1.04%",
+    "createdAt": "2025-08-06T21:35:00.218Z"
+  },
+  {
+    "id": "85c6ea5c-8373-4fdd-89ad-359da94970cc",
+    "type": "interest",
+    "amount": 162.45878714680615,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 1.06%",
+    "createdAt": "2025-08-06T21:35:00.224Z"
+  },
+  {
+    "id": "0ad483ff-c777-4ee5-887c-89f2691da6d1",
+    "type": "interest",
+    "amount": 1749.2403661361898,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 2.33%",
+    "createdAt": "2025-08-06T21:40:00.137Z"
+  },
+  {
+    "id": "722a264d-f4ea-4f93-b26a-11aff3da7a65",
+    "type": "interest",
+    "amount": 277.2099835566666,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 1.80%",
+    "createdAt": "2025-08-06T21:40:00.155Z"
+  },
+  {
+    "id": "404abcd9-7037-4be9-bab4-bab993e4c997",
+    "type": "interest",
+    "amount": 180.30816276114876,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 0.23%",
+    "createdAt": "2025-08-06T21:45:00.153Z"
+  },
+  {
+    "id": "242403ef-d7ed-47b5-85d7-776c53c886b4",
+    "type": "interest",
+    "amount": 249.9245540741162,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 1.59%",
+    "createdAt": "2025-08-06T21:45:00.176Z"
+  },
+  {
+    "id": "826f90a5-9849-4639-be6b-d662a1ddee42",
+    "type": "interest",
+    "amount": 154.985896954022,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 0.20%",
+    "createdAt": "2025-08-06T21:50:00.124Z"
+  },
+  {
+    "id": "157ef69b-31e8-46a8-8796-a3619ae0183b",
+    "type": "interest",
+    "amount": 395.5861512798156,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 2.48%",
+    "createdAt": "2025-08-06T21:50:00.143Z"
+  },
+  {
+    "id": "bcd9d318-8382-494f-8353-f8bb017da3e6",
+    "type": "interest",
+    "amount": 1119.1418864578104,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 1.45%",
+    "createdAt": "2025-08-06T21:55:00.241Z"
+  },
+  {
+    "id": "12d2fb39-436f-4131-935b-133628fc6e0f",
+    "type": "interest",
+    "amount": 364.3315410965426,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 2.23%",
+    "createdAt": "2025-08-06T21:55:00.272Z"
+  },
+  {
+    "id": "87c37b86-7bb3-4284-93c0-a8863897009b",
+    "type": "interest",
+    "amount": 1300.4874909498792,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 1.66%",
+    "createdAt": "2025-08-06T22:00:00.163Z"
+  },
+  {
+    "id": "9d23446c-44e5-4ee5-8eb8-761e1b7fceaf",
+    "type": "interest",
+    "amount": 342.361525500856,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 2.05%",
+    "createdAt": "2025-08-06T22:00:00.178Z"
+  },
+  {
+    "id": "ac364355-04d3-48bd-a964-d94cf08e935c",
+    "type": "interest",
+    "amount": 255.10436535608315,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 0.32%",
+    "createdAt": "2025-08-06T22:05:00.117Z"
+  },
+  {
+    "id": "4649fbf9-49a1-44bf-9e33-73fa69ad7b77",
+    "type": "interest",
+    "amount": 257.73047762182904,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 1.51%",
+    "createdAt": "2025-08-06T22:05:00.139Z"
+  },
+  {
+    "id": "25aceda7-bd56-4c0b-9d7e-e879853d1ab3",
+    "type": "interest",
+    "amount": 789.537442885975,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 0.99%",
+    "createdAt": "2025-08-06T22:10:00.131Z"
+  },
+  {
+    "id": "97407ac3-0a82-47ae-ada4-80e14ce85362",
+    "type": "interest",
+    "amount": 171.7836612833869,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 0.99%",
+    "createdAt": "2025-08-06T22:10:00.149Z"
+  },
+  {
+    "id": "ced1513a-11ca-4f77-b3cc-4d19d6c86c94",
+    "type": "interest",
+    "amount": 1010.2163147667915,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 1.25%",
+    "createdAt": "2025-08-06T22:15:00.134Z"
+  },
+  {
+    "id": "f3e51da6-4120-4743-b1c9-d6d6687bf5aa",
+    "type": "interest",
+    "amount": 109.86149456036445,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 0.63%",
+    "createdAt": "2025-08-06T22:15:00.155Z"
+  },
+  {
+    "id": "099a8709-6d43-40d7-a49a-52dfc0e5bf53",
+    "type": "interest",
+    "amount": 941.8079112904551,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 1.15%",
+    "createdAt": "2025-08-06T22:20:00.119Z"
+  },
+  {
+    "id": "2e9467c2-3d12-4b7b-bc89-815a486d01d8",
+    "type": "interest",
+    "amount": 62.59283262521044,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 0.36%",
+    "createdAt": "2025-08-06T22:20:00.135Z"
+  },
+  {
+    "id": "ddd15a85-747c-4063-8d5c-3a7c9a703ddf",
+    "type": "interest",
+    "amount": 253.40584006311022,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 0.31%",
+    "createdAt": "2025-08-06T22:25:01.253Z"
+  },
+  {
+    "id": "cae1ec86-b14b-45e5-b5e2-a333dcf4c089",
+    "type": "interest",
+    "amount": 352.2366345934773,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 1.99%",
+    "createdAt": "2025-08-06T22:25:01.359Z"
+  },
+  {
+    "id": "cada4eb8-7056-4cef-9d65-c5f11e52f3e2",
+    "type": "interest",
+    "amount": 2005.9062254784299,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 2.42%",
+    "createdAt": "2025-08-06T22:30:00.107Z"
+  },
+  {
+    "id": "715948df-8fcd-43e6-9629-ae5dfd386cdf",
+    "type": "interest",
+    "amount": 412.4594954001616,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 2.29%",
+    "createdAt": "2025-08-06T22:30:00.128Z"
+  },
+  {
+    "id": "ced32f38-9da6-41d4-bade-4b1d23035001",
+    "type": "interest",
+    "amount": 1069.180053517467,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 1.26%",
+    "createdAt": "2025-08-06T22:35:00.094Z"
+  },
+  {
+    "id": "84c2873b-7937-4c40-9b49-d260a6e2bc68",
+    "type": "interest",
+    "amount": 381.4619749494232,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 2.07%",
+    "createdAt": "2025-08-06T22:35:00.102Z"
+  },
+  {
+    "id": "e12a875a-7c4c-4704-a4b8-febba8401143",
+    "type": "interest",
+    "amount": 553.5924647381677,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 0.64%",
+    "createdAt": "2025-08-06T22:40:00.065Z"
+  },
+  {
+    "id": "e6209041-8c7b-4b05-abef-d5294a564000",
+    "type": "interest",
+    "amount": 191.7097413677742,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 1.02%",
+    "createdAt": "2025-08-06T22:40:00.069Z"
+  },
+  {
+    "id": "7daef534-aba7-4ff9-8ace-553c9624de9a",
+    "type": "interest",
+    "amount": 769.7888630819892,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 0.89%",
+    "createdAt": "2025-08-06T22:45:00.069Z"
+  },
+  {
+    "id": "17c1e6bc-f582-4621-a7b2-367999991aea",
+    "type": "interest",
+    "amount": 285.9146563706824,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 1.50%",
+    "createdAt": "2025-08-06T22:45:00.080Z"
+  },
+  {
+    "id": "b3a13b7e-86b8-4677-811d-dc779ae7656f",
+    "type": "interest",
+    "amount": 154.23420250353578,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 0.18%",
+    "createdAt": "2025-08-06T22:50:00.110Z"
+  },
+  {
+    "id": "6b8303ff-0c0b-4d5c-921f-121da029fc66",
+    "type": "interest",
+    "amount": 214.75661063757764,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 1.11%",
+    "createdAt": "2025-08-06T22:50:00.118Z"
+  },
+  {
+    "id": "c6b7075e-b194-4093-aabc-ac02030d69bd",
+    "type": "interest",
+    "amount": 1539.777185622444,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 1.76%",
+    "createdAt": "2025-08-06T22:55:00.039Z"
+  },
+  {
+    "id": "3424157c-4f5e-4113-a1ad-c25da4077ff0",
+    "type": "interest",
+    "amount": 172.9638156638487,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 0.89%",
+    "createdAt": "2025-08-06T22:55:00.054Z"
+  },
+  {
+    "id": "4cc58743-9fc6-4cce-9019-cf2d3ceb88a0",
+    "type": "interest",
+    "amount": 612.3059053528198,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 0.69%",
+    "createdAt": "2025-08-06T23:00:00.080Z"
+  },
+  {
+    "id": "4d80a3de-8352-40ad-940f-4ef301156b23",
+    "type": "interest",
+    "amount": 487.4182561033186,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 2.48%",
+    "createdAt": "2025-08-06T23:00:00.088Z"
+  },
+  {
+    "id": "0be93d8e-6f46-4ff9-aa34-dd65a4dc769d",
+    "type": "interest",
+    "amount": 1322.3251739048674,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 1.48%",
+    "createdAt": "2025-08-06T23:05:00.085Z"
+  },
+  {
+    "id": "0c4fc0d7-a345-4096-9216-97a515132326",
+    "type": "interest",
+    "amount": 337.5888090337591,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 1.67%",
+    "createdAt": "2025-08-06T23:05:00.092Z"
+  },
+  {
+    "id": "ff111d3f-4477-40e8-8746-52f1a1ebd9d2",
+    "type": "interest",
+    "amount": 1116.3234086889763,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 1.23%",
+    "createdAt": "2025-08-06T23:10:00.078Z"
+  },
+  {
+    "id": "5842ea1b-b680-41b3-b1fb-ac92db0aa23d",
+    "type": "interest",
+    "amount": 308.6251403266528,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 1.51%",
+    "createdAt": "2025-08-06T23:10:00.082Z"
+  },
+  {
+    "id": "b0b91ef2-2e82-4c67-9367-cd88c41e0d11",
+    "type": "interest",
+    "amount": 152.94630349427914,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 0.17%",
+    "createdAt": "2025-08-06T23:15:00.050Z"
+  },
+  {
+    "id": "86edab67-1251-437e-8063-472ced338298",
+    "type": "interest",
+    "amount": 503.07191678619625,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 2.42%",
+    "createdAt": "2025-08-06T23:15:00.057Z"
+  },
+  {
+    "id": "28646a7c-b78a-497c-a762-d1c0eaf5e748",
+    "type": "interest",
+    "amount": 1080.3734505180744,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 1.17%",
+    "createdAt": "2025-08-06T23:20:00.086Z"
+  },
+  {
+    "id": "391daf30-c471-4bb5-8946-b3a0022e0e1b",
+    "type": "interest",
+    "amount": 489.7786603414582,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 2.30%",
+    "createdAt": "2025-08-06T23:20:00.103Z"
+  },
+  {
+    "id": "6b344cce-23e3-4243-8b8d-8831e8bc300a",
+    "type": "interest",
+    "amount": 211.55458877246923,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 0.23%",
+    "createdAt": "2025-08-06T23:25:00.062Z"
+  },
+  {
+    "id": "418bb575-6c3a-4996-a411-09acbd3f7bc9",
+    "type": "interest",
+    "amount": 423.4689858130314,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 1.94%",
+    "createdAt": "2025-08-06T23:25:00.076Z"
+  },
+  {
+    "id": "69d9f4c0-935a-49db-a3a8-d69ad6322a6e",
+    "type": "interest",
+    "amount": 1602.0177516854565,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 1.72%",
+    "createdAt": "2025-08-06T23:30:00.120Z"
+  },
+  {
+    "id": "f37f886c-bf8b-4106-b7fc-bdb1a91dfaa7",
+    "type": "interest",
+    "amount": 301.64786515655055,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 1.36%",
+    "createdAt": "2025-08-06T23:30:00.126Z"
   }
 ]

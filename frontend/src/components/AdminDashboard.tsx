@@ -4,6 +4,7 @@ import AdminSidebar from './AdminSidebar';
 import axios from 'axios';
 import { buildApiUrl, API_CONFIG } from '../config/api';
 import { useAuth } from '../context/AuthContext';
+import { useRealTimeNotifications } from '../hooks/useRealTimeNotifications';
 
 interface User {
   id: string;
@@ -112,6 +113,69 @@ const AdminDashboard: React.FC = () => {
     password: '',
     role: 'user'
   });
+
+  // Real-time notifications for admin dashboard
+  const { isConnected, notifications, unreadCount, clearNotification } = useRealTimeNotifications({
+    onNewDeposit: (deposit) => {
+      console.log('💰 New deposit request:', deposit);
+      setPendingDeposits(prev => [deposit, ...prev]);
+      
+      // Show browser notification if permission granted
+      if (Notification.permission === 'granted') {
+        new Notification('New Deposit Request', {
+          body: `$${deposit.amount} from ${deposit.userEmail || 'User'}`,
+          icon: '/favicon.ico'
+        });
+      }
+    },
+    onNewWithdrawal: (withdrawal) => {
+      console.log('💸 New withdrawal request:', withdrawal);
+      setWithdrawals(prev => [withdrawal, ...prev]);
+      
+      // Show browser notification if permission granted
+      if (Notification.permission === 'granted') {
+        new Notification('New Withdrawal Request', {
+          body: `$${withdrawal.amount} from ${withdrawal.userEmail || 'User'}`,
+          icon: '/favicon.ico'
+        });
+      }
+    },
+    onNewChatMessage: (message) => {
+      console.log('💬 New chat message from user:', message);
+      
+      // Update chat conversations with new message
+      setChatConversations(prev => {
+        const updated = prev.map(conv => {
+          if (conv.userId === message.senderId) {
+            return {
+              ...conv,
+              lastMessage: message,
+              unreadCount: conv.unreadCount + 1
+            };
+          }
+          return conv;
+        });
+        
+        // If conversation doesn't exist, it will be handled by next dashboard refresh
+        return updated;
+      });
+      
+      // Show browser notification if permission granted
+      if (Notification.permission === 'granted') {
+        new Notification('New Chat Message', {
+          body: `${message.senderName}: ${message.message}`,
+          icon: '/favicon.ico'
+        });
+      }
+    }
+  });
+
+  // Request notification permission on component mount
+  useEffect(() => {
+    if (Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+  }, []);
 
   // Helper function to get auth headers
   const getAuthHeaders = () => {

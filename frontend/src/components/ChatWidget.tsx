@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { Send, User, Shield, Phone } from 'lucide-react';
 import axios from 'axios';
 import { buildApiUrl, API_CONFIG } from '../config/api';
+import { useRealTimeNotifications } from '../hooks/useRealTimeNotifications';
 
 interface ChatMessage {
   id: string;
@@ -22,6 +23,31 @@ const ChatWidget: React.FC = () => {
   const [isTyping] = useState(false); // Ready for typing indicator implementation
   const [unreadCount, setUnreadCount] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Real-time notifications for new chat messages
+  const { isConnected, sendTypingIndicator } = useRealTimeNotifications({
+    onNewChatMessage: (message) => {
+      console.log('📨 New chat message received:', message);
+      // Convert timestamp to Date object to match interface
+      const chatMessage: ChatMessage = {
+        ...message,
+        timestamp: new Date(message.timestamp)
+      };
+      
+      setMessages(prev => {
+        // Check if message already exists to avoid duplicates
+        const messageExists = prev.some(m => m.id === chatMessage.id);
+        if (messageExists) return prev;
+        
+        return [...prev, chatMessage];
+      });
+      
+      // Scroll to bottom when new message arrives
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+  });
 
   // Fetch chat messages when user is authenticated
   useEffect(() => {

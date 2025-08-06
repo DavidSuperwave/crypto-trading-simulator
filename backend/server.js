@@ -1,12 +1,14 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const http = require('http');
 
 // Import middleware
 const { authenticateToken } = require('./middleware/auth');
 
 // Import services
 const scheduler = require('./services/scheduler');
+const websocketService = require('./services/websocketService');
 
 // Import routes
 const authRoutes = require('./routes/auth');
@@ -65,8 +67,15 @@ app.use('*', (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
+// Create HTTP server
+const server = http.createServer(app);
+
+// Initialize WebSocket service
+websocketService.initialize(server);
+
+server.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`🔌 WebSocket endpoint: ws://localhost:${PORT}/ws`);
   console.log(`🔗 API Health Check: http://localhost:${PORT}/api/health`);
   console.log(`📊 Admin Dashboard: http://localhost:3000/admin`);
   console.log(`👤 User Dashboard: http://localhost:3000/user`);

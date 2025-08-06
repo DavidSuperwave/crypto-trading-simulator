@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const database = require('../database');
+const websocketService = require('../services/websocketService');
 
 // Get chat messages for a user
 router.get('/messages', async (req, res) => {
@@ -50,6 +51,9 @@ router.post('/send', async (req, res) => {
       timestamp: new Date(),
       isRead: false
     });
+    
+    // Send real-time notification
+    websocketService.notifyNewChatMessage(chatMessage);
     
     res.status(201).json({
       message: 'Message sent successfully',
@@ -155,6 +159,9 @@ router.post('/admin/send', async (req, res) => {
       timestamp: new Date(),
       isRead: false
     });
+    
+    // Send real-time notification
+    websocketService.notifyNewChatMessage(chatMessage);
     
     res.status(201).json({
       message: 'Message sent successfully',

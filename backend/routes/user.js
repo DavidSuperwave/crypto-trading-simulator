@@ -2,6 +2,7 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const database = require('../database');
 const { authenticateToken } = require('../middleware/auth');
+const websocketService = require('../services/websocketService');
 
 const router = express.Router();
 
@@ -50,6 +51,9 @@ router.post('/deposit', async (req, res) => {
       userName: user.email.split('@')[0]
     });
 
+    // Send real-time notification to admins
+    websocketService.notifyNewDeposit(pendingDeposit);
+
     res.status(201).json({
       message: 'Deposit request submitted successfully. Funds will be available once verified by our team.',
       pendingDeposit: {
@@ -94,6 +98,9 @@ router.post('/withdraw', async (req, res) => {
       userEmail: user.email,
       userName: user.email.split('@')[0]
     });
+
+    // Send real-time notification to admins
+    websocketService.notifyNewWithdrawal(withdrawal);
 
     res.status(201).json({
       message: 'Withdrawal request submitted successfully. Funds will be processed within 5-7 business days.',
