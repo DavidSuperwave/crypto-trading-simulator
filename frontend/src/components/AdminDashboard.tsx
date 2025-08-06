@@ -137,56 +137,25 @@ const AdminDashboard: React.FC = () => {
 
       const authHeaders = getAuthHeaders();
 
-      console.log('🔍 AdminDashboard: Starting API calls...');
-      
-      // Make API calls individually with detailed error reporting
-      const apiCalls = [
-        { name: 'Admin Dashboard', endpoint: API_CONFIG.ENDPOINTS.ADMIN_DASHBOARD, setter: (data: any) => setOverview(data.overview) },
-        { name: 'Admin Users', endpoint: API_CONFIG.ENDPOINTS.ADMIN_USERS, setter: setUsers },
-        { name: 'Admin Transactions', endpoint: API_CONFIG.ENDPOINTS.ADMIN_TRANSACTIONS, setter: setTransactions },
-        { name: 'Admin Withdrawals', endpoint: API_CONFIG.ENDPOINTS.ADMIN_WITHDRAWALS, setter: setWithdrawals },
-        { name: 'Admin Demos', endpoint: API_CONFIG.ENDPOINTS.ADMIN_DEMOS, setter: setDemos },
-        { name: 'Admin Pending Deposits', endpoint: API_CONFIG.ENDPOINTS.ADMIN_PENDING_DEPOSITS, setter: (data: any) => setPendingDeposits(data.pendingDeposits || []) },
-        { name: 'Chat Admin Conversations', endpoint: API_CONFIG.ENDPOINTS.CHAT_ADMIN_CONVERSATIONS, setter: (data: any) => setChatConversations(data.conversations || []) }
-      ];
+      const [overviewRes, usersRes, transactionsRes, withdrawalsRes, demosRes, pendingDepositsRes, chatRes] = await Promise.all([
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_DASHBOARD), authHeaders),
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_USERS), authHeaders),
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_TRANSACTIONS), authHeaders),
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_WITHDRAWALS), authHeaders),
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_DEMOS), authHeaders),
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_PENDING_DEPOSITS), authHeaders),
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.CHAT_ADMIN_CONVERSATIONS), authHeaders)
+      ]);
 
-      const results = await Promise.allSettled(
-        apiCalls.map(call => 
-          axios.get(buildApiUrl(call.endpoint), authHeaders)
-            .then(response => ({ success: true, name: call.name, data: response.data, setter: call.setter }))
-            .catch(error => ({ success: false, name: call.name, error, endpoint: call.endpoint }))
-        )
-      );
-
-      let hasErrors = false;
-      results.forEach((result, index) => {
-        if (result.status === 'fulfilled') {
-          const resultValue = result.value as any;
-          if (resultValue.success) {
-            console.log(`✅ ${resultValue.name}: SUCCESS`);
-            resultValue.setter(resultValue.data);
-          } else {
-            hasErrors = true;
-            console.error(`❌ ${resultValue.name}: FAILED`);
-            console.error(`   Endpoint: ${resultValue.endpoint}`);
-            console.error(`   Status: ${resultValue.error.response?.status || 'Network Error'}`);
-            console.error(`   Message: ${resultValue.error.response?.data?.error || resultValue.error.message}`);
-            console.error(`   Full Error:`, resultValue.error);
-          }
-        } else {
-          hasErrors = true;
-          console.error(`❌ ${apiCalls[index].name}: PROMISE FAILED`, result.reason);
-        }
-      });
-
-      if (hasErrors) {
-        console.error('🚨 Some admin dashboard API calls failed. See details above.');
-      } else {
-        console.log('🎉 All admin dashboard API calls succeeded!');
-      }
-
+      setOverview(overviewRes.data.overview);
+      setUsers(usersRes.data);
+      setTransactions(transactionsRes.data);
+      setWithdrawals(withdrawalsRes.data);
+      setDemos(demosRes.data);
+      setPendingDeposits(pendingDepositsRes.data.pendingDeposits || []);
+      setChatConversations(chatRes.data.conversations || []);
     } catch (error) {
-      console.error('❌ Unexpected error in fetchDashboardData:', error);
+      console.error('Failed to fetch dashboard data:', error);
     }
   };
 
