@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { Send, User, Shield, Phone } from 'lucide-react';
 import axios from 'axios';
 import { buildApiUrl, API_CONFIG } from '../config/api';
-import { useRealTimeNotifications } from '../hooks/useRealTimeNotifications';
+import { useHybridNotifications } from '../hooks/useHybridNotifications';
 
 interface ChatMessage {
   id: string;
@@ -24,10 +24,10 @@ const ChatWidget: React.FC = () => {
   const [unreadCount, setUnreadCount] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Real-time notifications for new chat messages
-  const { isConnected, sendTypingIndicator } = useRealTimeNotifications({
+  // Hybrid real-time notifications for new chat messages (WebSocket with polling fallback)
+  const { isConnected, mode, statusMessage } = useHybridNotifications({
     onNewChatMessage: (message) => {
-      console.log('📨 New chat message received:', message);
+      console.log(`📨 New chat message received (${mode}):`, message);
       // Convert timestamp to Date object to match interface
       const chatMessage: ChatMessage = {
         ...message,
@@ -192,9 +192,9 @@ const ChatWidget: React.FC = () => {
                 width: '8px',
                 height: '8px',
                 borderRadius: '50%',
-                background: '#10B981'
+                background: isConnected ? '#10B981' : '#F59E0B'
               }} />
-              <span style={{ fontSize: '0.7rem', opacity: 0.9 }}>En línea</span>
+              <span style={{ fontSize: '0.7rem', opacity: 0.9 }}>{statusMessage}</span>
             </div>
           </div>
           {unreadCount > 0 && (

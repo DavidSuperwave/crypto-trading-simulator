@@ -83,15 +83,25 @@ export const usePollingNotifications = (options: PollingNotificationsOptions = {
         }
 
       } else {
-        // User polling: Check for deposit/withdrawal status updates
-        const [depositsResponse, withdrawalsResponse] = await Promise.allSettled([
+        // User polling: Check for deposit/withdrawal status updates AND chat messages
+        const [depositsResponse, withdrawalsResponse, chatResponse] = await Promise.allSettled([
           axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.USER_PENDING_DEPOSITS), { headers }),
-          axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.USER_WITHDRAWALS), { headers })
+          axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.USER_WITHDRAWALS), { headers }),
+          axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.CHAT_MESSAGES), { headers })
         ]);
 
+        // Check for new chat messages for users
+        if (chatResponse.status === 'fulfilled') {
+          const messages = chatResponse.value.data;
+          const newMessages = messages.filter((msg: any) => new Date(msg.timestamp) > lastCheckTime);
+          newMessages.forEach((message: ChatMessage) => {
+            console.log('📊 Polling: New chat message detected (user):', message);
+            onNewChatMessage?.(message);
+          });
+        }
+
         // Check for status updates (simplified - would need to track previous states)
-        // For now, just log that we're polling
-        console.log('📊 Polling: Checking for user status updates');
+        console.log('📊 Polling: Checking for user status updates and chat messages');
       }
 
       setLastCheckTime(checkTime);
