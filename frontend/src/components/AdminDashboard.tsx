@@ -4,7 +4,8 @@ import AdminSidebar from './AdminSidebar';
 import axios from 'axios';
 import { buildApiUrl, API_CONFIG } from '../config/api';
 import { useAuth } from '../context/AuthContext';
-import { useRealTimeNotifications, DepositNotification, WithdrawalNotification, ChatMessage } from '../hooks/useRealTimeNotifications';
+import { useHybridNotifications } from '../hooks/useHybridNotifications';
+import { DepositNotification, WithdrawalNotification, ChatMessage } from '../hooks/useRealTimeNotifications';
 import ConnectionStatus from './ConnectionStatus';
 import NotificationBadge from './NotificationBadge';
 import WebSocketDebug from './WebSocketDebug';
@@ -90,11 +91,20 @@ const AdminDashboard: React.FC = () => {
     role: 'user'
   });
 
-  // Real-time notifications for admin dashboard
-  const { isConnected, connectionStatus, notifications, unreadCount, clearNotification } = useRealTimeNotifications({
+  // Notification state
+  const [unreadCount, setUnreadCount] = useState(0);
+  
+  const clearNotification = (id: string) => {
+    // Simple implementation - just decrement count
+    setUnreadCount(prev => Math.max(0, prev - 1));
+  };
+
+  // Hybrid real-time notifications (WebSocket with polling fallback)
+  const { mode, connectionStatus, isConnected, statusMessage } = useHybridNotifications({
     onNewDeposit: (deposit) => {
-      console.log('💰 New deposit request:', deposit);
+      console.log(`💰 New deposit request (${mode}):`, deposit);
       setPendingDeposits(prev => [deposit, ...prev]);
+      setUnreadCount(prev => prev + 1);
       
       // Show browser notification if permission granted
       if (Notification.permission === 'granted') {
@@ -105,8 +115,9 @@ const AdminDashboard: React.FC = () => {
       }
     },
     onNewWithdrawal: (withdrawal) => {
-      console.log('💸 New withdrawal request:', withdrawal);
+      console.log(`💸 New withdrawal request (${mode}):`, withdrawal);
       setWithdrawals(prev => [withdrawal, ...prev]);
+      setUnreadCount(prev => prev + 1);
       
       // Show browser notification if permission granted
       if (Notification.permission === 'granted') {
@@ -117,7 +128,7 @@ const AdminDashboard: React.FC = () => {
       }
     },
     onNewChatMessage: (message) => {
-      console.log('💬 New chat message from user:', message);
+      console.log(`💬 New chat message from user (${mode}):`, message);
       
       // Update chat conversations with new message
       setChatConversations(prev => {
@@ -135,6 +146,7 @@ const AdminDashboard: React.FC = () => {
         // If conversation doesn't exist, it will be handled by next dashboard refresh
         return updated;
       });
+      setUnreadCount(prev => prev + 1);
       
       // Show browser notification if permission granted
       if (Notification.permission === 'granted') {
@@ -406,10 +418,26 @@ const AdminDashboard: React.FC = () => {
             
             {/* Status Indicators */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <ConnectionStatus 
-                isConnected={isConnected} 
-                connectionStatus={connectionStatus}
-              />
+              <div style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '0.5rem',
+                padding: '0.5rem 1rem',
+                background: isConnected ? '#dcfce7' : '#fee2e2',
+                border: `1px solid ${isConnected ? '#16a34a' : '#dc2626'}`,
+                borderRadius: '9999px',
+                fontSize: '0.75rem',
+                fontWeight: '500',
+                color: isConnected ? '#16a34a' : '#dc2626'
+              }}>
+                <div style={{
+                  width: '8px',
+                  height: '8px',
+                  borderRadius: '50%',
+                  backgroundColor: isConnected ? '#16a34a' : '#dc2626'
+                }}></div>
+                {statusMessage}
+              </div>
               <NotificationBadge 
                 count={unreadCount} 
                 onClick={() => console.log('Show notifications panel')}
