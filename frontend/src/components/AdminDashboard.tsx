@@ -988,7 +988,8 @@ const AdminDashboard: React.FC = () => {
                     padding: '1rem', 
                     borderBottom: '1px solid #e5e7eb',
                     background: 'white',
-                    fontWeight: '600'
+                    fontWeight: '600',
+                    color: '#000'
                   }}>
                     Customer Conversations
                   </div>
@@ -1023,7 +1024,7 @@ const AdminDashboard: React.FC = () => {
                             }
                           }}
                         >
-                          <div style={{ fontWeight: '600', marginBottom: '0.25rem' }}>
+                          <div style={{ fontWeight: '600', marginBottom: '0.25rem', color: '#000' }}>
                             {conversation.userEmail}
                           </div>
                           <div style={{ 
@@ -1082,7 +1083,8 @@ const AdminDashboard: React.FC = () => {
                         padding: '1rem', 
                         borderBottom: '1px solid #e5e7eb',
                         fontWeight: '600',
-                        background: '#f8fafc'
+                        background: '#f8fafc',
+                        color: '#000'
                       }}>
                         Chat with {chatConversations.find(c => c.userId === selectedChatUser)?.userEmail}
                       </div>
