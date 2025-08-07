@@ -799,26 +799,26 @@ const AdminDashboard: React.FC = () => {
               <div style={{ overflowX: 'auto' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                   <thead>
-                    <tr style={{ background: '#f8fafc' }}>
-                      <th style={{ padding: '12px', textAlign: 'left', color: '#000' }}>User</th>
-                      <th style={{ padding: '12px', textAlign: 'left', color: '#000' }}>Amount</th>
-                      <th style={{ padding: '12px', textAlign: 'left', color: '#000' }}>Plan</th>
-                      <th style={{ padding: '12px', textAlign: 'left', color: '#000' }}>Method</th>
-                      <th style={{ padding: '12px', textAlign: 'left', color: '#000' }}>Status</th>
-                      <th style={{ padding: '12px', textAlign: 'left', color: '#000' }}>Date</th>
-                      <th style={{ padding: '12px', textAlign: 'left', color: '#000' }}>Actions</th>
+                    <tr style={{ background: '#374151' }}>
+                      <th style={{ padding: '12px', textAlign: 'left', color: 'white' }}>User</th>
+                      <th style={{ padding: '12px', textAlign: 'left', color: 'white' }}>Amount</th>
+                      <th style={{ padding: '12px', textAlign: 'left', color: 'white' }}>Plan</th>
+                      <th style={{ padding: '12px', textAlign: 'left', color: 'white' }}>Method</th>
+                      <th style={{ padding: '12px', textAlign: 'left', color: 'white' }}>Status</th>
+                      <th style={{ padding: '12px', textAlign: 'left', color: 'white' }}>Date</th>
+                      <th style={{ padding: '12px', textAlign: 'left', color: 'white' }}>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {pendingDeposits.map((deposit) => (
                       <tr key={deposit.id} style={{ borderBottom: '1px solid #eee' }}>
-                        <td style={{ padding: '12px', fontWeight: '600' }}>
+                        <td style={{ padding: '12px', fontWeight: '600', color: '#000' }}>
                           {deposit.userEmail}
                         </td>
                         <td style={{ padding: '12px', fontWeight: '600', color: '#10b981' }}>
                           ${deposit.amount.toLocaleString()}
                         </td>
-                        <td style={{ padding: '12px', textTransform: 'capitalize' }}>
+                        <td style={{ padding: '12px', textTransform: 'capitalize', color: '#000' }}>
                           {deposit.plan}
                         </td>
                         <td style={{ padding: '12px', textTransform: 'capitalize' }}>
