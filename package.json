@@ -11,7 +11,15 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "keywords": ["crypto", "trading", "simulator", "dashboard"],
+  "keywords": [
+    "crypto",
+    "trading",
+    "simulator",
+    "dashboard"
+  ],
   "author": "DavidSuperwave",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^8.18.3"
+  }
 }

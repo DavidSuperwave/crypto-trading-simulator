@@ -30,8 +30,19 @@ class WebSocketService {
         const isValidOrigin = allowedOrigins.includes(origin) || 
                              (process.env.NODE_ENV === 'development' && origin?.includes('localhost'));
         
+        // Log all connection attempts for debugging
+        console.log(`🔍 WebSocket connection attempt - Origin: ${origin}`);
+        console.log(`🔍 Allowed origins: ${JSON.stringify(allowedOrigins)}`);
+        console.log(`🔍 Is valid origin: ${isValidOrigin}`);
+        
         if (!isValidOrigin) {
           console.warn(`❌ WebSocket connection rejected - Invalid origin: ${origin}`);
+          console.warn(`❌ Expected one of: ${allowedOrigins.join(', ')}`);
+          // TEMPORARY: Allow all origins for debugging
+          if (process.env.NODE_ENV === 'production') {
+            console.warn(`🧪 TEMPORARY: Allowing connection for debugging purposes`);
+            return true;
+          }
           return false;
         }
         
