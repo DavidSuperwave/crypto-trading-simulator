@@ -13,10 +13,12 @@ interface User {
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
+  isLoading: boolean;
   login: (email: string, password: string) => Promise<User | null>;
   logout: () => void;
   register: (email: string, password: string, role?: string) => Promise<User | null>;
   updateUser: (userData: Partial<User>) => void;
+  getAuthHeaders: () => { Authorization: string } | {};
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -24,6 +26,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Check for stored token on app start
@@ -31,19 +34,27 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     if (token) {
       // Verify token and get user data
       fetchUserProfile(token);
+    } else {
+      setIsLoading(false);
     }
   }, []);
 
   const fetchUserProfile = async (token: string) => {
+    setIsLoading(true);
     try {
       const response = await axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.USER_PROFILE), {
         headers: { Authorization: `Bearer ${token}` }
       });
       setUser(response.data);
       setIsAuthenticated(true);
+      console.log('✅ Automatically logged in from stored token');
     } catch (error) {
       console.error('Token verification failed:', error);
       localStorage.removeItem('token');
+      setUser(null);
+      setIsAuthenticated(false);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -92,6 +103,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     localStorage.removeItem('token');
     setUser(null);
     setIsAuthenticated(false);
+    setIsLoading(false);
+    console.log('🚪 User logged out');
   };
 
   const updateUser = (userData: Partial<User>) => {
@@ -100,14 +113,21 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
+  const getAuthHeaders = () => {
+    const token = localStorage.getItem('token');
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  };
+
   return (
     <AuthContext.Provider value={{
       user,
       isAuthenticated,
+      isLoading,
       login,
       logout,
       register,
-      updateUser
+      updateUser,
+      getAuthHeaders
     }}>
       {children}
     </AuthContext.Provider>
