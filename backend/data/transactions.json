@@ -1814,5 +1814,23 @@
     "status": "completed",
     "description": "Daily interest: 2.50%",
     "createdAt": "2025-08-07T02:00:00.199Z"
+  },
+  {
+    "id": "deede678-3f3c-4ee9-bf11-f03f0c551d46",
+    "type": "interest",
+    "amount": 2930.3416803325945,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 2.09%",
+    "createdAt": "2025-08-07T02:05:00.155Z"
+  },
+  {
+    "id": "c84a488d-431c-48c0-8978-6edd2c0c92d7",
+    "type": "interest",
+    "amount": 107.44129804350953,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 0.34%",
+    "createdAt": "2025-08-07T02:05:00.167Z"
   }
 ]
