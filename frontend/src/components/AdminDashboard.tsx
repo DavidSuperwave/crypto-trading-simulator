@@ -730,7 +730,7 @@ const AdminDashboard: React.FC = () => {
                       <th style={{ padding: '12px', textAlign: 'left', color: '#000' }}>Balance</th>
                       <th style={{ padding: '12px', textAlign: 'left', color: '#000' }}>Total Interest</th>
                       <th style={{ padding: '12px', textAlign: 'left', color: '#000' }}>Joined</th>
-                      <th style={{ padding: '12px', textAlign: 'left', color: '#000' }}>Actions</th>
+                      <th style={{ padding: '12px', textAlign: 'left', color: '#000' }}>Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -758,46 +758,24 @@ const AdminDashboard: React.FC = () => {
                           {formatDate(user.createdAt)}
                         </td>
                         <td style={{ padding: '12px' }}>
-                          <div style={{ display: 'flex', gap: '0.5rem' }}>
-                            <button
-                              onClick={() => setSelectedUser(user)}
-                              style={{
-                                background: '#667eea',
-                                color: 'white',
-                                border: 'none',
-                                padding: '6px 12px',
-                                borderRadius: '4px',
-                                fontSize: '0.8rem',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.25rem'
-                              }}
-                            >
-                              <Eye size={12} />
-                              View
-                            </button>
-                            <button
-                              onClick={() => handleDeleteUser(user.id, user.email)}
-                              disabled={loading}
-                              style={{
-                                background: '#ef4444',
-                                color: 'white',
-                                border: 'none',
-                                padding: '6px 12px',
-                                borderRadius: '4px',
-                                fontSize: '0.8rem',
-                                cursor: loading ? 'not-allowed' : 'pointer',
-                                opacity: loading ? 0.6 : 1,
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.25rem'
-                              }}
-                            >
-                              <X size={12} />
-                              Delete
-                            </button>
-                          </div>
+                          <button
+                            onClick={() => setSelectedUser(user)}
+                            style={{
+                              background: '#667eea',
+                              color: 'white',
+                              border: 'none',
+                              padding: '6px 12px',
+                              borderRadius: '4px',
+                              fontSize: '0.8rem',
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '0.25rem'
+                            }}
+                          >
+                            <Eye size={12} />
+                            View
+                          </button>
                         </td>
                       </tr>
                     ))}
@@ -1370,21 +1348,49 @@ const AdminDashboard: React.FC = () => {
               <p style={{ color: '#000' }}><strong>Total Interest:</strong> {formatCurrency(selectedUser.totalInterest)}</p>
               <p style={{ color: '#000' }}><strong>Joined:</strong> {formatDate(selectedUser.createdAt)}</p>
             </div>
-            <button
-              onClick={() => setSelectedUser(null)}
-              style={{
-                background: '#667eea',
-                color: 'white',
-                border: 'none',
-                padding: '12px 24px',
-                borderRadius: '8px',
-                fontSize: '16px',
-                fontWeight: '600',
-                cursor: 'pointer'
-              }}
-            >
-              Close
-            </button>
+            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
+              <button
+                onClick={() => {
+                  if (window.confirm(`Are you sure you want to delete user ${selectedUser.email}? This action cannot be undone.`)) {
+                    handleDeleteUser(selectedUser.id, selectedUser.email);
+                    setSelectedUser(null);
+                  }
+                }}
+                disabled={loading}
+                style={{
+                  background: '#ef4444',
+                  color: 'white',
+                  border: 'none',
+                  padding: '12px 24px',
+                  borderRadius: '8px',
+                  fontSize: '16px',
+                  fontWeight: '600',
+                  cursor: loading ? 'not-allowed' : 'pointer',
+                  opacity: loading ? 0.6 : 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem'
+                }}
+              >
+                <X size={16} />
+                Delete User
+              </button>
+              <button
+                onClick={() => setSelectedUser(null)}
+                style={{
+                  background: '#667eea',
+                  color: 'white',
+                  border: 'none',
+                  padding: '12px 24px',
+                  borderRadius: '8px',
+                  fontSize: '16px',
+                  fontWeight: '600',
+                  cursor: 'pointer'
+                }}
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}
