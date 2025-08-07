@@ -732,13 +732,13 @@ const AdminDashboard: React.FC = () => {
                 </style>
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                   <thead>
-                    <tr style={{ background: 'white' }}>
-                      <th style={{ padding: '12px', textAlign: 'left', color: '#000' }}>Email</th>
-                      <th style={{ padding: '12px', textAlign: 'left', color: '#000' }}>Role</th>
-                      <th style={{ padding: '12px', textAlign: 'left', color: '#000' }}>Balance</th>
-                      <th style={{ padding: '12px', textAlign: 'left', color: '#000' }}>Total Interest</th>
-                      <th style={{ padding: '12px', textAlign: 'left', color: '#000' }}>Joined</th>
-                      <th style={{ padding: '12px', textAlign: 'left', color: '#000' }}>Action</th>
+                    <tr style={{ background: '#374151' }}>
+                      <th style={{ padding: '12px', textAlign: 'left', color: 'white' }}>Email</th>
+                      <th style={{ padding: '12px', textAlign: 'left', color: 'white' }}>Role</th>
+                      <th style={{ padding: '12px', textAlign: 'left', color: 'white' }}>Balance</th>
+                      <th style={{ padding: '12px', textAlign: 'left', color: 'white' }}>Total Interest</th>
+                      <th style={{ padding: '12px', textAlign: 'left', color: 'white' }}>Joined</th>
+                      <th style={{ padding: '12px', textAlign: 'left', color: 'white' }}>Action</th>
                     </tr>
                   </thead>
                   <tbody>
