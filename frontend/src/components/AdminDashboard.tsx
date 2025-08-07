@@ -309,7 +309,11 @@ const AdminDashboard: React.FC = () => {
     const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
     return `$${(numAmount || 0).toFixed(2)}`;
   };
-  const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString();
+  const formatDate = (dateString: string) => {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return isNaN(date.getTime()) ? 'N/A' : date.toLocaleDateString();
+  };
 
   const getStatusBadge = (status: string) => {
     const styles = {
@@ -720,7 +724,7 @@ const AdminDashboard: React.FC = () => {
               <div style={{ overflowX: 'auto' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                   <thead>
-                    <tr style={{ background: '#f8fafc' }}>
+                    <tr style={{ background: 'white' }}>
                       <th style={{ padding: '12px', textAlign: 'left', color: '#000' }}>Email</th>
                       <th style={{ padding: '12px', textAlign: 'left', color: '#000' }}>Role</th>
                       <th style={{ padding: '12px', textAlign: 'left', color: '#000' }}>Balance</th>
@@ -732,7 +736,7 @@ const AdminDashboard: React.FC = () => {
                   <tbody>
                     {users.map((user) => (
                       <tr key={user.id} style={{ borderBottom: '1px solid #eee' }}>
-                        <td style={{ padding: '12px', fontWeight: '600' }}>{user.email}</td>
+                        <td style={{ padding: '12px', fontWeight: '600', color: '#000' }}>{user.email}</td>
                         <td style={{ padding: '12px' }}>
                           <span style={{
                             background: user.role === 'admin' ? '#dbeafe' : '#f3f4f6',
@@ -744,7 +748,7 @@ const AdminDashboard: React.FC = () => {
                             {user.role}
                           </span>
                         </td>
-                        <td style={{ padding: '12px', fontWeight: '600' }}>
+                        <td style={{ padding: '12px', fontWeight: '600', color: '#000' }}>
                           {formatCurrency(user.balance)}
                         </td>
                         <td style={{ padding: '12px', color: '#10b981', fontWeight: '600' }}>
