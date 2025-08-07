@@ -1364,11 +1364,11 @@ const AdminDashboard: React.FC = () => {
           }}>
             <h3 style={{ margin: '0 0 1.5rem 0', color: '#000' }}>User Details</h3>
             <div style={{ marginBottom: '1.5rem' }}>
-              <p><strong>Email:</strong> {selectedUser.email}</p>
-              <p><strong>Role:</strong> {selectedUser.role}</p>
-              <p><strong>Balance:</strong> {formatCurrency(selectedUser.balance)}</p>
-              <p><strong>Total Interest:</strong> {formatCurrency(selectedUser.totalInterest)}</p>
-              <p><strong>Joined:</strong> {formatDate(selectedUser.createdAt)}</p>
+              <p style={{ color: '#000' }}><strong>Email:</strong> {selectedUser.email}</p>
+              <p style={{ color: '#000' }}><strong>Role:</strong> {selectedUser.role}</p>
+              <p style={{ color: '#000' }}><strong>Balance:</strong> {formatCurrency(selectedUser.balance)}</p>
+              <p style={{ color: '#000' }}><strong>Total Interest:</strong> {formatCurrency(selectedUser.totalInterest)}</p>
+              <p style={{ color: '#000' }}><strong>Joined:</strong> {formatDate(selectedUser.createdAt)}</p>
             </div>
             <button
               onClick={() => setSelectedUser(null)}
