@@ -67,6 +67,18 @@ app.get('/api/websocket/health', (req, res) => {
   });
 });
 
+// Fallback HTTP route for WebSocket endpoint (DigitalOcean App Platform compatibility)
+app.get('/ws', (req, res) => {
+  res.status(426).json({
+    error: 'Upgrade Required',
+    message: 'This endpoint requires WebSocket upgrade',
+    upgrade: 'websocket',
+    expectedProtocol: 'wss://',
+    currentRequest: 'HTTP/1.1',
+    solution: 'Use WebSocket client instead of HTTP'
+  });
+});
+
 
 
 // Error handling middleware
@@ -92,13 +104,27 @@ const server = http.createServer(app);
 // Initialize WebSocket service
 websocketService.initialize(server);
 
-server.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`🔌 WebSocket endpoint: ws://localhost:${PORT}/ws`);
-  console.log(`🔗 API Health Check: http://localhost:${PORT}/api/health`);
-  console.log(`📊 Admin Dashboard: http://localhost:3000/admin`);
-  console.log(`👤 User Dashboard: http://localhost:3000/user`);
-  console.log(`🎯 Demo Dashboard: http://localhost:3000/demo`);
+server.listen(PORT, '0.0.0.0', () => {
+  const env = process.env.NODE_ENV || 'development';
+  const baseUrl = env === 'production' 
+    ? 'https://coral-app-bh2u4.ondigitalocean.app' 
+    : `http://localhost:${PORT}`;
+    
+  console.log(`🚀 Server running on port ${PORT} (${env})`);
+  console.log(`🔗 Health check: ${baseUrl}/api/health`);
+  console.log(`🔌 WebSocket health: ${baseUrl}/api/websocket/health`);
+  console.log(`🔌 WebSocket endpoint: ${baseUrl.replace('http', 'ws')}/ws`);
+  console.log(`📱 Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:3000'}`);
+  
+  // Log WebSocket service status
+  console.log(`🔌 WebSocket service initialized: ${websocketService.wss !== null}`);
+  
+  // Development URLs
+  if (env === 'development') {
+    console.log(`📊 Admin Dashboard: http://localhost:3000/admin`);
+    console.log(`👤 User Dashboard: http://localhost:3000/user`);
+    console.log(`🎯 Demo Dashboard: http://localhost:3000/demo`);
+  }
   
   // Initialize scheduler for automated tasks
   try {

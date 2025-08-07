@@ -1,0 +1,52 @@
+name: crypto-trading-simulator
+services:
+- name: backend
+  source_dir: /backend
+  github:
+    repo: DavidSuperwave/crypto-trading-simulator
+    branch: main
+  run_command: npm start
+  environment_slug: node-js
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  http_port: 5001
+  routes:
+  - path: /
+  # Enable WebSocket upgrade support
+  cors:
+    allow_origins:
+    - exact: https://crypto-trading-simulator-five.vercel.app
+    - exact: https://crypto-trading-simulator-duk9upmqa.vercel.app
+    - exact: http://localhost:3000
+    allow_headers:
+    - Content-Type
+    - Authorization
+    - X-Requested-With
+    - Accept
+    - Origin
+    - Upgrade
+    - Connection
+    - Sec-WebSocket-Key
+    - Sec-WebSocket-Version
+    - Sec-WebSocket-Protocol
+    allow_methods:
+    - GET
+    - POST
+    - PUT
+    - DELETE
+    - OPTIONS
+    - PATCH
+  envs:
+  - key: NODE_ENV
+    value: production
+  - key: JWT_SECRET
+    scope: RUN_TIME
+    type: SECRET
+  - key: FRONTEND_URL
+    value: https://crypto-trading-simulator-five.vercel.app
+  - key: WS_MAX_PAYLOAD
+    value: "16384"
+  - key: WS_CONNECTION_TIMEOUT
+    value: "1800000"
+  - key: CORS_ORIGIN
+    value: https://crypto-trading-simulator-five.vercel.app

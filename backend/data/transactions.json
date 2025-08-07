@@ -1346,5 +1346,41 @@
     "status": "completed",
     "description": "Daily interest: 0.98%",
     "createdAt": "2025-08-06T23:50:00.109Z"
+  },
+  {
+    "id": "022c5983-f3d7-40e9-85ae-0fd5da2c8b30",
+    "type": "interest",
+    "amount": 1754.7372192689902,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 1.76%",
+    "createdAt": "2025-08-06T23:55:00.080Z"
+  },
+  {
+    "id": "35b8d5a8-72ce-44d8-bdd6-d31f4e3abdf8",
+    "type": "interest",
+    "amount": 95.90850327587529,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 0.41%",
+    "createdAt": "2025-08-06T23:55:00.089Z"
+  },
+  {
+    "id": "5febf293-7e91-4255-9b35-599ac6661ac8",
+    "type": "interest",
+    "amount": 1790.9786213349012,
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "status": "completed",
+    "description": "Daily interest: 1.76%",
+    "createdAt": "2025-08-07T00:00:00.063Z"
+  },
+  {
+    "id": "4dd35f48-3731-4e69-82a5-7bddd96f4ec4",
+    "type": "interest",
+    "amount": 272.01623942359475,
+    "userId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "status": "completed",
+    "description": "Daily interest: 1.15%",
+    "createdAt": "2025-08-07T00:00:00.068Z"
   }
 ]
