@@ -83,6 +83,7 @@ const AdminDashboard: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [selectedChatUser, setSelectedChatUser] = useState<string | null>(null);
+  const [showWebSocketDebug, setShowWebSocketDebug] = useState(false);
 
   // Function to handle chat selection and mark messages as read
   const handleChatSelection = async (userId: string) => {
@@ -1452,9 +1453,53 @@ const AdminDashboard: React.FC = () => {
         </div>
       )}
       
-      {/* WebSocket Debug Component - Only show in development or for debugging */}
+      {/* WebSocket Debug Toggle - Only show in development or for debugging */}
       {(process.env.NODE_ENV === 'development' || window.location.search.includes('debug=ws')) && (
-        <WebSocketDebug />
+        <>
+          {/* Floating toggle button */}
+          <button
+            onClick={() => setShowWebSocketDebug(!showWebSocketDebug)}
+            style={{
+              position: 'fixed',
+              bottom: '20px',
+              right: '20px',
+              background: showWebSocketDebug ? '#ef4444' : '#10b981',
+              color: 'white',
+              border: 'none',
+              borderRadius: '50%',
+              width: '50px',
+              height: '50px',
+              cursor: 'pointer',
+              zIndex: 9999,
+              fontSize: '12px',
+              fontWeight: '600',
+              boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
+              transition: 'all 0.2s ease'
+            }}
+            title={showWebSocketDebug ? 'Hide WebSocket Debug' : 'Show WebSocket Debug'}
+          >
+            {showWebSocketDebug ? '✕' : 'WS'}
+          </button>
+          
+          {/* WebSocket Debug Component */}
+          {showWebSocketDebug && (
+            <div style={{
+              position: 'fixed',
+              bottom: '80px',
+              right: '20px',
+              zIndex: 9998,
+              background: 'white',
+              border: '2px solid #e5e7eb',
+              borderRadius: '8px',
+              boxShadow: '0 8px 16px rgba(0,0,0,0.1)',
+              maxWidth: '400px',
+              maxHeight: '300px',
+              overflow: 'auto'
+            }}>
+              <WebSocketDebug />
+            </div>
+          )}
+        </>
       )}
       </div>
     </div>
