@@ -22,7 +22,13 @@ class PostgreSQLDatabase {
   // User operations
   async getAllUsers() {
     const result = await this.query('SELECT * FROM users ORDER BY created_at DESC');
-    return result.rows;
+    // Convert snake_case to camelCase for frontend compatibility
+    return result.rows.map(user => ({
+      ...user,
+      createdAt: user.created_at,
+      updatedAt: user.updated_at,
+      totalInterest: user.total_interest
+    }));
   }
 
   async createUser(userData) {
@@ -41,17 +47,43 @@ class PostgreSQLDatabase {
       userData.totalInterest || 0
     ];
     const result = await this.query(query, values);
-    return result.rows[0];
+    const user = result.rows[0];
+    
+    // Convert snake_case to camelCase for frontend compatibility
+    return {
+      ...user,
+      createdAt: user.created_at,
+      updatedAt: user.updated_at,
+      totalInterest: user.total_interest
+    };
   }
 
   async getUserById(id) {
     const result = await this.query('SELECT * FROM users WHERE id = $1', [id]);
-    return result.rows[0];
+    const user = result.rows[0];
+    if (!user) return null;
+    
+    // Convert snake_case to camelCase for frontend compatibility
+    return {
+      ...user,
+      createdAt: user.created_at,
+      updatedAt: user.updated_at,
+      totalInterest: user.total_interest
+    };
   }
 
   async getUserByEmail(email) {
     const result = await this.query('SELECT * FROM users WHERE email = $1', [email]);
-    return result.rows[0];
+    const user = result.rows[0];
+    if (!user) return null;
+    
+    // Convert snake_case to camelCase for frontend compatibility
+    return {
+      ...user,
+      createdAt: user.created_at,
+      updatedAt: user.updated_at,
+      totalInterest: user.total_interest
+    };
   }
 
   async updateUser(id, updates) {
