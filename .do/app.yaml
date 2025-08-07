@@ -9,7 +9,7 @@ services:
   environment_slug: node-js
   instance_count: 1
   instance_size_slug: basic-xxs
-  http_port: 5001
+  http_port: 8080
   routes:
   - path: /
   # Enable WebSocket upgrade support
@@ -29,6 +29,7 @@ services:
     - Sec-WebSocket-Key
     - Sec-WebSocket-Version
     - Sec-WebSocket-Protocol
+    - Sec-WebSocket-Extensions
     allow_methods:
     - GET
     - POST

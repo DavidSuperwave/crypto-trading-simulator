@@ -18,7 +18,7 @@ const demoRoutes = require('./routes/demo');
 const chatRoutes = require('./routes/chat');
 
 const app = express();
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || (process.env.NODE_ENV === 'production' ? 8080 : 5001);
 
 // Middleware
 const corsOptions = {
@@ -67,6 +67,18 @@ app.get('/api/websocket/health', (req, res) => {
   });
 });
 
+// WebSocket test endpoint that doesn't require authentication
+app.get('/ws-test', (req, res) => {
+  res.status(426).json({
+    error: 'WebSocket Test Endpoint',
+    message: 'This endpoint is for testing WebSocket upgrades',
+    protocol: req.headers.upgrade,
+    connection: req.headers.connection,
+    headers: req.headers,
+    note: 'If you see this, WebSocket upgrade is not working'
+  });
+});
+
 // Fallback HTTP route for WebSocket endpoint (DigitalOcean App Platform compatibility)
 app.get('/ws', (req, res) => {
   res.status(426).json({
@@ -75,7 +87,13 @@ app.get('/ws', (req, res) => {
     upgrade: 'websocket',
     expectedProtocol: 'wss://',
     currentRequest: 'HTTP/1.1',
-    solution: 'Use WebSocket client instead of HTTP'
+    solution: 'Use WebSocket client instead of HTTP',
+    debug: {
+      headers: req.headers,
+      protocol: req.protocol,
+      url: req.url,
+      method: req.method
+    }
   });
 });
 
@@ -104,17 +122,21 @@ const server = http.createServer(app);
 // Initialize WebSocket service
 websocketService.initialize(server);
 
-server.listen(PORT, '0.0.0.0', () => {
+// Bind to 0.0.0.0 for external access (required for DigitalOcean App Platform)
+const HOST = process.env.HOST || '0.0.0.0';
+server.listen(PORT, HOST, () => {
   const env = process.env.NODE_ENV || 'development';
   const baseUrl = env === 'production' 
     ? 'https://coral-app-bh2u4.ondigitalocean.app' 
     : `http://localhost:${PORT}`;
     
-  console.log(`🚀 Server running on port ${PORT} (${env})`);
+  console.log(`🚀 Server running on ${HOST}:${PORT} (${env})`);
   console.log(`🔗 Health check: ${baseUrl}/api/health`);
   console.log(`🔌 WebSocket health: ${baseUrl}/api/websocket/health`);
   console.log(`🔌 WebSocket endpoint: ${baseUrl.replace('http', 'ws')}/ws`);
   console.log(`📱 Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:3000'}`);
+  console.log(`🌐 Binding to host: ${HOST} (required for external access)`);
+  console.log(`🔌 HTTP Port: ${PORT} (App Platform expects 8080 in production)`);
   
   // Log WebSocket service status
   console.log(`🔌 WebSocket service initialized: ${websocketService.wss !== null}`);

@@ -55,6 +55,7 @@ export const useWebSocket = (options: UseWebSocketOptions = {}) => {
       const isProduction = window.location.hostname !== 'localhost';
       
       if (isProduction) {
+        // Always use wss:// for production (App Platform runs over HTTPS with SSL)
         return `wss://coral-app-bh2u4.ondigitalocean.app/ws?token=${token}`;
       } else {
         return `ws://localhost:5001/ws?token=${token}`;
