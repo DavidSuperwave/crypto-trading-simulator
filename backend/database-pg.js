@@ -135,8 +135,23 @@ class PostgreSQLDatabase {
 
   // Withdrawal operations
   async getAllWithdrawals() {
-    const result = await this.query('SELECT * FROM withdrawals ORDER BY created_at DESC');
-    return result.rows;
+    const result = await this.query(`
+      SELECT 
+        w.*,
+        u.email as user_email
+      FROM withdrawals w
+      LEFT JOIN users u ON w.user_id = u.id
+      ORDER BY w.created_at DESC
+    `);
+    
+    // Convert snake_case to camelCase for frontend compatibility
+    return result.rows.map(withdrawal => ({
+      ...withdrawal,
+      userId: withdrawal.user_id,
+      userEmail: withdrawal.user_email,
+      createdAt: withdrawal.created_at,
+      updatedAt: withdrawal.updated_at
+    }));
   }
 
   async createWithdrawal(withdrawalData) {
@@ -158,8 +173,26 @@ class PostgreSQLDatabase {
   }
 
   async getWithdrawalById(id) {
-    const result = await this.query('SELECT * FROM withdrawals WHERE id = $1', [id]);
-    return result.rows[0];
+    const result = await this.query(`
+      SELECT 
+        w.*,
+        u.email as user_email
+      FROM withdrawals w
+      LEFT JOIN users u ON w.user_id = u.id
+      WHERE w.id = $1
+    `, [id]);
+    
+    const withdrawal = result.rows[0];
+    if (!withdrawal) return null;
+    
+    // Convert snake_case to camelCase for frontend compatibility
+    return {
+      ...withdrawal,
+      userId: withdrawal.user_id,
+      userEmail: withdrawal.user_email,
+      createdAt: withdrawal.created_at,
+      updatedAt: withdrawal.updated_at
+    };
   }
 
   async updateWithdrawal(id, updates) {

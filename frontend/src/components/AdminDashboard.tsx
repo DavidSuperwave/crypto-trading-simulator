@@ -217,8 +217,10 @@ const AdminDashboard: React.FC = () => {
       await axios.put(`${buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_WITHDRAWALS)}/${withdrawalId}`, { status }, getAuthHeaders());
       fetchDashboardData();
       alert(`Withdrawal ${status} successfully!`);
-    } catch (error) {
-      alert(`Failed to ${status} withdrawal. Please try again.`);
+    } catch (error: any) {
+      console.error('Withdrawal update error:', error);
+      const errorMessage = error.response?.data?.error || error.message || 'Unknown error';
+      alert(`Failed to ${status} withdrawal: ${errorMessage}`);
     } finally {
       setLoading(false);
     }
@@ -893,12 +895,12 @@ const AdminDashboard: React.FC = () => {
               <div style={{ overflowX: 'auto' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                   <thead>
-                    <tr style={{ background: '#f8fafc' }}>
-                      <th style={{ padding: '12px', textAlign: 'left', color: '#000' }}>User</th>
-                      <th style={{ padding: '12px', textAlign: 'left', color: '#000' }}>Amount</th>
-                      <th style={{ padding: '12px', textAlign: 'left', color: '#000' }}>Status</th>
-                      <th style={{ padding: '12px', textAlign: 'left', color: '#000' }}>Date</th>
-                      <th style={{ padding: '12px', textAlign: 'left', color: '#000' }}>Actions</th>
+                    <tr style={{ background: '#374151' }}>
+                      <th style={{ padding: '12px', textAlign: 'left', color: 'white' }}>User</th>
+                      <th style={{ padding: '12px', textAlign: 'left', color: 'white' }}>Amount</th>
+                      <th style={{ padding: '12px', textAlign: 'left', color: 'white' }}>Status</th>
+                      <th style={{ padding: '12px', textAlign: 'left', color: 'white' }}>Date</th>
+                      <th style={{ padding: '12px', textAlign: 'left', color: 'white' }}>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -906,10 +908,10 @@ const AdminDashboard: React.FC = () => {
                       const user = users.find(u => u.id === withdrawal.userId);
                       return (
                         <tr key={withdrawal.id} style={{ borderBottom: '1px solid #eee' }}>
-                          <td style={{ padding: '12px', fontWeight: '600' }}>
-                            {user?.email || 'Unknown User'}
+                          <td style={{ padding: '12px', fontWeight: '600', color: '#000' }}>
+                            {withdrawal.userEmail || user?.email || 'Unknown User'}
                           </td>
-                          <td style={{ padding: '12px', fontWeight: '600' }}>
+                          <td style={{ padding: '12px', fontWeight: '600', color: '#000' }}>
                             {formatCurrency(withdrawal.amount)}
                           </td>
                           <td style={{ padding: '12px' }}>
