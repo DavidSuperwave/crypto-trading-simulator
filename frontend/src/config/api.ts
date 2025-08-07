@@ -25,9 +25,10 @@ export const API_CONFIG = {
     ADMIN_PENDING_DEPOSITS: '/admin/pending-deposits',
     
     // Chat endpoints
-    CHAT_MESSAGES: '/chat/messages',
-    CHAT_SEND: '/chat/send',
-    CHAT_ADMIN_CONVERSATIONS: '/chat/admin/conversations',
+      CHAT_MESSAGES: '/chat/messages',
+  CHAT_SEND: '/chat/send',
+  CHAT_ADMIN_CONVERSATIONS: '/chat/admin/conversations',
+  CHAT_MARK_READ: '/chat/mark-read',
     CHAT_ADMIN_SEND: '/chat/admin/send',
     
     // Demo endpoints

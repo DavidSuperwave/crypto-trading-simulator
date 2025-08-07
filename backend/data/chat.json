@@ -2358,5 +2358,53 @@
     "timestamp": "2025-08-07T01:50:00.072Z",
     "isRead": false,
     "createdAt": "2025-08-07T01:50:00.072Z"
+  },
+  {
+    "id": "6cce0bad-b493-4b16-aaa0-72448237d507",
+    "senderId": "system",
+    "senderType": "admin",
+    "senderName": "Altura Capital System",
+    "recipientUserId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "recipientType": "user",
+    "message": "🎉 Great news! You've earned $1034.28 in daily interest (0.76%). Your new balance is $137699.64. Keep investing to earn more!",
+    "timestamp": "2025-08-07T01:55:00.061Z",
+    "isRead": false,
+    "createdAt": "2025-08-07T01:55:00.061Z"
+  },
+  {
+    "id": "2557b513-f3c2-40ff-a3d8-a4f2e4b7cd91",
+    "senderId": "system",
+    "senderType": "admin",
+    "senderName": "Altura Capital System",
+    "recipientUserId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "recipientType": "user",
+    "message": "🎉 Great news! You've earned $701.89 in daily interest (2.31%). Your new balance is $31100.11. Keep investing to earn more!",
+    "timestamp": "2025-08-07T01:55:00.068Z",
+    "isRead": false,
+    "createdAt": "2025-08-07T01:55:00.068Z"
+  },
+  {
+    "id": "cc27a806-9b25-4c8a-be70-2173bda93af3",
+    "senderId": "system",
+    "senderType": "admin",
+    "senderName": "Altura Capital System",
+    "recipientUserId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "recipientType": "user",
+    "message": "🎉 Great news! You've earned $2410.76 in daily interest (1.75%). Your new balance is $140110.40. Keep investing to earn more!",
+    "timestamp": "2025-08-07T02:00:00.192Z",
+    "isRead": false,
+    "createdAt": "2025-08-07T02:00:00.192Z"
+  },
+  {
+    "id": "56bc5635-d23c-4998-b869-f796d42ac736",
+    "senderId": "system",
+    "senderType": "admin",
+    "senderName": "Altura Capital System",
+    "recipientUserId": "1fe3f131-b230-4955-ace3-f1c8d20da406",
+    "recipientType": "user",
+    "message": "🎉 Great news! You've earned $776.84 in daily interest (2.50%). Your new balance is $31876.96. Keep investing to earn more!",
+    "timestamp": "2025-08-07T02:00:00.204Z",
+    "isRead": false,
+    "createdAt": "2025-08-07T02:00:00.204Z"
   }
 ]

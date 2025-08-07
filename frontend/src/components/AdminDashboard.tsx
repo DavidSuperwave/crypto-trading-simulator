@@ -83,6 +83,47 @@ const AdminDashboard: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [selectedChatUser, setSelectedChatUser] = useState<string | null>(null);
+
+  // Function to handle chat selection and mark messages as read
+  const handleChatSelection = async (userId: string) => {
+    try {
+      // Set the selected user first
+      setSelectedChatUser(userId);
+      
+      // Get unread messages for this conversation
+      const conversation = chatConversations.find(c => c.userId === userId);
+      if (conversation && conversation.unreadCount > 0) {
+        // Get message IDs from the conversation that are unread
+        const unreadMessageIds = conversation.messages
+          ?.filter(msg => !msg.isRead && msg.senderType === 'user')
+          .map(msg => msg.id) || [];
+          
+        if (unreadMessageIds.length > 0) {
+          // Mark messages as read on backend
+          await axios.put(buildApiUrl(API_CONFIG.ENDPOINTS.CHAT_MARK_READ), {
+            messageIds: unreadMessageIds
+          }, getAuthHeaders());
+          
+          // Update local state to clear unread count
+          setChatConversations(prev => 
+            prev.map(conv => 
+              conv.userId === userId 
+                ? { ...conv, unreadCount: 0, messages: conv.messages?.map(msg => ({ ...msg, isRead: true })) }
+                : conv
+            )
+          );
+          
+          // Decrease global unread count
+          setUnreadCount(prev => Math.max(0, prev - conversation.unreadCount));
+          
+          console.log(`✅ Marked ${unreadMessageIds.length} messages as read for user ${userId}`);
+        }
+      }
+    } catch (error) {
+      console.error('Error marking messages as read:', error);
+      // Still allow chat selection even if marking as read fails
+    }
+  };
   const [newMessage, setNewMessage] = useState('');
   const [showCreateUserForm, setShowCreateUserForm] = useState(false);
   const [newUserData, setNewUserData] = useState({
@@ -137,7 +178,8 @@ const AdminDashboard: React.FC = () => {
             return {
               ...conv,
               lastMessage: message,
-              unreadCount: conv.unreadCount + 1
+              // Only increment unread count for messages from users (not admin messages)
+              unreadCount: message.senderType === 'user' ? conv.unreadCount + 1 : conv.unreadCount
             };
           }
           return conv;
@@ -146,14 +188,17 @@ const AdminDashboard: React.FC = () => {
         // If conversation doesn't exist, it will be handled by next dashboard refresh
         return updated;
       });
-      setUnreadCount(prev => prev + 1);
-      
-      // Show browser notification if permission granted
-      if (Notification.permission === 'granted') {
-        new Notification('New Chat Message', {
-          body: `${message.senderName}: ${message.message}`,
-          icon: '/favicon.ico'
-        });
+      // Only increment notification count and show notifications for user messages
+      if (message.senderType === 'user') {
+        setUnreadCount(prev => prev + 1);
+        
+        // Show browser notification if permission granted
+        if (Notification.permission === 'granted') {
+          new Notification('New Chat Message', {
+            body: `${message.senderName}: ${message.message}`,
+            icon: '/favicon.ico'
+          });
+        }
       }
     }
   });
@@ -1006,7 +1051,7 @@ const AdminDashboard: React.FC = () => {
                       chatConversations.map((conversation) => (
                         <div
                           key={conversation.userId}
-                          onClick={() => setSelectedChatUser(conversation.userId)}
+                          onClick={() => handleChatSelection(conversation.userId)}
                           style={{
                             padding: '1rem',
                             borderBottom: '1px solid #e5e7eb',
