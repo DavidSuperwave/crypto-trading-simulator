@@ -722,6 +722,14 @@ const AdminDashboard: React.FC = () => {
               )}
 
               <div style={{ overflowX: 'auto' }}>
+                <style>
+                  {`
+                    .user-table-row:hover {
+                      background-color: #f8fafc !important;
+                      transition: background-color 0.2s ease;
+                    }
+                  `}
+                </style>
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                   <thead>
                     <tr style={{ background: 'white' }}>
@@ -735,7 +743,7 @@ const AdminDashboard: React.FC = () => {
                   </thead>
                   <tbody>
                     {users.map((user) => (
-                      <tr key={user.id} style={{ borderBottom: '1px solid #eee' }}>
+                      <tr key={user.id} className="user-table-row" style={{ borderBottom: '1px solid #eee' }}>
                         <td style={{ padding: '12px', fontWeight: '600', color: '#000' }}>{user.email}</td>
                         <td style={{ padding: '12px' }}>
                           <span style={{
