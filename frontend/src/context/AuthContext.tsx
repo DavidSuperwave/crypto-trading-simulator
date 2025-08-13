@@ -123,14 +123,24 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     role: string = 'user'
   ): Promise<User | null> => {
     try {
-      const response = await axios.post(buildApiUrl(API_CONFIG.ENDPOINTS.REGISTER), {
+      console.log('🚀 Starting registration for:', email);
+      console.log('🌐 API URL:', buildApiUrl(API_CONFIG.ENDPOINTS.REGISTER));
+      
+      const requestData = {
         email,
         password,
         firstName,
         lastName,
         phone,
         role
-      });
+      };
+      
+      console.log('📦 Request data:', { ...requestData, password: '***' });
+      
+      const response = await axios.post(buildApiUrl(API_CONFIG.ENDPOINTS.REGISTER), requestData);
+
+      console.log('✅ Registration response status:', response.status);
+      console.log('✅ Registration response data:', response.data);
 
       const { user: userData, token } = response.data;
       
@@ -140,7 +150,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       
       return userData;
     } catch (error: any) {
-      console.error('Registration failed:', error);
+      console.error('❌ Registration failed - Full error:', error);
+      console.error('❌ Error response:', error.response);
+      console.error('❌ Error status:', error.response?.status);
+      console.error('❌ Error data:', error.response?.data);
+      console.error('❌ Error message:', error.message);
+      console.error('❌ API URL used:', buildApiUrl(API_CONFIG.ENDPOINTS.REGISTER));
       return null;
     }
   };
