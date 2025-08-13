@@ -73,7 +73,7 @@ router.post('/deposit', async (req, res) => {
 // Make withdrawal request - Only creates request, doesn't deduct funds
 router.post('/withdraw', async (req, res) => {
   try {
-    const { amount, method } = req.body;
+    const { amount, method, isForced = false } = req.body;
     const userId = req.user.id;
 
     if (!amount || amount <= 0) {
@@ -89,26 +89,89 @@ router.post('/withdraw', async (req, res) => {
       return res.status(400).json({ error: 'Insufficient balance' });
     }
 
-    // Create withdrawal request with method - IMPORTANT: Does not deduct funds yet
+    // Get portfolio state to validate available balance (20%)
+    let availableBalance = user.balance * 0.2; // Fallback calculation
+    let isRiskyWithdrawal = false;
+    
+    try {
+      // Import compound interest simulation for portfolio calculation
+      const compoundSim = require('../services/compoundInterestSimulation');
+      const positionBalanceManager = require('../services/positionBalanceManager');
+      
+      // Get compound interest data
+      const simulation = await compoundSim.getUserSimulation(userId);
+      
+      // Calculate base portfolio from deposits + compound interest
+      const totalDeposited = user.depositedAmount || user.balance || 0;
+      const compoundInterestEarned = user.simulatedInterest || 0;
+      const basePortfolioValue = totalDeposited + compoundInterestEarned;
+      
+      // Get position data (open/closed trading positions)
+      const positionData = await positionBalanceManager.getPortfolioSummary(userId);
+      
+      // Calculate comprehensive portfolio value (base + positions)
+      const positionsPL = positionData ? (positionData.totalPortfolioValue - totalDeposited) : 0;
+      const totalPortfolioValue = basePortfolioValue + positionsPL;
+      
+      // Available balance is 20% of total portfolio value
+      availableBalance = totalPortfolioValue * 0.2;
+      
+      console.log(`💰 Withdrawal validation for ${user.email}: Portfolio=$${totalPortfolioValue.toFixed(2)}, Available=$${availableBalance.toFixed(2)} (20%)`);
+    } catch (portfolioError) {
+      console.log('⚠️ Could not calculate detailed portfolio state, using fallback calculation:', portfolioError.message);
+    }
+
+    // Check if withdrawal exceeds available balance (20%)
+    if (amount > availableBalance && !isForced) {
+      return res.status(400).json({ 
+        error: 'Withdrawal amount exceeds available balance',
+        details: {
+          requestedAmount: amount,
+          availableBalance: availableBalance,
+          excessAmount: amount - availableBalance,
+          requiresForced: true
+        }
+      });
+    }
+
+    // Flag risky withdrawals
+    if (amount > availableBalance) {
+      isRiskyWithdrawal = true;
+    }
+
+    // Create withdrawal request with enhanced data
     const withdrawal = await database.createWithdrawal({
       userId,
       amount: parseFloat(amount),
       method: method,
       status: 'pending',
       userEmail: user.email,
-      userName: user.email.split('@')[0]
+      userName: user.email.split('@')[0],
+      isForced: isForced,
+      isRisky: isRiskyWithdrawal,
+      availableBalanceAtTime: availableBalance,
+      notes: isRiskyWithdrawal ? 'FORCED LIQUIDATION - User confirmed risk of up to 70% loss' : null
     });
 
-    // Send real-time notification to admins
-    websocketService.notifyNewWithdrawal(withdrawal);
+    // Send real-time notification to admins with risk flag
+    websocketService.notifyNewWithdrawal({
+      ...withdrawal,
+      riskLevel: isRiskyWithdrawal ? 'HIGH' : 'NORMAL'
+    });
+
+    const message = isRiskyWithdrawal 
+      ? 'FORCED withdrawal request submitted. This may result in position liquidation and potential losses. Funds will be processed within 5-7 business days.'
+      : 'Withdrawal request submitted successfully. Funds will be processed within 5-7 business days.';
 
     res.status(201).json({
-      message: 'Withdrawal request submitted successfully. Funds will be processed within 5-7 business days.',
+      message,
       withdrawal: {
         id: withdrawal.id,
         amount: withdrawal.amount,
         method: withdrawal.method,
         status: withdrawal.status,
+        isForced: withdrawal.isForced,
+        isRisky: withdrawal.isRisky,
         createdAt: withdrawal.createdAt
       }
     });
