@@ -38,12 +38,12 @@ const PrimaryBalanceCard: React.FC = () => {
   
   const livePortfolioValue = useMemo(() => 
     portfolioData ? portfolioData.totalPortfolioValue + livePnL : 0,
-    [portfolioData?.totalPortfolioValue, livePnL]
+    [portfolioData, livePnL]
   );
   
   const liveDailyPL = useMemo(() => 
     portfolioData ? portfolioData.dailyPL + livePnL : 0,
-    [portfolioData?.dailyPL, livePnL]
+    [portfolioData, livePnL]
   );
   
   // Debug logging

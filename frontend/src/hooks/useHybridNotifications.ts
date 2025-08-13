@@ -45,7 +45,7 @@ export const useHybridNotifications = (options: HybridNotificationsOptions = {})
         pollingNotifications.startPolling();
       }
     }
-  }, [websocketNotifications.isConnected, websocketNotifications.connectionStatus, mode, pollingNotifications]);
+  }, [websocketNotifications.isConnected, websocketNotifications.connectionStatus, websocketNotifications, mode, pollingNotifications]);
 
   // Automatic fallback timer
   useEffect(() => {

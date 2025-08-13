@@ -84,7 +84,7 @@ export const usePollingNotifications = (options: PollingNotificationsOptions = {
 
       } else {
         // User polling: Check for deposit/withdrawal status updates AND chat messages
-        const [depositsResponse, withdrawalsResponse, chatResponse] = await Promise.allSettled([
+        const [, , chatResponse] = await Promise.allSettled([
           axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.USER_PENDING_DEPOSITS), { headers }),
           axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.USER_WITHDRAWALS), { headers }),
           axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.CHAT_MESSAGES), { headers })
@@ -109,7 +109,7 @@ export const usePollingNotifications = (options: PollingNotificationsOptions = {
     } catch (error) {
       console.error('📊 Polling error:', error);
     }
-  }, [lastCheckTime, getAuthHeaders, onNewDeposit, onNewWithdrawal, onNewChatMessage, onDepositStatusUpdate, onWithdrawalStatusUpdate]);
+  }, [lastCheckTime, getAuthHeaders, onNewDeposit, onNewWithdrawal, onNewChatMessage]);
 
   const startPolling = useCallback(() => {
     if (intervalRef.current) return; // Already polling

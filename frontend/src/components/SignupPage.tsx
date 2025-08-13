@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { User, Mail, Phone, Lock, Eye, EyeOff, CheckCircle, XCircle } from 'lucide-react';
@@ -154,108 +154,7 @@ const SignupPage: React.FC = () => {
     }
   };
 
-  // Input field component
-  const InputField: React.FC<{
-    label: string;
-    type: string;
-    value: string;
-    onChange: (value: string) => void;
-    onBlur?: (value: string) => void;
-    placeholder: string;
-    icon: React.ReactNode;
-    error?: string;
-    showPasswordToggle?: boolean;
-    onPasswordToggle?: () => void;
-    showPassword?: boolean;
-    fieldName: string;
-  }> = ({ label, type, value, onChange, onBlur, placeholder, icon, error, showPasswordToggle, onPasswordToggle, showPassword, fieldName }) => (
-    <div style={{ marginBottom: '20px' }}>
-      <label style={{
-        display: 'block',
-        marginBottom: '8px',
-        color: '#000000',
-        fontWeight: '500',
-        fontSize: '14px'
-      }}>
-        {label}
-      </label>
-      <div style={{ position: 'relative' }}>
-        <div style={{
-          position: 'absolute',
-          left: '12px',
-          top: '50%',
-          transform: 'translateY(-50%)',
-          color: '#6b7280',
-          zIndex: 1
-        }}>
-          {icon}
-        </div>
-        <input
-          type={type}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          onBlur={(e) => onBlur && onBlur(e.target.value)}
-          placeholder={placeholder}
-          style={{
-            width: '100%',
-            padding: '14px 14px 14px 44px',
-            border: `2px solid ${error ? '#ef4444' : '#d1d5db'}`,
-            borderRadius: '8px',
-            fontSize: '16px',
-            outline: 'none',
-            transition: 'border-color 0.2s, box-shadow 0.2s',
-            boxSizing: 'border-box',
-            background: '#ffffff',
-            color: '#000000',
-            ...(value && !error ? { borderColor: '#10b981' } : {})
-          }}
-        />
-        {showPasswordToggle && (
-          <button
-            type="button"
-            onClick={onPasswordToggle}
-            style={{
-              position: 'absolute',
-              right: '12px',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              color: '#9ca3af',
-              zIndex: 1
-            }}
-          >
-            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-          </button>
-        )}
-        {value && !showPasswordToggle && (
-          <div style={{
-            position: 'absolute',
-            right: '12px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            color: error ? '#ef4444' : '#10b981'
-          }}>
-            {error ? <XCircle size={20} /> : <CheckCircle size={20} />}
-          </div>
-        )}
-      </div>
-      {error && (
-        <div style={{
-          color: '#ef4444',
-          fontSize: '13px',
-          marginTop: '6px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '4px'
-        }}>
-          <XCircle size={14} />
-          {error}
-        </div>
-      )}
-    </div>
-  );
+
 
   return (
     <>

@@ -72,7 +72,6 @@ const TradingAnimation: React.FC = () => {
 
   // Trade card component
   const TradeCard: React.FC<{ trade: Trade; index: number }> = ({ trade, index }) => {
-    const isProfit = trade.profit > 0;
     
     return (
       <div 
