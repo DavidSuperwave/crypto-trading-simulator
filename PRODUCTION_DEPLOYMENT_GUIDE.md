@@ -6,6 +6,8 @@
 - ✅ **Advanced Deposit System**: Tiered plans ($2500, $5000, $10000) with persuasive UI
 - ✅ **Enhanced Withdrawal System**: 20% available balance with forced liquidation warnings
 - ✅ **Risk Protection System**: Comprehensive warning popups for risky withdrawals
+- ✅ **Backend Withdrawal Validation**: Server-side 20% portfolio enforcement and risk tracking
+- ✅ **Forced Withdrawal Support**: Backend handles `isForced` flag with admin notifications
 - ✅ **AI Simulator Moved**: Relocated from user dashboard to demo account
 - ✅ **Improved Portfolio Management**: Real-time 80/20 balance calculations
 - ✅ **Better UX**: All hardcoded URLs replaced with environment variables
@@ -117,6 +119,34 @@ pm2 logs crypto-trading-backend
 
 ---
 
+## 🔧 Backend Enhancements
+
+### **Enhanced Withdrawal Endpoint (`/api/user/withdraw`)**:
+- **Portfolio Validation**: Real-time 20% available balance calculation using compound interest and position data
+- **Risk Detection**: Automatic flagging of withdrawals exceeding available balance
+- **Forced Withdrawal Support**: Handles `isForced` parameter from frontend risk warnings
+- **Admin Notifications**: Sends high-risk withdrawal alerts to admins via WebSocket
+- **Enhanced Logging**: Tracks withdrawal risk levels and available balance at time of request
+- **Database Integration**: Stores additional risk fields (`isForced`, `isRisky`, `availableBalanceAtTime`, `notes`)
+
+### **New Validation Logic**:
+```javascript
+// Backend now validates against actual portfolio calculations
+if (amount > availableBalance && !isForced) {
+  return res.status(400).json({ 
+    error: 'Withdrawal amount exceeds available balance',
+    details: {
+      requestedAmount: amount,
+      availableBalance: availableBalance,
+      excessAmount: amount - availableBalance,
+      requiresForced: true
+    }
+  });
+}
+```
+
+---
+
 ## 🔧 New Features Testing Guide
 
 ### 1. Deposit System Testing
@@ -127,10 +157,12 @@ pm2 logs crypto-trading-backend
 
 ### 2. Withdrawal System Testing
 - Navigate to user dashboard → Retirar
-- Enter amount > 20% of portfolio
-- Verify risk warning popup appears
-- Test "Quiero Retirar" confirmation requirement
-- Verify alternative timeline calculations
+- **Test Normal Withdrawal**: Enter amount ≤ 20% of portfolio, verify smooth processing
+- **Test Risk Warning**: Enter amount > 20% of portfolio, verify risk warning popup appears
+- **Test Backend Validation**: Verify backend rejects excessive withdrawals without `isForced` flag
+- **Test Forced Withdrawal**: Complete "Quiero Retirar" confirmation, verify backend accepts with risk tracking
+- **Test Admin Notifications**: Verify admins receive high-risk withdrawal alerts
+- **Test Database Storage**: Check withdrawal records include new risk fields (`isForced`, `isRisky`, `notes`)
 
 ### 3. Dashboard Testing
 - Confirm AI Simulator tab removed from user dashboard
