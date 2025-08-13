@@ -29,6 +29,7 @@ const corsOptions = {
     'http://localhost:3000', // Development
     'https://crypto-trading-simulator-five.vercel.app', // Production
     'https://crypto-trading-simulator-duk9upmqa.vercel.app', // Backup URL
+    'https://crypto-trading-simul-git-426edf-kevin-durants-projects-0597f3a2.vercel.app', // Current deployment
     process.env.FRONTEND_URL // Environment variable
   ].filter(Boolean), // Remove undefined values
   credentials: true,
