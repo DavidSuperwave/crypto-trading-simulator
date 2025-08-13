@@ -11,6 +11,13 @@ interface User {
   role: string;
   balance: number;
   totalInterest: number;
+  depositedAmount?: number;
+  simulatedInterest?: number;
+  currentMonthlyTarget?: number;
+  simulationStartDate?: string;
+  lastSimulationUpdate?: string;
+  simulationActive?: boolean;
+  currentPlan?: string;
 }
 
 interface AuthContextType {

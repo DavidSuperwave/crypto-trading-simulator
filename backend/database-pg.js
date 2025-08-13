@@ -29,15 +29,27 @@ class PostgreSQLDatabase {
       lastName: user.last_name,
       createdAt: user.created_at,
       updatedAt: user.updated_at,
-      totalInterest: user.total_interest
+      totalInterest: user.total_interest,
+      depositedAmount: user.deposited_amount,
+      simulatedInterest: user.simulated_interest,
+      currentMonthlyTarget: user.current_monthly_target,
+      simulationStartDate: user.simulation_start_date,
+      lastSimulationUpdate: user.last_simulation_update,
+      simulationActive: user.simulation_active,
+      currentPlan: user.current_plan
     }));
   }
 
   async createUser(userData) {
     const id = uuidv4();
     const query = `
-      INSERT INTO users (id, email, password, first_name, last_name, phone, role, balance, total_interest, created_at, updated_at)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW(), NOW())
+      INSERT INTO users (
+        id, email, password, first_name, last_name, phone, role, balance, total_interest,
+        deposited_amount, simulated_interest, current_monthly_target, 
+        simulation_start_date, last_simulation_update, simulation_active, current_plan,
+        created_at, updated_at
+      )
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, NOW(), NOW())
       RETURNING *
     `;
     const values = [
@@ -49,7 +61,14 @@ class PostgreSQLDatabase {
       userData.phone,
       userData.role || 'user',
       userData.balance || 0,
-      userData.totalInterest || 0
+      userData.totalInterest || 0,
+      userData.depositedAmount || userData.balance || 0,
+      userData.simulatedInterest || 0,
+      userData.currentMonthlyTarget || 0,
+      userData.simulationStartDate || new Date().toISOString(),
+      userData.lastSimulationUpdate || new Date().toISOString(),
+      userData.simulationActive !== undefined ? userData.simulationActive : true,
+      userData.currentPlan || 'basic'
     ];
     const result = await this.query(query, values);
     const user = result.rows[0];
@@ -61,7 +80,14 @@ class PostgreSQLDatabase {
       lastName: user.last_name,
       createdAt: user.created_at,
       updatedAt: user.updated_at,
-      totalInterest: user.total_interest
+      totalInterest: user.total_interest,
+      depositedAmount: user.deposited_amount,
+      simulatedInterest: user.simulated_interest,
+      currentMonthlyTarget: user.current_monthly_target,
+      simulationStartDate: user.simulation_start_date,
+      lastSimulationUpdate: user.last_simulation_update,
+      simulationActive: user.simulation_active,
+      currentPlan: user.current_plan
     };
   }
 
@@ -77,7 +103,14 @@ class PostgreSQLDatabase {
       lastName: user.last_name,
       createdAt: user.created_at,
       updatedAt: user.updated_at,
-      totalInterest: user.total_interest
+      totalInterest: user.total_interest,
+      depositedAmount: user.deposited_amount,
+      simulatedInterest: user.simulated_interest,
+      currentMonthlyTarget: user.current_monthly_target,
+      simulationStartDate: user.simulation_start_date,
+      lastSimulationUpdate: user.last_simulation_update,
+      simulationActive: user.simulation_active,
+      currentPlan: user.current_plan
     };
   }
 
@@ -93,7 +126,14 @@ class PostgreSQLDatabase {
       lastName: user.last_name,
       createdAt: user.created_at,
       updatedAt: user.updated_at,
-      totalInterest: user.total_interest
+      totalInterest: user.total_interest,
+      depositedAmount: user.deposited_amount,
+      simulatedInterest: user.simulated_interest,
+      currentMonthlyTarget: user.current_monthly_target,
+      simulationStartDate: user.simulation_start_date,
+      lastSimulationUpdate: user.last_simulation_update,
+      simulationActive: user.simulation_active,
+      currentPlan: user.current_plan
     };
   }
 
