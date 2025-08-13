@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { ArrowLeft, CreditCard, Building, Bitcoin, Smartphone, CheckCircle, Clock, Shield, Phone } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -23,6 +23,11 @@ const WithdrawalPage: React.FC = () => {
   const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [portfolioData, setPortfolioData] = useState<any>(null);
+  const [portfolioLoading, setPortfolioLoading] = useState(true);
+  const [showRiskWarning, setShowRiskWarning] = useState(false);
+  const [confirmationText, setConfirmationText] = useState('');
+  const [riskCalculations, setRiskCalculations] = useState<any>(null);
 
   // Currency formatter function
   const formatCurrency = useCallback((amount: number) => 
@@ -78,16 +83,113 @@ const WithdrawalPage: React.FC = () => {
     }
   ];
 
-  // Get available balance (today's withdrawable amount)
-  const availableBalance = user?.balance || 0;
+  // Fetch portfolio data to get actual available balance (20%)
+  useEffect(() => {
+    const fetchPortfolioData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
+        const response = await axios.get(buildApiUrl('/compound-interest/portfolio-state'), {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.data.success) {
+          setPortfolioData(response.data.portfolioState);
+        }
+      } catch (error) {
+        console.error('Error fetching portfolio data:', error);
+        // Fallback to user balance if API fails
+        setPortfolioData({
+          availableBalance: (user?.balance || 0) * 0.2, // Assume 20% is available
+          lockedCapital: (user?.balance || 0) * 0.8,
+          totalPortfolioValue: user?.balance || 0
+        });
+      } finally {
+        setPortfolioLoading(false);
+      }
+    };
+
+    if (user) {
+      fetchPortfolioData();
+    }
+  }, [user]);
+
+  // Get available balance (20% of portfolio) and daily withdrawal limit
+  const availableBalance = portfolioData?.availableBalance || 0;
+  const lockedCapital = portfolioData?.lockedCapital || 0;
+  const totalPortfolioValue = portfolioData?.totalPortfolioValue || 0;
   const dailyWithdrawalLimit = 50000; // $50,000 MXN daily limit
   const maxWithdrawable = Math.min(availableBalance, dailyWithdrawalLimit);
+
+  // Calculate risk scenarios for large withdrawals
+  const calculateRiskScenarios = useCallback((requestedAmount: number) => {
+    if (!portfolioData) return null;
+
+    const excessAmount = requestedAmount - availableBalance;
+    const forceCloseAmount = Math.min(excessAmount, lockedCapital);
+    
+    // Estimate potential losses (up to 70% of forced closure amount)
+    const potentialLoss = forceCloseAmount * 0.7;
+    const bestCaseScenario = forceCloseAmount * 0.1; // 10% loss in best case
+    const worstCaseScenario = forceCloseAmount * 0.7; // 70% loss in worst case
+    
+    // Calculate timeline for natural withdrawal (20% availability growth)
+    // Assuming 8% monthly compound growth on total portfolio
+    const monthlyGrowthRate = 0.08;
+    const currentMonthlyAvailable = totalPortfolioValue * 0.2 * monthlyGrowthRate;
+    const monthsToNaturalWithdrawal = Math.ceil(excessAmount / currentMonthlyAvailable);
+    
+    // Calculate best withdrawal date (end of current month when interest pays out)
+    const today = new Date();
+    const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+    const daysUntilNextMonth = Math.ceil((nextMonth.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    
+    return {
+      requestedAmount,
+      availableNow: availableBalance,
+      excessAmount,
+      forceCloseAmount,
+      potentialLoss: {
+        best: bestCaseScenario,
+        worst: worstCaseScenario,
+        average: potentialLoss
+      },
+      timeline: {
+        monthsToNaturalWithdrawal,
+        daysUntilNextMonth,
+        recommendedDate: nextMonth.toLocaleDateString('es-MX', { 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        })
+      },
+      netAmount: requestedAmount - potentialLoss, // What they'd actually receive after losses
+      lossPercentage: (potentialLoss / requestedAmount) * 100
+    };
+  }, [portfolioData, availableBalance, lockedCapital, totalPortfolioValue]);
 
   // Handle withdrawal submission
   const handleWithdraw = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!withdrawAmount || parseFloat(withdrawAmount) <= 0 || !selectedMethod) return;
 
+    const withdrawAmountNum = parseFloat(withdrawAmount);
+
+    // Check if withdrawal exceeds available balance (20%)
+    if (withdrawAmountNum > availableBalance) {
+      const riskData = calculateRiskScenarios(withdrawAmountNum);
+      setRiskCalculations(riskData);
+      setShowRiskWarning(true);
+      return;
+    }
+
+    // Proceed with normal withdrawal (within 20% limit)
+    await processWithdrawal(withdrawAmountNum);
+  };
+
+  // Process the actual withdrawal (for both normal and forced withdrawals)
+  const processWithdrawal = async (amount: number, isForced: boolean = false) => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
@@ -97,8 +199,9 @@ const WithdrawalPage: React.FC = () => {
       }
 
       await axios.post(buildApiUrl(API_CONFIG.ENDPOINTS.USER_WITHDRAW), {
-        amount: parseFloat(withdrawAmount),
-        method: selectedMethod
+        amount: amount,
+        method: selectedMethod,
+        isForced: isForced // Flag to indicate forced liquidation
       }, {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -113,12 +216,23 @@ const WithdrawalPage: React.FC = () => {
       });
       updateUser(profileRes.data);
 
-      // Show confirmation but don't update user data immediately
+      // Show confirmation
       setShowConfirmation(true);
+      setShowRiskWarning(false);
+      setConfirmationText('');
     } catch (error) {
       alert('Error en la solicitud de retiro. Inténtalo de nuevo.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Handle forced withdrawal confirmation
+  const handleForcedWithdrawal = () => {
+    if (confirmationText.toLowerCase().trim() === 'quiero retirar') {
+      processWithdrawal(parseFloat(withdrawAmount), true);
+    } else {
+      alert('Debes escribir exactamente "Quiero Retirar" para confirmar esta acción.');
     }
   };
 
@@ -200,7 +314,7 @@ const WithdrawalPage: React.FC = () => {
               </p>
             </div>
 
-            {/* Available Balance Card */}
+            {/* Portfolio Balance Breakdown */}
             <div style={{
               background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
               borderRadius: '16px',
@@ -209,14 +323,28 @@ const WithdrawalPage: React.FC = () => {
               color: 'white'
             }}>
               <div style={{ fontSize: '0.9rem', opacity: 0.9, marginBottom: '0.5rem' }}>
-                Balance disponible hoy:
+                Balance disponible para retiro:
               </div>
-              <div style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
-                {formatCurrency(maxWithdrawable)}
+              <div style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem' }}>
+                {portfolioLoading ? 'Cargando...' : formatCurrency(maxWithdrawable)}
               </div>
-              <div style={{ fontSize: '0.8rem', opacity: 0.8 }}>
-                Límite diario: {formatCurrency(dailyWithdrawalLimit)}
-              </div>
+              
+              {!portfolioLoading && portfolioData && (
+                <div style={{ fontSize: '0.8rem', opacity: 0.9 }}>
+                  <div style={{ marginBottom: '0.5rem' }}>
+                    📊 Portfolio total: {formatCurrency(totalPortfolioValue)}
+                  </div>
+                  <div style={{ marginBottom: '0.5rem' }}>
+                    🔒 Capital bloqueado (80%): {formatCurrency(lockedCapital)}
+                  </div>
+                  <div style={{ marginBottom: '0.5rem' }}>
+                    💰 Disponible (20%): {formatCurrency(availableBalance)}
+                  </div>
+                  <div style={{ opacity: 0.8 }}>
+                    Límite diario: {formatCurrency(dailyWithdrawalLimit)}
+                  </div>
+                </div>
+              )}
             </div>
 
             <form onSubmit={handleWithdraw}>
@@ -234,14 +362,15 @@ const WithdrawalPage: React.FC = () => {
                   type="number"
                   step="1"
                   min="100"
-                  max={maxWithdrawable}
                   value={withdrawAmount}
                   onChange={(e) => setWithdrawAmount(e.target.value)}
                   placeholder="Ej: 5,000"
                   style={{
                     width: '100%',
                     padding: '1rem',
-                    border: '2px solid #E5E7EB',
+                    border: withdrawAmountNum > availableBalance 
+                      ? '2px solid #F59E0B' 
+                      : '2px solid #E5E7EB',
                     borderRadius: '12px',
                     fontSize: '1.1rem',
                     outline: 'none',
@@ -249,13 +378,32 @@ const WithdrawalPage: React.FC = () => {
                     fontWeight: '600'
                   }}
                 />
-                <p style={{ 
-                  margin: '0.5rem 0 0 0', 
-                  fontSize: '0.8rem', 
-                  color: '#6B7280' 
-                }}>
-                  Mínimo: $100 MXN | Máximo: {formatCurrency(maxWithdrawable)}
-                </p>
+                <div style={{ marginTop: '0.5rem' }}>
+                  <p style={{ 
+                    margin: '0 0 0.25rem 0', 
+                    fontSize: '0.8rem', 
+                    color: '#6B7280' 
+                  }}>
+                    Mínimo: $100 MXN
+                  </p>
+                  {withdrawAmountNum > availableBalance && (
+                    <p style={{ 
+                      margin: 0, 
+                      fontSize: '0.8rem', 
+                      color: '#F59E0B',
+                      fontWeight: '600'
+                    }}>
+                      ⚠️ Excede balance disponible - Requiere liquidación forzada
+                    </p>
+                  )}
+                  <p style={{ 
+                    margin: '0.25rem 0 0 0', 
+                    fontSize: '0.8rem', 
+                    color: '#059669' 
+                  }}>
+                    💡 Disponible sin riesgo: {formatCurrency(availableBalance)}
+                  </p>
+                </div>
               </div>
 
               {/* Selected Method Summary */}
@@ -290,32 +438,58 @@ const WithdrawalPage: React.FC = () => {
               {/* Withdraw Button */}
               <button
                 type="submit"
-                disabled={loading || !withdrawAmount || !selectedMethod || withdrawAmountNum < 100 || withdrawAmountNum > maxWithdrawable}
+                disabled={loading || portfolioLoading || !withdrawAmount || !selectedMethod || withdrawAmountNum < 100}
                 style={{
                   width: '100%',
-                  background: loading || !withdrawAmount || !selectedMethod || withdrawAmountNum < 100 || withdrawAmountNum > maxWithdrawable
+                  background: loading || portfolioLoading || !withdrawAmount || !selectedMethod || withdrawAmountNum < 100
                     ? '#9CA3AF' 
-                    : 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                    : withdrawAmountNum > availableBalance
+                    ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' // Orange for risky withdrawals
+                    : 'linear-gradient(135deg, #10B981 0%, #059669 100%)', // Green for safe withdrawals
                   color: 'white',
                   border: 'none',
                   borderRadius: '12px',
                   padding: '1rem',
                   fontSize: '1rem',
                   fontWeight: '600',
-                  cursor: loading || !withdrawAmount || !selectedMethod || withdrawAmountNum < 100 || withdrawAmountNum > maxWithdrawable
+                  cursor: loading || portfolioLoading || !withdrawAmount || !selectedMethod || withdrawAmountNum < 100
                     ? 'not-allowed' 
                     : 'pointer',
-                  boxShadow: '0 4px 20px rgba(16, 185, 129, 0.3)',
+                  boxShadow: withdrawAmountNum > availableBalance
+                    ? '0 4px 20px rgba(245, 158, 11, 0.3)'
+                    : '0 4px 20px rgba(16, 185, 129, 0.3)',
                   transition: 'all 0.2s'
                 }}
               >
-                {loading ? 'Procesando...' : `Retirar ${formatCurrency(withdrawAmountNum)}`}
+                {loading ? 'Procesando...' : portfolioLoading ? 'Cargando datos...' : 
+                 withdrawAmountNum > availableBalance ? 
+                 `⚠️ Liquidación Forzada - ${formatCurrency(withdrawAmountNum)}` : 
+                 `Retirar ${formatCurrency(withdrawAmountNum)}`}
               </button>
             </form>
 
-            {/* Security Notice */}
+            {/* Portfolio Information */}
             <div style={{
               marginTop: '2rem',
+              padding: '1rem',
+              background: '#EBF8FF',
+              borderRadius: '8px',
+              border: '1px solid #BFDBFE'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                <CreditCard size={16} style={{ color: '#3B82F6' }} />
+                <span style={{ color: '#3B82F6', fontWeight: '600', fontSize: '0.9rem' }}>
+                  Sistema de Portfolio Inteligente
+                </span>
+              </div>
+              <p style={{ margin: 0, fontSize: '0.8rem', color: '#1E40AF' }}>
+                El 80% de tu portfolio está optimizado para trading automático. Solo el 20% está disponible para retiro inmediato, maximizando tus ganancias potenciales.
+              </p>
+            </div>
+
+            {/* Security Notice */}
+            <div style={{
+              marginTop: '1rem',
               padding: '1rem',
               background: '#F0FDF4',
               borderRadius: '8px',
@@ -506,6 +680,256 @@ const WithdrawalPage: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* Risk Warning Modal */}
+        {showRiskWarning && riskCalculations && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0,0,0,0.7)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+            padding: '1rem'
+          }}>
+            <div style={{
+              background: 'white',
+              borderRadius: '20px',
+              padding: '2rem',
+              width: '600px',
+              maxWidth: '90vw',
+              maxHeight: '90vh',
+              overflowY: 'auto'
+            }}>
+              {/* Warning Header */}
+              <div style={{
+                textAlign: 'center',
+                marginBottom: '2rem'
+              }}>
+                <div style={{
+                  width: '80px',
+                  height: '80px',
+                  borderRadius: '50%',
+                  background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: '0 auto 1rem auto',
+                  color: 'white',
+                  fontSize: '2rem'
+                }}>
+                  ⚠️
+                </div>
+                <h2 style={{ 
+                  margin: '0 0 0.5rem 0', 
+                  color: '#DC2626',
+                  fontSize: '1.8rem'
+                }}>
+                  ¡ADVERTENCIA DE LIQUIDACIÓN FORZADA!
+                </h2>
+                <p style={{ 
+                  margin: 0, 
+                  color: '#6B7280',
+                  fontSize: '1rem'
+                }}>
+                  Esta acción puede resultar en pérdidas significativas
+                </p>
+              </div>
+
+              {/* Risk Analysis */}
+              <div style={{
+                background: '#FEF3C7',
+                borderRadius: '12px',
+                padding: '1.5rem',
+                marginBottom: '2rem',
+                border: '2px solid #F59E0B'
+              }}>
+                <h3 style={{ margin: '0 0 1rem 0', color: '#92400E' }}>
+                  💰 Análisis de Riesgo
+                </h3>
+                
+                <div style={{ marginBottom: '1rem' }}>
+                  <div style={{ fontSize: '0.9rem', color: '#92400E', marginBottom: '0.5rem' }}>
+                    Monto solicitado: <strong>{formatCurrency(riskCalculations.requestedAmount)}</strong>
+                  </div>
+                  <div style={{ fontSize: '0.9rem', color: '#92400E', marginBottom: '0.5rem' }}>
+                    Disponible ahora (20%): <strong>{formatCurrency(riskCalculations.availableNow)}</strong>
+                  </div>
+                  <div style={{ fontSize: '0.9rem', color: '#DC2626', fontWeight: 'bold' }}>
+                    Requiere liquidación forzada: <strong>{formatCurrency(riskCalculations.excessAmount)}</strong>
+                  </div>
+                </div>
+
+                <div style={{
+                  background: '#FECACA',
+                  borderRadius: '8px',
+                  padding: '1rem',
+                  marginBottom: '1rem'
+                }}>
+                  <div style={{ fontSize: '0.9rem', color: '#7F1D1D', marginBottom: '0.5rem' }}>
+                    <strong>Pérdidas Estimadas por Liquidación Forzada:</strong>
+                  </div>
+                  <div style={{ fontSize: '0.85rem', color: '#7F1D1D' }}>
+                    • Mejor escenario: -{formatCurrency(riskCalculations.potentialLoss.best)} (10%)
+                  </div>
+                  <div style={{ fontSize: '0.85rem', color: '#7F1D1D' }}>
+                    • Escenario promedio: -{formatCurrency(riskCalculations.potentialLoss.average)} (70%)
+                  </div>
+                  <div style={{ fontSize: '0.85rem', color: '#7F1D1D' }}>
+                    • Peor escenario: -{formatCurrency(riskCalculations.potentialLoss.worst)} (70%)
+                  </div>
+                </div>
+
+                <div style={{
+                  background: '#DBEAFE',
+                  borderRadius: '8px',
+                  padding: '1rem'
+                }}>
+                  <div style={{ fontSize: '0.9rem', color: '#1E40AF', fontWeight: 'bold' }}>
+                    Recibirías aproximadamente: {formatCurrency(riskCalculations.netAmount)}
+                  </div>
+                  <div style={{ fontSize: '0.8rem', color: '#1E40AF' }}>
+                    (Pérdida estimada: {riskCalculations.lossPercentage.toFixed(1)}% del monto total)
+                  </div>
+                </div>
+              </div>
+
+              {/* Alternative Timeline */}
+              <div style={{
+                background: '#F0FDF4',
+                borderRadius: '12px',
+                padding: '1.5rem',
+                marginBottom: '2rem',
+                border: '2px solid #10B981'
+              }}>
+                <h3 style={{ margin: '0 0 1rem 0', color: '#065F46' }}>
+                  📅 Alternativa Recomendada (Sin Pérdidas)
+                </h3>
+                
+                <div style={{ marginBottom: '1rem' }}>
+                  <div style={{ fontSize: '0.9rem', color: '#065F46', marginBottom: '0.5rem' }}>
+                    <strong>Espera al crecimiento natural de tu portfolio:</strong>
+                  </div>
+                  <div style={{ fontSize: '0.85rem', color: '#065F46' }}>
+                    • En {riskCalculations.timeline.monthsToNaturalWithdrawal} mes(es), tendrás suficiente balance disponible
+                  </div>
+                  <div style={{ fontSize: '0.85rem', color: '#065F46' }}>
+                    • Mejor fecha para retirar: <strong>{riskCalculations.timeline.recommendedDate}</strong>
+                  </div>
+                  <div style={{ fontSize: '0.85rem', color: '#065F46' }}>
+                    • Solo faltan {riskCalculations.timeline.daysUntilNextMonth} días para el próximo pago de intereses
+                  </div>
+                </div>
+
+                <div style={{
+                  background: '#DCFCE7',
+                  borderRadius: '8px',
+                  padding: '1rem'
+                }}>
+                  <div style={{ fontSize: '0.9rem', color: '#065F46', fontWeight: 'bold' }}>
+                    💡 Recomendación: Espera y retira el monto completo sin pérdidas
+                  </div>
+                </div>
+              </div>
+
+              {/* Confirmation Input */}
+              <div style={{
+                background: '#FEF2F2',
+                borderRadius: '12px',
+                padding: '1.5rem',
+                marginBottom: '2rem',
+                border: '2px solid #DC2626'
+              }}>
+                <h3 style={{ margin: '0 0 1rem 0', color: '#7F1D1D' }}>
+                  ⚠️ Confirmación Requerida
+                </h3>
+                <p style={{ 
+                  margin: '0 0 1rem 0', 
+                  fontSize: '0.9rem', 
+                  color: '#7F1D1D' 
+                }}>
+                  Si decides continuar con esta liquidación riesgosa, escribe exactamente:
+                </p>
+                <div style={{
+                  background: '#FCA5A5',
+                  borderRadius: '8px',
+                  padding: '0.75rem',
+                  marginBottom: '1rem',
+                  textAlign: 'center',
+                  fontWeight: 'bold',
+                  color: '#7F1D1D'
+                }}>
+                  "Quiero Retirar"
+                </div>
+                <input
+                  type="text"
+                  value={confirmationText}
+                  onChange={(e) => setConfirmationText(e.target.value)}
+                  placeholder="Escribe exactamente: Quiero Retirar"
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem',
+                    border: '2px solid #DC2626',
+                    borderRadius: '8px',
+                    fontSize: '1rem',
+                    boxSizing: 'border-box'
+                  }}
+                />
+              </div>
+
+              {/* Action Buttons */}
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: '1rem'
+              }}>
+                <button
+                  onClick={() => {
+                    setShowRiskWarning(false);
+                    setConfirmationText('');
+                  }}
+                  style={{
+                    background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '12px',
+                    padding: '1rem',
+                    fontSize: '1rem',
+                    fontWeight: '600',
+                    cursor: 'pointer'
+                  }}
+                >
+                  ✅ Cancelar (Recomendado)
+                </button>
+                
+                <button
+                  onClick={handleForcedWithdrawal}
+                  disabled={confirmationText.toLowerCase().trim() !== 'quiero retirar'}
+                  style={{
+                    background: confirmationText.toLowerCase().trim() === 'quiero retirar'
+                      ? 'linear-gradient(135deg, #DC2626 0%, #991B1B 100%)'
+                      : '#9CA3AF',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '12px',
+                    padding: '1rem',
+                    fontSize: '1rem',
+                    fontWeight: '600',
+                    cursor: confirmationText.toLowerCase().trim() === 'quiero retirar' 
+                      ? 'pointer' 
+                      : 'not-allowed'
+                  }}
+                >
+                  ⚠️ Proceder con Riesgo
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Confirmation Modal */}
         {showConfirmation && (

@@ -25,7 +25,16 @@ const Navigation: React.FC = () => {
       color: 'white',
       boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <img 
+          src="/logo.png" 
+          alt="Logo" 
+          style={{
+            width: '32px',
+            height: '32px',
+            objectFit: 'contain'
+          }}
+        />
         <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 'bold' }}>
           Altura Capital
         </h1>

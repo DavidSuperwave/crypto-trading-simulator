@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { TrendingUp, TrendingDown, Users, DollarSign, Activity, ArrowRight, User } from 'lucide-react';
 import axios from 'axios';
+import { buildApiUrl, API_CONFIG } from '../config/api';
 
 interface DemoStats {
   totalUsers: number;
@@ -53,9 +54,9 @@ const DemoDashboard: React.FC = () => {
   const fetchDemoData = async () => {
     try {
       const [statsRes, tradingRes, tradesRes] = await Promise.all([
-        axios.get('http://localhost:5001/api/demo/stats'),
-        axios.get('http://localhost:5001/api/demo/trading-data'),
-        axios.get('http://localhost:5001/api/demo/recent-trades')
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.DEMO_STATS)),
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.DEMO_TRADING_DATA)),
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.DEMO_RECENT_TRADES))
       ]);
 
       setStats(statsRes.data);
@@ -69,7 +70,7 @@ const DemoDashboard: React.FC = () => {
   const handleDemoRequest = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5001/api/demo/request', demoForm);
+      await axios.post(buildApiUrl(API_CONFIG.ENDPOINTS.DEMO_REQUEST), demoForm);
       alert('Demo request submitted successfully! We will contact you soon.');
       setDemoForm({ name: '', email: '', company: '', phone: '', message: '' });
       setShowDemoForm(false);

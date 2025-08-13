@@ -1,0 +1,32 @@
+[
+  {
+    "userId": "test-position-user",
+    "availableBalance": 10050,
+    "openPositions": [],
+    "totalPortfolioValue": 10050,
+    "dayStartBalance": 10000,
+    "dailyPL": 50,
+    "lastUpdated": "2025-08-12T14:14:21.471Z",
+    "createdAt": "2025-08-12T14:14:21.465Z"
+  },
+  {
+    "userId": "enhanced-test-user",
+    "availableBalance": 10105.950000000004,
+    "openPositions": [],
+    "totalPortfolioValue": 10105.950000000004,
+    "dayStartBalance": 10000,
+    "dailyPL": 105.95000000000437,
+    "lastUpdated": "2025-08-12T14:18:59.298Z",
+    "createdAt": "2025-08-12T14:18:59.245Z"
+  },
+  {
+    "userId": "d78a65f6-56b0-47a7-b5f2-3531f8bbd1a8",
+    "availableBalance": 10000,
+    "openPositions": [],
+    "totalPortfolioValue": 10000,
+    "dayStartBalance": 10000,
+    "dailyPL": 0,
+    "lastUpdated": "2025-08-12T15:11:16.818Z",
+    "createdAt": "2025-08-12T15:11:16.818Z"
+  }
+]

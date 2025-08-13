@@ -38,7 +38,7 @@ const WebSocketDebug: React.FC = () => {
 
   // Log environment and URLs
   useEffect(() => {
-    const apiUrl = process.env.REACT_APP_API_URL;
+          const apiUrl = process.env.REACT_APP_API_URL;
     const wsUrl = process.env.REACT_APP_WS_URL;
     const hostname = window.location.hostname;
     const protocol = window.location.protocol;

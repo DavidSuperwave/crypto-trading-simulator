@@ -25,6 +25,8 @@ class PostgreSQLDatabase {
     // Convert snake_case to camelCase for frontend compatibility
     return result.rows.map(user => ({
       ...user,
+      firstName: user.first_name,
+      lastName: user.last_name,
       createdAt: user.created_at,
       updatedAt: user.updated_at,
       totalInterest: user.total_interest
@@ -34,14 +36,17 @@ class PostgreSQLDatabase {
   async createUser(userData) {
     const id = uuidv4();
     const query = `
-      INSERT INTO users (id, email, password, role, balance, total_interest, created_at, updated_at)
-      VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW())
+      INSERT INTO users (id, email, password, first_name, last_name, phone, role, balance, total_interest, created_at, updated_at)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW(), NOW())
       RETURNING *
     `;
     const values = [
       id,
       userData.email,
       userData.password,
+      userData.firstName,
+      userData.lastName,
+      userData.phone,
       userData.role || 'user',
       userData.balance || 0,
       userData.totalInterest || 0
@@ -52,6 +57,8 @@ class PostgreSQLDatabase {
     // Convert snake_case to camelCase for frontend compatibility
     return {
       ...user,
+      firstName: user.first_name,
+      lastName: user.last_name,
       createdAt: user.created_at,
       updatedAt: user.updated_at,
       totalInterest: user.total_interest
@@ -66,6 +73,8 @@ class PostgreSQLDatabase {
     // Convert snake_case to camelCase for frontend compatibility
     return {
       ...user,
+      firstName: user.first_name,
+      lastName: user.last_name,
       createdAt: user.created_at,
       updatedAt: user.updated_at,
       totalInterest: user.total_interest
@@ -80,6 +89,8 @@ class PostgreSQLDatabase {
     // Convert snake_case to camelCase for frontend compatibility
     return {
       ...user,
+      firstName: user.first_name,
+      lastName: user.last_name,
       createdAt: user.created_at,
       updatedAt: user.updated_at,
       totalInterest: user.total_interest

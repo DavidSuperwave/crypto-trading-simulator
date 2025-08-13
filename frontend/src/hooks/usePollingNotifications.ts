@@ -101,7 +101,7 @@ export const usePollingNotifications = (options: PollingNotificationsOptions = {
         }
 
         // Check for status updates (simplified - would need to track previous states)
-        console.log('📊 Polling: Checking for user status updates and chat messages');
+        // console.log('📊 Polling: Checking for user status updates and chat messages');
       }
 
       setLastCheckTime(checkTime);
@@ -114,7 +114,7 @@ export const usePollingNotifications = (options: PollingNotificationsOptions = {
   const startPolling = useCallback(() => {
     if (intervalRef.current) return; // Already polling
 
-    console.log(`📊 Starting polling notifications (interval: ${pollInterval}ms)`);
+    // console.log(`📊 Starting polling notifications (interval: ${pollInterval}ms)`);
     setIsPolling(true);
     setLastCheckTime(new Date());
     
@@ -127,7 +127,7 @@ export const usePollingNotifications = (options: PollingNotificationsOptions = {
       intervalRef.current = null;
     }
     setIsPolling(false);
-    console.log('📊 Stopped polling notifications');
+    // console.log('📊 Stopped polling notifications');
   }, []);
 
   useEffect(() => {

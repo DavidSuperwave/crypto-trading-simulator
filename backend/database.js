@@ -367,6 +367,31 @@ class DatabaseManager {
         description: 'Approved deposit'
       });
 
+      // 🎯 COMPOUND INTEREST SIMULATION: Initialize or handle additional deposit
+      try {
+        const CompoundInterestSimulation = require('./services/compoundInterestSimulation');
+        const compoundSim = new CompoundInterestSimulation();
+        
+        // Check if user already has a simulation (additional deposit) or if this is first deposit
+        const existingSimulation = await compoundSim.getUserSimulation(deposit.userId);
+        
+        if (existingSimulation) {
+          // Handle additional deposit during simulation
+          console.log(`💰 Processing additional deposit for user ${deposit.userId}: $${deposit.amount}`);
+          const today = new Date().toISOString().split('T')[0];
+          await compoundSim.handleMidMonthDeposit(deposit.userId, deposit.amount, today);
+          console.log(`✅ Additional deposit processed and daily payouts adjusted`);
+        } else {
+          // Initialize new simulation for first deposit
+          console.log(`🚀 Initializing compound interest simulation for user ${deposit.userId} with first deposit $${deposit.amount}`);
+          await compoundSim.initializeSimulation(deposit.userId, deposit.amount);
+          console.log(`✅ 12-month compound interest simulation created for user ${deposit.userId}`);
+        }
+      } catch (simulationError) {
+        console.error('Error with compound interest simulation:', simulationError);
+        // Don't fail the deposit approval if simulation fails
+      }
+
       return updatedDeposit;
     }
   }

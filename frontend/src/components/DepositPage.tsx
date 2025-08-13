@@ -16,11 +16,10 @@ interface InvestmentPlan {
 }
 
 const DepositPage: React.FC = () => {
-  const { user, updateUser } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [depositAmount, setDepositAmount] = useState('');
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
 
   // Currency formatter function
   const formatCurrency = useCallback((amount: number) => 
@@ -30,76 +29,86 @@ const DepositPage: React.FC = () => {
   // Investment plans configuration
   const investmentPlans: InvestmentPlan[] = [
     {
-      id: 'basic',
-      name: 'Plan Básico',
-      minAmount: 1000,
-      maxTrades: 5,
-      returnMultiplier: 1.0,
+      id: 'starter',
+      name: 'Plan Starter',
+      minAmount: 2500,
+      maxTrades: 8,
+      returnMultiplier: 1.2,
       features: [
-        'Hasta 5 operaciones simultáneas',
-        'Rentabilidad estándar',
-        'Soporte por email',
-        'Acceso a señales básicas'
+        'Hasta 8 operaciones simultáneas',
+        '20% más rentabilidad',
+        'Soporte por email estándar',
+        'Señales básicas de trading',
+        'Retiros en 3-5 días hábiles',
+        'Comisión del 1% por transacción'
       ]
     },
     {
-      id: 'advanced',
-      name: 'Plan Avanzado',
+      id: 'growth',
+      name: 'Plan Growth',
       minAmount: 5000,
-      maxTrades: 10,
-      returnMultiplier: 1.25,
+      maxTrades: 15,
+      returnMultiplier: 1.5,
       features: [
-        'Hasta 10 operaciones simultáneas',
-        '25% más rentabilidad',
-        'Soporte prioritario',
-        'Señales avanzadas de IA',
-        'Análisis técnico semanal'
+        'Hasta 15 operaciones simultáneas',
+        '50% más rentabilidad',
+        'Soporte prioritario por email',
+        'Señales avanzadas con IA',
+        'Retiros en 1-2 días hábiles',
+        '🎁 Bono del 10% en tu depósito',
+        'Análisis de mercado mensual',
+        'Comisión reducida del 0.75%'
       ],
       badge: 'Popular',
       badgeColor: '#10B981',
       highlight: true
     },
     {
-      id: 'professional',
-      name: 'Plan Profesional',
-      minAmount: 15000,
-      maxTrades: 20,
-      returnMultiplier: 1.5,
-      features: [
-        'Hasta 20 operaciones simultáneas',
-        '50% más rentabilidad',
-        'Asesor personal dedicado',
-        'Señales premium en tiempo real',
-        'Análisis técnico diario',
-        'Acceso a estrategias exclusivas'
-      ],
-      badge: 'Recomendado',
-      badgeColor: '#F59E0B'
-    },
-    {
       id: 'elite',
       name: 'Plan Elite',
-      minAmount: 50000,
-      maxTrades: 50,
+      minAmount: 10000,
+      maxTrades: 999,
       returnMultiplier: 2.0,
       features: [
-        'Operaciones ilimitadas',
-        '100% más rentabilidad',
-        'Equipo de asesores exclusivo',
-        'Señales institucionales',
-        'Análisis en tiempo real',
-        'Estrategias personalizadas',
-        'Acceso a mercados premium'
+        '🚀 Operaciones ilimitadas',
+        '💎 100% más rentabilidad',
+        '👨‍💼 Asesor personal dedicado',
+        '⚡ Señales premium en tiempo real',
+        '💸 Retiros instantáneos (24/7)',
+        '🎁 Bono del 20% en tu depósito',
+        '📊 Análisis de mercado diario',
+        '🛡️ Seguro de protección incluido',
+        '🌟 Acceso VIP a nuevas funciones',
+        '💰 Comisión premium del 0.5%'
       ],
       badge: 'VIP',
       badgeColor: '#8B5CF6'
     }
   ];
 
-  // Get available plans based on deposit amount
-  const getAvailablePlans = () => {
-    const amount = parseFloat(depositAmount) || 0;
-    return investmentPlans.filter(plan => amount >= plan.minAmount);
+  // Get current plan based on user's balance
+  const getCurrentPlan = () => {
+    const balance = user?.balance || 0;
+    // Find the highest plan the user qualifies for based on their balance
+    return [...investmentPlans]
+      .reverse() // Start from highest plan
+      .find(plan => balance >= plan.minAmount) || investmentPlans[0];
+  };
+
+  // Get next available plan for upgrade
+  const getNextPlan = () => {
+    const currentPlan = getCurrentPlan();
+    const currentIndex = investmentPlans.findIndex(plan => plan.id === currentPlan.id);
+    return currentIndex < investmentPlans.length - 1 ? investmentPlans[currentIndex + 1] : null;
+  };
+
+  // Get plans to display (current + next upgrade option)
+  const getDisplayPlans = () => {
+    const currentPlan = getCurrentPlan();
+    const nextPlan = getNextPlan();
+    const plans = [currentPlan];
+    if (nextPlan) plans.push(nextPlan);
+    return plans;
   };
 
   // Handle deposit - navigate to payment method selection
@@ -114,13 +123,15 @@ const DepositPage: React.FC = () => {
       state: {
         amount: parseFloat(depositAmount),
         plan: selectedPlan,
-        planName: selectedPlanData?.name || 'Plan Básico'
+        planName: selectedPlanData?.name || 'Plan Starter'
       }
     });
   };
 
   const depositAmountNum = parseFloat(depositAmount) || 0;
-  const availablePlans = getAvailablePlans();
+  const currentPlan = getCurrentPlan();
+  const nextPlan = getNextPlan();
+  const displayPlans = getDisplayPlans();
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', padding: '2rem' }}>
@@ -211,7 +222,7 @@ const DepositPage: React.FC = () => {
                 <input
                   type="number"
                   step="1"
-                  min="1000"
+                  min="2500"
                   value={depositAmount}
                   onChange={(e) => setDepositAmount(e.target.value)}
                   placeholder="Ej: 10,000"
@@ -231,7 +242,7 @@ const DepositPage: React.FC = () => {
                   fontSize: '0.8rem', 
                   color: '#6B7280' 
                 }}>
-                  Mínimo: {formatCurrency(1000)}
+                  Mínimo: {formatCurrency(2500)}
                 </p>
               </div>
 
@@ -271,10 +282,10 @@ const DepositPage: React.FC = () => {
               {/* Deposit Button */}
               <button
                 type="submit"
-                disabled={!depositAmount || !selectedPlan || depositAmountNum < 1000}
+                disabled={!depositAmount || !selectedPlan || depositAmountNum < 2500}
                 style={{
                   width: '100%',
-                  background: !depositAmount || !selectedPlan || depositAmountNum < 1000 
+                  background: !depositAmount || !selectedPlan || depositAmountNum < 2500 
                     ? '#9CA3AF' 
                     : 'linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%)',
                   color: 'white',
@@ -283,7 +294,7 @@ const DepositPage: React.FC = () => {
                   padding: '1rem',
                   fontSize: '1rem',
                   fontWeight: '600',
-                  cursor: !depositAmount || !selectedPlan || depositAmountNum < 1000 
+                  cursor: !depositAmount || !selectedPlan || depositAmountNum < 2500 
                     ? 'not-allowed' 
                     : 'pointer',
                   boxShadow: '0 4px 20px rgba(79, 70, 229, 0.3)',
@@ -316,58 +327,158 @@ const DepositPage: React.FC = () => {
 
           {/* Right Side - Investment Plans */}
           <div>
+            {/* Current Plan Status */}
+            <div style={{
+              background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+              borderRadius: '16px',
+              padding: '1.5rem',
+              marginBottom: '2rem',
+              color: 'white',
+              textAlign: 'center'
+            }}>
+              <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.2rem' }}>
+                🎯 Tu Plan Actual
+              </h3>
+              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                {currentPlan.name}
+              </div>
+              <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>
+                Balance actual: {formatCurrency(user?.balance || 0)}
+              </div>
+            </div>
+
+            {/* Earnings Potential Calculator */}
+            {depositAmountNum >= 2500 && (
+              <div style={{
+                background: 'linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%)',
+                borderRadius: '16px',
+                padding: '1.5rem',
+                marginBottom: '2rem',
+                color: 'white',
+                textAlign: 'center'
+              }}>
+                <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.2rem' }}>
+                  💰 Potencial de Ganancias en 30 días
+                </h3>
+                <div style={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+                  gap: '1rem'
+                }}>
+                  {displayPlans.map((plan) => {
+                    const monthlyReturn = (depositAmountNum * plan.returnMultiplier * 0.08); // 8% base monthly return
+                    const isCurrent = plan.id === currentPlan.id;
+                    return (
+                      <div key={plan.id} style={{
+                        background: isCurrent ? 'rgba(16, 185, 129, 0.3)' : 'rgba(255,255,255,0.2)',
+                        borderRadius: '8px',
+                        padding: '1rem'
+                      }}>
+                        <div style={{ fontSize: '0.8rem', marginBottom: '0.25rem' }}>
+                          {plan.name} {isCurrent && '(Actual)'}
+                        </div>
+                        <div style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>
+                          +{formatCurrency(monthlyReturn)}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
             <div style={{ marginBottom: '2rem' }}>
               <h2 style={{ 
                 margin: '0 0 0.5rem 0', 
                 color: '#1F2937',
                 fontSize: '1.8rem'
               }}>
-                Planes de Inversión Disponibles
+                {nextPlan ? 'Mejora tu Plan' : 'Tu Plan Premium'}
               </h2>
               <p style={{ 
                 margin: 0, 
                 color: '#6B7280',
                 fontSize: '1rem'
               }}>
-                {depositAmountNum >= 1000 
-                  ? `Con ${formatCurrency(depositAmountNum)} puedes acceder a ${availablePlans.length} plan${availablePlans.length > 1 ? 'es' : ''}`
-                  : 'Ingresa un monto mínimo de $1,000 MXN para ver los planes disponibles'
+                {nextPlan 
+                  ? `Deposita más para acceder al ${nextPlan.name} y obtener mejores beneficios`
+                  : 'Ya tienes acceso al plan más premium disponible'
                 }
               </p>
             </div>
 
-            {depositAmountNum >= 1000 ? (
-              <div style={{ 
-                display: 'grid', 
-                gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-                gap: '1.5rem'
-              }}>
-                {availablePlans.map((plan) => (
+            <div style={{ 
+              display: 'grid', 
+              gridTemplateColumns: nextPlan ? 'repeat(auto-fit, minmax(300px, 1fr))' : '1fr',
+              gap: '1.5rem'
+            }}>
+              {displayPlans.map((plan) => {
+                const isSelected = selectedPlan === plan.id;
+                const isCurrent = plan.id === currentPlan.id;
+                const isUpgrade = plan.id === nextPlan?.id;
+                return (
                   <div
                     key={plan.id}
                     onClick={() => setSelectedPlan(plan.id)}
                     style={{
-                      background: selectedPlan === plan.id 
+                      background: isSelected 
                         ? 'linear-gradient(135deg, #EBF8FF 0%, #DBEAFE 100%)'
+                        : isCurrent
+                        ? 'linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%)'
                         : 'white',
                       borderRadius: '16px',
                       padding: '1.5rem',
-                      boxShadow: selectedPlan === plan.id 
+                      boxShadow: isSelected 
                         ? '0 10px 30px rgba(59, 130, 246, 0.2)' 
                         : '0 4px 6px rgba(0,0,0,0.05)',
-                      border: selectedPlan === plan.id 
+                      border: isSelected 
                         ? '2px solid #3B82F6' 
+                        : isCurrent
+                        ? '2px solid #10B981'
                         : plan.highlight 
                         ? '2px solid #10B981'
                         : '2px solid transparent',
                       cursor: 'pointer',
                       transition: 'all 0.2s',
                       position: 'relative',
-                      transform: selectedPlan === plan.id ? 'translateY(-4px)' : 'translateY(0)'
+                      transform: isSelected ? 'translateY(-4px)' : 'translateY(0)'
                     }}
                   >
-                    {/* Badge */}
-                    {plan.badge && (
+                    {/* Status Badge */}
+                    {isCurrent && (
+                      <div style={{
+                        position: 'absolute',
+                        top: '-8px',
+                        left: '1.5rem',
+                        background: '#10B981',
+                        color: 'white',
+                        padding: '0.25rem 0.75rem',
+                        borderRadius: '20px',
+                        fontSize: '0.7rem',
+                        fontWeight: '600'
+                      }}>
+                        Tu Plan Actual
+                      </div>
+                    )}
+                    
+                    {isUpgrade && (
+                      <div style={{
+                        position: 'absolute',
+                        top: '-8px',
+                        left: '1.5rem',
+                        background: '#F59E0B',
+                        color: 'white',
+                        padding: '0.25rem 0.75rem',
+                        borderRadius: '20px',
+                        fontSize: '0.7rem',
+                        fontWeight: '600'
+                      }}>
+                        Siguiente Nivel
+                      </div>
+                    )}
+
+                    {/* Plan Badge */}
+                    {plan.badge && !isCurrent && !isUpgrade && (
                       <div style={{
                         position: 'absolute',
                         top: '-8px',
@@ -384,7 +495,7 @@ const DepositPage: React.FC = () => {
                     )}
 
                     {/* Selected Indicator */}
-                    {selectedPlan === plan.id && (
+                    {isSelected && (
                       <div style={{
                         position: 'absolute',
                         top: '1rem',
@@ -436,7 +547,7 @@ const DepositPage: React.FC = () => {
                           <span style={{ fontSize: '0.8rem', color: '#6B7280' }}>Trades</span>
                         </div>
                         <div style={{ fontWeight: 'bold', color: '#1F2937' }}>
-                          {plan.maxTrades === 50 ? 'Ilimitado' : `Hasta ${plan.maxTrades}`}
+                          {plan.maxTrades === 999 ? 'Ilimitado' : `Hasta ${plan.maxTrades}`}
                         </div>
                       </div>
                       
@@ -493,25 +604,9 @@ const DepositPage: React.FC = () => {
                       </ul>
                     </div>
                   </div>
-                ))}
-              </div>
-            ) : (
-              <div style={{
-                background: 'white',
-                borderRadius: '16px',
-                padding: '3rem',
-                textAlign: 'center',
-                border: '2px dashed #E5E7EB'
-              }}>
-                <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>💰</div>
-                <h3 style={{ margin: '0 0 0.5rem 0', color: '#1F2937' }}>
-                  Ingresa un monto para ver los planes
-                </h3>
-                <p style={{ margin: 0, color: '#6B7280' }}>
-                  Los planes de inversión se mostrarán según el monto que ingreses
-                </p>
-              </div>
-            )}
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>

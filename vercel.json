@@ -1,5 +1,27 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": "build",
-  "installCommand": "npm install"
+  "name": "crypto-trading-simulator",
+  "version": 2,
+  "buildCommand": "cd frontend && npm ci && npm run build",
+  "outputDirectory": "frontend/build",
+  "installCommand": "npm install --prefix frontend",
+  "routes": [
+    {
+      "src": "/static/(.*)",
+      "headers": { "cache-control": "s-maxage=31536000,immutable" },
+      "dest": "/static/$1"
+    },
+    {
+      "src": "/(.*\\.(js|css|ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot))",
+      "headers": { "cache-control": "s-maxage=31536000,immutable" },
+      "dest": "/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "env": {
+    "REACT_APP_API_URL": "@crypto_api_url",
+    "REACT_APP_WS_URL": "@crypto_ws_url"
+  }
 }

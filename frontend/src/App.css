@@ -4,14 +4,19 @@
   box-sizing: border-box;
 }
 
+
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f8fafc;
   line-height: 1.6;
+}
+
+.App {
+  background-color: #f8fafc;
 }
 
 .App {
@@ -53,41 +58,9 @@ button:disabled {
   opacity: 0.6;
 }
 
-/* Table styles */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
 
-table th {
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-size: 0.8rem;
-  background: #f8fafc;
-  padding: 16px 12px;
-  text-align: left;
-  color: #6b7280;
-  border-bottom: 1px solid #e5e7eb;
-}
 
-table td {
-  padding: 12px;
-  border-bottom: 1px solid #f3f4f6;
-  color: #374151;
-}
-
-table tr:hover {
-  background-color: #f9fafb;
-}
-
-table tr:last-child td {
-  border-bottom: none;
-}
+/* Global table styles removed - now using CSS modules for admin dashboard */
 
 /* Form styles */
 input, textarea, select {
@@ -123,6 +96,8 @@ label {
   font-size: 14px;
 }
 
+
+
 /* Card styles */
 .card {
   background: white;
@@ -135,6 +110,8 @@ label {
 .card:hover {
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
 }
+
+
 
 /* Grid responsive */
 .grid-responsive {
@@ -401,6 +378,8 @@ label {
   }
 }
 
+
+
 /* Utility classes */
 .text-center {
   text-align: center;
@@ -429,6 +408,8 @@ label {
 .p-3 { padding: 1.5rem; }
 .p-4 { padding: 2rem; }
 
+
+
 .flex {
   display: flex;
 }
@@ -449,6 +430,8 @@ label {
   justify-content: space-between;
 }
 
+
+
 .gap-1 { gap: 0.5rem; }
 .gap-2 { gap: 1rem; }
 .gap-3 { gap: 1.5rem; }
@@ -461,6 +444,8 @@ label {
 .h-full {
   height: 100%;
 }
+
+
 
 /* Responsive breakpoints */
 @media (max-width: 1024px) {
@@ -523,6 +508,8 @@ label {
     padding: 8px 6px;
     font-size: 0.8rem;
   }
+  
+  
 }
 
 /* Dark mode support (optional) */
@@ -554,6 +541,630 @@ label {
   
   table tr:hover {
     background-color: #374151;
+  }
+  
+
+}
+
+/* Trading Animation Styles */
+.trading-animation-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: #000;
+}
+
+/* Animated Blue Lava Background */
+.lava-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.lava-blob {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.6) 0%, rgba(147, 51, 234, 0.4) 50%, transparent 70%);
+  filter: blur(40px);
+  animation: float 20s ease-in-out infinite;
+}
+
+.lava-blob-1 {
+  width: 400px;
+  height: 400px;
+  top: 10%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.lava-blob-2 {
+  width: 300px;
+  height: 300px;
+  top: 60%;
+  right: 15%;
+  animation-delay: -7s;
+}
+
+.lava-blob-3 {
+  width: 350px;
+  height: 350px;
+  bottom: 20%;
+  left: 30%;
+  animation-delay: -14s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(30px, -30px) scale(1.1);
+  }
+  50% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  75% {
+    transform: translate(20px, 30px) scale(1.05);
+  }
+}
+
+/* Glass Overlay */
+.glass-overlay {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Trading Header */
+.trading-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.trading-title {
+  color: white;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+  text-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+}
+
+.live-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #10b981;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  background: #10b981;
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.2);
+  }
+}
+
+/* Trades Container */
+.trades-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow: hidden;
+  padding-right: 1rem;
+}
+
+/* Trade Card Styles */
+.trade-card {
+  opacity: 0;
+  transform: translateY(-50px);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.trade-card-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.trade-card-removing {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.trade-card-background {
+  position: relative;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  grid-gap: 1rem;
+  align-items: center;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.trade-card-background:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+/* Trade Type Indicator */
+.trade-type-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.trade-type-indicator.buy {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.trade-type-indicator.sell {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* Main Trade Info */
+.trade-main-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.trade-symbol {
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.trade-amount {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
+}
+
+/* User Info */
+.trade-user {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.85rem;
+}
+
+/* Profit/Loss */
+.trade-profit {
+  text-align: right;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.trade-profit.profit {
+  color: #10b981;
+}
+
+.trade-profit.loss {
+  color: #ef4444;
+}
+
+.profit-sign {
+  font-size: 0.9rem;
+}
+
+/* Profit Glow Effect */
+.profit-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+  border-radius: 12px;
+  opacity: 0;
+  animation: profitPulse 2s ease-in-out;
+}
+
+@keyframes profitPulse {
+  0%, 100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Trading Stats Footer */
+.trading-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat-value {
+  display: block;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+.stat-label {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .glass-overlay {
+    padding: 1rem;
+  }
+  
+  .trading-title {
+    font-size: 1.4rem;
+  }
+  
+  .trade-card-background {
+    grid-template-columns: 1fr;
+    grid-gap: 0.8rem;
+    text-align: center;
+  }
+  
+  .trading-stats {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .lava-blob,
+  .pulse-dot,
+  .profit-glow {
+    animation: none;
+  }
+  
+  .trade-card,
+  .trade-card-visible,
+  .trade-card-removing {
+    transition: opacity 0.3s ease;
+    transform: none;
+  }
+}
+
+/* Signup Page Styles */
+.signup-page {
+  display: flex;
+  min-height: 100vh;
+  background: #000;
+}
+
+.signup-left {
+  flex: 3;
+  min-height: 100vh;
+}
+
+.signup-right {
+  flex: 2;
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(20px);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.signup-form-container {
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Signup Header */
+.signup-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.signup-title {
+  color: white;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #06b6d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.signup-subtitle {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+/* Form Styles */
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-label {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 1rem;
+  color: rgba(255, 255, 255, 0.5);
+  z-index: 1;
+}
+
+.form-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 1rem 1rem 1rem 3rem;
+  color: white;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.form-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.form-input:focus {
+  border-color: #3b82f6;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.password-toggle {
+  position: absolute;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: color 0.3s ease;
+  z-index: 1;
+}
+
+.password-toggle:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Password Strength Indicator */
+.password-strength {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.strength-bar-container {
+  flex: 1;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.strength-bar {
+  height: 100%;
+  transition: all 0.3s ease;
+  border-radius: 2px;
+}
+
+.strength-text {
+  font-size: 0.8rem;
+  font-weight: 500;
+  min-width: 80px;
+  text-align: right;
+}
+
+/* Password Match Indicator */
+.password-match {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.match-success {
+  color: #10b981;
+}
+
+.match-error {
+  color: #ef4444;
+}
+
+/* Error Message */
+.error-message {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* Signup Button */
+.signup-button {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #06b6d4 100%);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 1rem 2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.signup-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+}
+
+.signup-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Signup Footer */
+.signup-footer {
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.signup-footer p {
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+.signup-link {
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.signup-link:hover {
+  color: #60a5fa;
+}
+
+/* Mobile Responsive */
+@media (max-width: 1024px) {
+  .signup-page {
+    flex-direction: column;
+  }
+  
+  .signup-left {
+    flex: none;
+    height: 50vh;
+  }
+  
+  .signup-right {
+    flex: none;
+    min-height: 50vh;
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+@media (max-width: 768px) {
+  .signup-right {
+    padding: 1rem;
+  }
+  
+  .signup-title {
+    font-size: 2rem;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .signup-left {
+    height: 40vh;
+  }
+  
+  .signup-right {
+    min-height: 60vh;
   }
 }
 

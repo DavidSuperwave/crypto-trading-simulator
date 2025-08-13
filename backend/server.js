@@ -16,6 +16,9 @@ const userRoutes = require('./routes/user');
 const adminRoutes = require('./routes/admin');
 const demoRoutes = require('./routes/demo');
 const chatRoutes = require('./routes/chat');
+const simulationRoutes = require('./routes/simulation');
+const compoundInterestRoutes = require('./routes/compoundInterest');
+const enhancedTradingRoutes = require('./routes/enhanced-trading');
 
 const app = express();
 const PORT = process.env.PORT || (process.env.NODE_ENV === 'production' ? 8080 : 5001);
@@ -43,6 +46,9 @@ app.use('/api/user', authenticateToken, userRoutes);
 app.use('/api/admin', authenticateToken, adminRoutes);
 app.use('/api/demo', demoRoutes);
 app.use('/api/chat', authenticateToken, chatRoutes);
+app.use('/api/simulation', authenticateToken, simulationRoutes);
+app.use('/api/compound-interest', authenticateToken, compoundInterestRoutes);
+app.use('/api/enhanced-trading', authenticateToken, enhancedTradingRoutes);
 
 // Health check endpoints
 app.get('/api/health', (req, res) => {

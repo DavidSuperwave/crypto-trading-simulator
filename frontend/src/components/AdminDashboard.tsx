@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Users, DollarSign, Download, BarChart3, Check, X, Eye, Upload, MessageCircle } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Users, DollarSign, Download, BarChart3, Check, X, Eye, Upload, MessageCircle, ChevronDown, Info, Settings, Activity } from 'lucide-react';
 import AdminSidebar from './AdminSidebar';
+import CompoundInterestAdmin from './CompoundInterestAdmin';
 import axios from 'axios';
 import { buildApiUrl, API_CONFIG } from '../config/api';
 import { useAuth } from '../context/AuthContext';
@@ -9,6 +10,7 @@ import { DepositNotification, WithdrawalNotification, ChatMessage } from '../hoo
 import ConnectionStatus from './ConnectionStatus';
 import NotificationBadge from './NotificationBadge';
 import WebSocketDebug from './WebSocketDebug';
+
 
 interface User {
   id: string;
@@ -80,10 +82,21 @@ const AdminDashboard: React.FC = () => {
   const [pendingDeposits, setPendingDeposits] = useState<PendingDeposit[]>([]);
   const [chatConversations, setChatConversations] = useState<ChatConversation[]>([]);
   const [activeTab, setActiveTab] = useState('overview');
+  const [simulationTimeframe, setSimulationTimeframe] = useState('30d');
   const [loading, setLoading] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [selectedChatUser, setSelectedChatUser] = useState<string | null>(null);
   const [showWebSocketDebug, setShowWebSocketDebug] = useState(false);
+  const [conversationCategory, setConversationCategory] = useState('general');
+  const [showUserInfo, setShowUserInfo] = useState(false);
+  const [simulationData, setSimulationData] = useState<any>(null);
+
+  // Reset user info panel when no chat is selected
+  useEffect(() => {
+    if (!selectedChatUser) {
+      setShowUserInfo(false); // Hide user info when no chat is selected
+    }
+  }, [selectedChatUser]);
 
   // Function to handle chat selection and mark messages as read
   const handleChatSelection = async (userId: string) => {
@@ -141,7 +154,14 @@ const AdminDashboard: React.FC = () => {
     setUnreadCount(prev => Math.max(0, prev - 1));
   };
 
-  // Hybrid real-time notifications (WebSocket with polling fallback)
+  // TEMPORARILY DISABLED - Hybrid real-time notifications (WebSocket with polling fallback)
+  // const { mode, connectionStatus, isConnected, statusMessage } = useHybridNotifications({
+  const mode = 'disabled';
+  const connectionStatus = 'disabled';
+  const isConnected = false;
+  const statusMessage = 'Notifications disabled';
+  
+  /* DISABLED TO STOP INFINITE LOOP
   const { mode, connectionStatus, isConnected, statusMessage } = useHybridNotifications({
     onNewDeposit: (deposit) => {
       console.log(`💰 New deposit request (${mode}):`, deposit);
@@ -203,6 +223,7 @@ const AdminDashboard: React.FC = () => {
       }
     }
   });
+  */
 
   // Request notification permission on component mount
   useEffect(() => {
@@ -221,11 +242,7 @@ const AdminDashboard: React.FC = () => {
     };
   };
 
-  useEffect(() => {
-    fetchDashboardData();
-  }, []);
-
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -235,6 +252,7 @@ const AdminDashboard: React.FC = () => {
 
       const authHeaders = getAuthHeaders();
 
+      // First try core dashboard data (without simulation for now)
       const [overviewRes, usersRes, transactionsRes, withdrawalsRes, demosRes, pendingDepositsRes, chatRes] = await Promise.all([
         axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_DASHBOARD), authHeaders),
         axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN_USERS), authHeaders),
@@ -245,6 +263,36 @@ const AdminDashboard: React.FC = () => {
         axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.CHAT_ADMIN_CONVERSATIONS), authHeaders)
       ]);
 
+      // Try simulation data separately with error handling
+      let simulationRes = null;
+      try {
+        const token = localStorage.getItem('token');
+        console.log('🔍 Attempting to fetch simulation data...');
+        console.log('Token exists:', !!token);
+        console.log('Token preview:', token ? token.substring(0, 20) + '...' : 'none');
+        console.log('Auth headers:', authHeaders);
+        simulationRes = await axios.get(buildApiUrl('/admin/simulation-data'), authHeaders);
+        console.log('✅ Simulation data loaded successfully:', simulationRes.data);
+      } catch (simError: any) {
+        console.error('❌ SIMULATION DATA ERROR:', simError.response?.status, simError.response?.data?.error);
+        console.error('Full error:', simError);
+        // Create fallback that shows auth issue but doesn't break the UI
+        console.warn('🔄 Auth failed - simulation data unavailable. User table will show $0.00 until re-login.');
+        simulationRes = {
+          data: {
+            users: [],
+            platformStats: {
+              totalActiveSimulations: 0,
+              totalUsers: 0,
+              sevenDayTotalEarnings: 0,
+              thirtyDayTotalEarnings: 0,
+              yearTotalEarnings: 0,
+              totalTrades: 0
+            }
+          }
+        };
+      }
+
       setOverview(overviewRes.data.overview);
       setUsers(usersRes.data);
       setTransactions(transactionsRes.data);
@@ -252,10 +300,16 @@ const AdminDashboard: React.FC = () => {
       setDemos(demosRes.data);
       setPendingDeposits(pendingDepositsRes.data.pendingDeposits || []);
       setChatConversations(chatRes.data.conversations || []);
+      setSimulationData(simulationRes.data);
+      console.log('📊 Dashboard data loaded successfully');
     } catch (error) {
       console.error('Failed to fetch dashboard data:', error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, [fetchDashboardData]);
 
   const handleWithdrawalUpdate = async (withdrawalId: string, status: string) => {
     setLoading(true);
@@ -374,7 +428,7 @@ const AdminDashboard: React.FC = () => {
       cancelled: { background: '#fee2e2', color: '#dc2626' }
     };
 
-    const style = styles[status as keyof typeof styles] || styles.pending;
+    const style = status === 'pending' ? { color: '#f59e0b' } : status === 'approved' ? { color: '#10b981' } : { color: '#ef4444' };
 
     return (
       <span style={{ 
@@ -446,6 +500,7 @@ const AdminDashboard: React.FC = () => {
                 }}>
                   {activeTab === 'overview' && 'Dashboard Overview'}
                   {activeTab === 'users' && 'User Management'}
+                  {activeTab === 'simulation' && 'Compound Interest Management'}
                   {activeTab === 'pending-deposits' && 'Pending Deposits'}
                   {activeTab === 'withdrawals' && 'Withdrawal Requests'}
                   {activeTab === 'chat' && 'Chat Management'}
@@ -459,6 +514,7 @@ const AdminDashboard: React.FC = () => {
                 }}>
                   {activeTab === 'overview' && 'System overview and key metrics'}
                   {activeTab === 'users' && 'Manage user accounts and permissions'}
+                  {activeTab === 'simulation' && 'Manage compound interest simulations and payout projections'}
                   {activeTab === 'pending-deposits' && 'Review and approve deposit requests'}
                   {activeTab === 'withdrawals' && 'Process withdrawal requests'}
                   {activeTab === 'chat' && 'Monitor and respond to user conversations'}
@@ -778,7 +834,14 @@ const AdminDashboard: React.FC = () => {
                     }
                   `}
                 </style>
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <table style={{
+                    width: '100%',
+                    borderCollapse: 'collapse',
+                    background: 'white',
+                    borderRadius: '8px',
+                    overflow: 'hidden',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                  }}>
                   <thead>
                     <tr style={{ background: '#374151' }}>
                       <th style={{ padding: '12px', textAlign: 'left', color: 'white' }}>Email</th>
@@ -791,7 +854,7 @@ const AdminDashboard: React.FC = () => {
                   </thead>
                   <tbody>
                     {users.map((user) => (
-                      <tr key={user.id} className="user-table-row" style={{ borderBottom: '1px solid #eee' }}>
+                      <tr key={user.id}>
                         <td style={{ padding: '12px', fontWeight: '600', color: '#000' }}>{user.email}</td>
                         <td style={{ padding: '12px' }}>
                           <span style={{
@@ -841,11 +904,22 @@ const AdminDashboard: React.FC = () => {
             </div>
           )}
 
+          {activeTab === 'simulation' && (
+            <CompoundInterestAdmin />
+          )}
+
           {activeTab === 'pending-deposits' && (
             <div>
               <h3 style={{ color: '#000', marginBottom: '1.5rem' }}>Pending Deposits</h3>
               <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <table style={{
+                    width: '100%',
+                    borderCollapse: 'collapse',
+                    background: 'white',
+                    borderRadius: '8px',
+                    overflow: 'hidden',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                  }}>
                   <thead>
                     <tr style={{ background: '#374151' }}>
                       <th style={{ padding: '12px', textAlign: 'left', color: 'white' }}>User</th>
@@ -939,7 +1013,14 @@ const AdminDashboard: React.FC = () => {
             <div>
               <h3 style={{ color: '#000', marginBottom: '1.5rem' }}>Withdrawal Requests</h3>
               <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <table style={{
+                    width: '100%',
+                    borderCollapse: 'collapse',
+                    background: 'white',
+                    borderRadius: '8px',
+                    overflow: 'hidden',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                  }}>
                   <thead>
                     <tr style={{ background: '#374151' }}>
                       <th style={{ padding: '12px', textAlign: 'left', color: 'white' }}>User</th>
@@ -1022,7 +1103,13 @@ const AdminDashboard: React.FC = () => {
           {activeTab === 'chat' && (
             <div>
               <h3 style={{ color: '#000', marginBottom: '1.5rem' }}>Chat Management</h3>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '2rem', height: '600px' }}>
+              <div style={{ 
+                display: 'grid', 
+                gridTemplateColumns: selectedChatUser && showUserInfo ? '1fr 2fr 1fr' : '1fr 2fr', 
+                gap: '1.5rem', 
+                height: '600px',
+                transition: 'grid-template-columns 0.3s ease'
+              }}>
                 {/* Conversations List */}
                 <div style={{ 
                   border: '1px solid #e5e7eb', 
@@ -1128,11 +1215,92 @@ const AdminDashboard: React.FC = () => {
                       <div style={{ 
                         padding: '1rem', 
                         borderBottom: '1px solid #e5e7eb',
-                        fontWeight: '600',
-                        background: '#f8fafc',
-                        color: '#000'
+                        background: '#f8fafc'
                       }}>
-                        Chat with {chatConversations.find(c => c.userId === selectedChatUser)?.userEmail}
+                        <div style={{ 
+                          display: 'flex', 
+                          justifyContent: 'space-between', 
+                          alignItems: 'center',
+                          marginBottom: '0.75rem'
+                        }}>
+                          <div style={{ fontWeight: '600', color: '#000' }}>
+                            Chat with {chatConversations.find(c => c.userId === selectedChatUser)?.userEmail}
+                          </div>
+                          <button
+                            onClick={() => setShowUserInfo(!showUserInfo)}
+                            style={{
+                              background: showUserInfo ? '#10b981' : '#6b7280',
+                              color: 'white',
+                              border: 'none',
+                              padding: '0.5rem 0.75rem',
+                              borderRadius: '6px',
+                              cursor: 'pointer',
+                              fontSize: '0.8rem',
+                              fontWeight: '500',
+                              transition: 'all 0.2s ease',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '0.25rem'
+                            }}
+                            title={showUserInfo ? 'Hide User Info' : 'Show User Info'}
+                          >
+                            👤 {showUserInfo ? 'Hide' : 'Show'} Info
+                          </button>
+                        </div>
+                        
+                        {/* Conversation Category Dropdown */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          <label style={{ 
+                            fontSize: '0.85rem', 
+                            fontWeight: '500', 
+                            color: '#374151',
+                            minWidth: 'fit-content'
+                          }}>
+                            Topic:
+                          </label>
+                          <select
+                            value={conversationCategory}
+                            onChange={(e) => setConversationCategory(e.target.value)}
+                            style={{
+                              padding: '0.4rem 0.75rem',
+                              border: '1px solid #d1d5db',
+                              borderRadius: '6px',
+                              background: 'white',
+                              color: '#374151',
+                              fontSize: '0.85rem',
+                              cursor: 'pointer',
+                              outline: 'none',
+                              transition: 'border-color 0.2s ease'
+                            }}
+                            onFocus={(e) => e.target.style.borderColor = '#10b981'}
+                            onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+                          >
+                            <option value="general">General Support</option>
+                            <option value="deposits">New Deposits</option>
+                            <option value="withdrawals">Withdrawals</option>
+                            <option value="complaints">Complaints</option>
+                            <option value="technical">Technical Issues</option>
+                            <option value="account">Account Management</option>
+                            <option value="verification">Verification</option>
+                            <option value="trading">Trading Questions</option>
+                          </select>
+                          <div style={{
+                            background: conversationCategory === 'complaints' ? '#fef2f2' : 
+                                       conversationCategory === 'withdrawals' ? '#fef3c7' :
+                                       conversationCategory === 'deposits' ? '#ecfdf5' : '#f3f4f6',
+                            color: conversationCategory === 'complaints' ? '#dc2626' : 
+                                   conversationCategory === 'withdrawals' ? '#d97706' :
+                                   conversationCategory === 'deposits' ? '#059669' : '#6b7280',
+                            padding: '0.25rem 0.5rem',
+                            borderRadius: '4px',
+                            fontSize: '0.75rem',
+                            fontWeight: '500',
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.5px'
+                          }}>
+                            {conversationCategory}
+                          </div>
+                        </div>
                       </div>
 
                       {/* Messages */}
@@ -1232,6 +1400,239 @@ const AdminDashboard: React.FC = () => {
                     </div>
                   )}
                 </div>
+
+                {/* User Info Panel */}
+                {selectedChatUser && showUserInfo && (
+                  <div style={{ 
+                    border: '1px solid #e5e7eb', 
+                    borderRadius: '8px', 
+                    overflow: 'hidden',
+                    background: 'white',
+                    transform: 'translateX(0)',
+                    transition: 'transform 0.3s ease-in-out',
+                    opacity: 1
+                  }}>
+                  {selectedChatUser ? (
+                    <>
+                      {/* User Info Header */}
+                      <div style={{ 
+                        padding: '1rem', 
+                        borderBottom: '1px solid #e5e7eb',
+                        fontWeight: '600',
+                        background: '#f8fafc',
+                        color: '#000'
+                      }}>
+                        User Information
+                      </div>
+
+                      {/* User Details */}
+                      <div style={{ 
+                        padding: '1rem', 
+                        height: '550px', 
+                        overflow: 'auto' 
+                      }}>
+                        {(() => {
+                          const selectedUser = users.find(u => u.id === selectedChatUser);
+                          const userDeposits = pendingDeposits.filter(d => d.userId === selectedChatUser);
+                          const userWithdrawals = withdrawals.filter(w => w.userId === selectedChatUser);
+                          
+                          if (!selectedUser) {
+                            return (
+                              <div style={{ color: '#000', textAlign: 'center', padding: '2rem' }}>
+                                Loading user information...
+                              </div>
+                            );
+                          }
+
+                          return (
+                            <div>
+                              {/* Basic Info */}
+                              <div style={{ marginBottom: '1.5rem' }}>
+                                <h4 style={{ color: '#000', margin: '0 0 1rem 0', fontSize: '1.1rem' }}>Account Details</h4>
+                                <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '6px' }}>
+                                  <div style={{ marginBottom: '0.5rem' }}>
+                                    <strong style={{ color: '#000' }}>Email:</strong>
+                                    <div style={{ color: '#000', fontSize: '0.9rem' }}>{selectedUser.email}</div>
+                                  </div>
+                                  <div style={{ marginBottom: '0.5rem' }}>
+                                    <strong style={{ color: '#000' }}>Role:</strong>
+                                    <div style={{ color: '#000', fontSize: '0.9rem', textTransform: 'capitalize' }}>{selectedUser.role}</div>
+                                  </div>
+                                  <div style={{ marginBottom: '0.5rem' }}>
+                                    <strong style={{ color: '#000' }}>Joined:</strong>
+                                    <div style={{ color: '#000', fontSize: '0.9rem' }}>{formatDate(selectedUser.createdAt)}</div>
+                                  </div>
+                                  <div>
+                                    <strong style={{ color: '#000' }}>Current Balance:</strong>
+                                    <div style={{ color: '#10b981', fontSize: '1.1rem', fontWeight: '600' }}>
+                                      {formatCurrency(selectedUser.balance)}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Deposit History */}
+                              <div style={{ marginBottom: '1.5rem' }}>
+                                <h4 style={{ color: '#000', margin: '0 0 1rem 0', fontSize: '1.1rem' }}>
+                                  Recent Deposits ({userDeposits.length})
+                                </h4>
+                                {userDeposits.length === 0 ? (
+                                  <div style={{ 
+                                    background: '#f3f4f6', 
+                                    padding: '1rem', 
+                                    borderRadius: '6px',
+                                    color: '#000',
+                                    textAlign: 'center',
+                                    fontSize: '0.9rem'
+                                  }}>
+                                    No deposits yet
+                                  </div>
+                                ) : (
+                                  <div style={{ background: '#f8fafc', padding: '0.5rem', borderRadius: '6px' }}>
+                                    {userDeposits.slice(0, 3).map((deposit) => (
+                                      <div 
+                                        key={deposit.id} 
+                                        style={{ 
+                                          padding: '0.75rem',
+                                          marginBottom: '0.5rem',
+                                          background: 'white',
+                                          borderRadius: '4px',
+                                          borderLeft: '3px solid #10b981'
+                                        }}
+                                      >
+                                        <div style={{ 
+                                          display: 'flex', 
+                                          justifyContent: 'space-between',
+                                          alignItems: 'center',
+                                          marginBottom: '0.25rem'
+                                        }}>
+                                          <span style={{ color: '#10b981', fontWeight: '600', fontSize: '0.9rem' }}>
+                                            +{formatCurrency(deposit.amount)}
+                                          </span>
+                                          <span style={{
+                                            background: deposit.status === 'approved' ? '#dcfce7' : 
+                                                       deposit.status === 'pending' ? '#fef3c7' : '#fee2e2',
+                                            color: deposit.status === 'approved' ? '#166534' : 
+                                                  deposit.status === 'pending' ? '#d97706' : '#dc2626',
+                                            padding: '2px 6px',
+                                            borderRadius: '3px',
+                                            fontSize: '0.7rem',
+                                            textTransform: 'capitalize'
+                                          }}>
+                                            {deposit.status}
+                                          </span>
+                                        </div>
+                                        <div style={{ color: '#000', fontSize: '0.8rem' }}>
+                                          {deposit.plan} • {formatDate(deposit.createdAt)}
+                                        </div>
+                                      </div>
+                                    ))}
+                                    {userDeposits.length > 3 && (
+                                      <div style={{ 
+                                        textAlign: 'center', 
+                                        color: '#666', 
+                                        fontSize: '0.8rem',
+                                        padding: '0.5rem'
+                                      }}>
+                                        +{userDeposits.length - 3} more deposits
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Withdrawal History */}
+                              <div>
+                                <h4 style={{ color: '#000', margin: '0 0 1rem 0', fontSize: '1.1rem' }}>
+                                  Recent Withdrawals ({userWithdrawals.length})
+                                </h4>
+                                {userWithdrawals.length === 0 ? (
+                                  <div style={{ 
+                                    background: '#f3f4f6', 
+                                    padding: '1rem', 
+                                    borderRadius: '6px',
+                                    color: '#000',
+                                    textAlign: 'center',
+                                    fontSize: '0.9rem'
+                                  }}>
+                                    No withdrawals yet
+                                  </div>
+                                ) : (
+                                  <div style={{ background: '#f8fafc', padding: '0.5rem', borderRadius: '6px' }}>
+                                    {userWithdrawals.slice(0, 3).map((withdrawal) => (
+                                      <div 
+                                        key={withdrawal.id} 
+                                        style={{ 
+                                          padding: '0.75rem',
+                                          marginBottom: '0.5rem',
+                                          background: 'white',
+                                          borderRadius: '4px',
+                                          borderLeft: '3px solid #ef4444'
+                                        }}
+                                      >
+                                        <div style={{ 
+                                          display: 'flex', 
+                                          justifyContent: 'space-between',
+                                          alignItems: 'center',
+                                          marginBottom: '0.25rem'
+                                        }}>
+                                          <span style={{ color: '#ef4444', fontWeight: '600', fontSize: '0.9rem' }}>
+                                            -{formatCurrency(withdrawal.amount)}
+                                          </span>
+                                          <span style={{
+                                            background: withdrawal.status === 'approved' ? '#dcfce7' : 
+                                                       withdrawal.status === 'pending' ? '#fef3c7' : '#fee2e2',
+                                            color: withdrawal.status === 'approved' ? '#166534' : 
+                                                  withdrawal.status === 'pending' ? '#d97706' : '#dc2626',
+                                            padding: '2px 6px',
+                                            borderRadius: '3px',
+                                            fontSize: '0.7rem',
+                                            textTransform: 'capitalize'
+                                          }}>
+                                            {withdrawal.status}
+                                          </span>
+                                        </div>
+                                        <div style={{ color: '#000', fontSize: '0.8rem' }}>
+                                          {formatDate(withdrawal.createdAt)}
+                                        </div>
+                                      </div>
+                                    ))}
+                                    {userWithdrawals.length > 3 && (
+                                      <div style={{ 
+                                        textAlign: 'center', 
+                                        color: '#666', 
+                                        fontSize: '0.8rem',
+                                        padding: '0.5rem'
+                                      }}>
+                                        +{userWithdrawals.length - 3} more withdrawals
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })()}
+                      </div>
+                    </>
+                  ) : (
+                    <div style={{ 
+                      height: '100%',
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center',
+                      color: '#000',
+                      textAlign: 'center',
+                      padding: '2rem'
+                    }}>
+                      <div>
+                        <div style={{ fontSize: '2rem', marginBottom: '1rem', opacity: 0.3 }}>👤</div>
+                        <div>Select a user to view their information</div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                )}
               </div>
             </div>
           )}
@@ -1240,7 +1641,14 @@ const AdminDashboard: React.FC = () => {
             <div>
               <h3 style={{ color: '#000', marginBottom: '1.5rem' }}>Demo Requests</h3>
               <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <table style={{
+                    width: '100%',
+                    borderCollapse: 'collapse',
+                    background: 'white',
+                    borderRadius: '8px',
+                    overflow: 'hidden',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                  }}>
                   <thead>
                     <tr style={{ background: '#f8fafc' }}>
                       <th style={{ padding: '12px', textAlign: 'left', color: '#000' }}>Name</th>
@@ -1319,7 +1727,14 @@ const AdminDashboard: React.FC = () => {
             <div>
               <h3 style={{ color: '#000', marginBottom: '1.5rem' }}>All Transactions</h3>
               <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <table style={{
+                    width: '100%',
+                    borderCollapse: 'collapse',
+                    background: 'white',
+                    borderRadius: '8px',
+                    overflow: 'hidden',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                  }}>
                   <thead>
                     <tr style={{ background: '#f8fafc' }}>
                       <th style={{ padding: '12px', textAlign: 'left', color: '#000' }}>User</th>
@@ -1454,7 +1869,7 @@ const AdminDashboard: React.FC = () => {
       )}
       
       {/* WebSocket Debug Toggle - Only show in development or for debugging */}
-      {(process.env.NODE_ENV === 'development' || window.location.search.includes('debug=ws')) && (
+              {(process.env.NODE_ENV === 'development' || window.location.search.includes('debug=ws')) && (
         <>
           {/* Floating toggle button */}
           <button

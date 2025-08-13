@@ -1,5 +1,5 @@
 const cron = require('node-cron');
-const interestService = require('./interestService');
+// Note: interestService (real-time system) removed during migration to compound interest system
 
 /**
  * Task Scheduler Service
@@ -58,11 +58,37 @@ class Scheduler {
     try {
       const scheduledTask = cron.schedule(cronPattern, async () => {
         console.log(`🚀 Running scheduled task: ${name}`);
+        const startTime = new Date();
+        
         try {
-          await task();
-          console.log(`✅ Completed task: ${name}`);
+          const result = await task();
+          const endTime = new Date();
+          const duration = endTime - startTime;
+          
+          // Update task tracking info
+          if (this.tasks.has(name)) {
+            const taskInfo = this.tasks.get(name);
+            taskInfo.lastRun = endTime.toISOString();
+            taskInfo.lastDuration = duration;
+            taskInfo.lastResult = 'success';
+            taskInfo.lastError = null;
+          }
+          
+          console.log(`✅ Completed task: ${name} (${duration}ms)`);
+          return result;
         } catch (error) {
+          const endTime = new Date();
+          
+          // Update error tracking info
+          if (this.tasks.has(name)) {
+            const taskInfo = this.tasks.get(name);
+            taskInfo.lastRun = endTime.toISOString();
+            taskInfo.lastError = error.message;
+            taskInfo.lastResult = 'error';
+          }
+          
           console.error(`❌ Error in scheduled task ${name}:`, error);
+          throw error;
         }
       }, {
         scheduled: true,
@@ -71,10 +97,13 @@ class Scheduler {
 
       this.tasks.set(name, {
         task: scheduledTask,
-        pattern: cronPattern,
+        cronPattern: cronPattern,
         description,
         lastRun: null,
-        nextRun: this.getNextRun(cronPattern)
+        lastDuration: null,
+        lastResult: null,
+        lastError: null,
+        createdAt: new Date().toISOString()
       });
 
       console.log(`📅 Scheduled: ${name} - ${description} (${cronPattern})`);
@@ -85,11 +114,22 @@ class Scheduler {
 
   /**
    * Run daily interest processing
+   * Now uses only compound interest system (real-time system removed)
    */
   async runDailyInterest() {
     try {
       console.log('💰 Starting scheduled daily interest processing...');
-      const results = await interestService.processDailyInterest();
+      
+      // 🎯 MIGRATION: Use only compound interest system
+      console.log('🏦 Processing compound interest daily payouts...');
+      const compoundResults = await this.processCompoundInterestDaily();
+      
+      const results = {
+        compound: compoundResults,
+        totalProcessed: compoundResults.processedUsers || 0,
+        totalEarnings: compoundResults.totalEarnings || 0,
+        migrationComplete: true // Indicates real-time system was removed
+      };
       
       // Update last run time
       if (this.tasks.has('daily-interest')) {
@@ -100,6 +140,84 @@ class Scheduler {
       return results;
     } catch (error) {
       console.error('❌ Scheduled interest processing failed:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Process compound interest daily payouts for all users
+   */
+  async processCompoundInterestDaily() {
+    try {
+      const CompoundInterestSimulation = require('./compoundInterestSimulation');
+      const compoundSim = new CompoundInterestSimulation();
+      const database = require('../database');
+      
+      console.log('🏦 Processing compound interest daily payouts...');
+      
+      const today = new Date().toISOString().split('T')[0];
+      const users = await database.getAllUsers();
+      
+      const results = {
+        date: today,
+        processedUsers: 0,
+        totalEarnings: 0,
+        errors: [],
+        userResults: []
+      };
+
+      // Find users with active compound interest simulations
+      for (const user of users) {
+        try {
+          if (user.role !== 'user' && !(user.role === 'admin' && user.depositedAmount)) {
+            continue;
+          }
+
+          const simulationStatus = await compoundSim.getSimulationStatus(user.id);
+          
+          if (simulationStatus.hasSimulation && simulationStatus.status === 'active') {
+            console.log(`🎯 Processing compound interest for ${user.email}...`);
+            
+            // Step 1: Generate daily trades based on volatility pattern
+            const tradesResult = await compoundSim.generateDailyTrades(user.id, today);
+            
+            // Step 2: Process daily payout (existing functionality)
+            const payoutResult = await compoundSim.processDailyPayout(user.id, today);
+            
+            if (payoutResult.success) {
+              results.processedUsers++;
+              results.totalEarnings += payoutResult.payoutAmount;
+              results.userResults.push({
+                userId: user.id,
+                email: user.email,
+                payoutAmount: payoutResult.payoutAmount,
+                newBalance: payoutResult.newBalance,
+                monthlyProgress: payoutResult.monthlyProgress,
+                // NEW: Add trade information
+                tradesGenerated: tradesResult.success ? tradesResult.dailyTrades.tradeCount : 0,
+                dailyVolatility: tradesResult.success ? tradesResult.volatilityData : null,
+                tradesSummary: tradesResult.success ? tradesResult.dailyTrades.summary : null
+              });
+              
+              const tradeInfo = tradesResult.success ? `, ${tradesResult.dailyTrades.tradeCount} trades` : ', no trades';
+              console.log(`✅ ${user.email}: $${payoutResult.payoutAmount.toFixed(2)} compound interest${tradeInfo}`);
+            }
+          }
+        } catch (error) {
+          console.error(`❌ Error processing compound interest for ${user.email}:`, error);
+          results.errors.push({
+            userId: user.id,
+            email: user.email,
+            error: error.message
+          });
+        }
+      }
+
+      console.log(`🎉 Compound interest processing complete: ${results.processedUsers} users, $${results.totalEarnings.toFixed(2)} total payouts`);
+      return results;
+
+    } catch (error) {
+      console.error('❌ Error in compound interest daily processing:', error);
       throw error;
     }
   }
@@ -169,6 +287,8 @@ class Scheduler {
     switch (taskName) {
       case 'daily-interest':
         return await this.runDailyInterest();
+      case 'compound-interest':
+        return await this.processCompoundInterestDaily();
       case 'weekly-cleanup':
         return await this.runWeeklyCleanup();
       default:
@@ -203,6 +323,84 @@ class Scheduler {
     }
     
     console.log('✅ All tasks started');
+  }
+
+  /**
+   * Get status of all scheduled tasks
+   * @returns {Object} Task status information
+   */
+  getTaskStatus() {
+    const status = {};
+    
+    for (const [name, taskInfo] of this.tasks) {
+      status[name] = {
+        description: taskInfo.description,
+        cronPattern: taskInfo.cronPattern,
+        isRunning: taskInfo.task ? true : false,
+        lastRun: taskInfo.lastRun || null,
+        nextRun: this.getNextRunTime(taskInfo.cronPattern),
+        createdAt: taskInfo.createdAt
+      };
+    }
+    
+    return status;
+  }
+
+  /**
+   * Get next run time for a cron pattern
+   * @param {string} cronPattern - Cron pattern
+   * @returns {string|null} Next run time or null
+   */
+  getNextRunTime(cronPattern) {
+    try {
+      // This is a simplified implementation
+      // For production, consider using a more robust cron parser
+      const now = new Date();
+      
+      if (cronPattern === '1 0 * * *') {
+        // Daily at 12:01 AM
+        const tomorrow = new Date(now);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        tomorrow.setHours(0, 1, 0, 0);
+        return tomorrow.toISOString();
+      } else if (cronPattern === '0 2 * * 0') {
+        // Weekly cleanup - next Sunday at 2 AM
+        const nextSunday = new Date(now);
+        const daysUntilSunday = (7 - now.getDay()) % 7;
+        nextSunday.setDate(now.getDate() + (daysUntilSunday === 0 ? 7 : daysUntilSunday));
+        nextSunday.setHours(2, 0, 0, 0);
+        return nextSunday.toISOString();
+      } else if (cronPattern === '*/5 * * * *') {
+        // Every 5 minutes (dev mode)
+        const nextRun = new Date(now);
+        nextRun.setMinutes(Math.ceil(now.getMinutes() / 5) * 5, 0, 0);
+        return nextRun.toISOString();
+      }
+      
+      return null;
+    } catch (error) {
+      console.error('Error calculating next run time:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Get overall scheduler health
+   * @returns {Object} Health status
+   */
+  getHealth() {
+    const taskStatus = this.getTaskStatus();
+    const taskCount = Object.keys(taskStatus).length;
+    const runningTasks = Object.values(taskStatus).filter(task => task.isRunning).length;
+    
+    return {
+      status: runningTasks === taskCount ? 'healthy' : 'degraded',
+      totalTasks: taskCount,
+      runningTasks: runningTasks,
+      isProduction: this.isProduction,
+      uptime: process.uptime(),
+      tasks: taskStatus
+    };
   }
 }
 

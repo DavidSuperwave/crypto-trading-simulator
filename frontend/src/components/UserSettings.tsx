@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { User, Lock, Mail, Shield, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useSimulationData } from '../hooks/useSimulationData';
 import axios from 'axios';
 import { buildApiUrl, API_CONFIG } from '../config/api';
 
 const UserSettings: React.FC = () => {
   const { user } = useAuth();
+  const { simulationData } = useSimulationData();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -187,7 +189,7 @@ const UserSettings: React.FC = () => {
             </div>
           </div>
 
-          {/* Balance */}
+          {/* Enhanced Balance Information */}
           <div>
             <label style={{
               display: 'block',
@@ -196,8 +198,10 @@ const UserSettings: React.FC = () => {
               color: '#374151',
               marginBottom: '0.5rem'
             }}>
-              Balance Actual
+              Portfolio Balance
             </label>
+            
+            {/* Total Balance */}
             <div style={{
               display: 'flex',
               alignItems: 'center',
@@ -205,16 +209,93 @@ const UserSettings: React.FC = () => {
               padding: '0.75rem 1rem',
               background: 'linear-gradient(135deg, #EBF8FF 0%, #DBEAFE 100%)',
               border: '1px solid #BFDBFE',
-              borderRadius: '8px'
+              borderRadius: '8px',
+              marginBottom: '0.5rem'
             }}>
-              <span style={{ 
-                color: '#1E40AF', 
-                fontWeight: '700',
-                fontSize: '1.1rem'
-              }}>
-                ${user?.balance?.toLocaleString('es-MX', { minimumFractionDigits: 2 }) || '0.00'} MXN
-              </span>
+              <span style={{ fontSize: '1.25rem' }}>💼</span>
+              <div style={{ flex: 1 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '0.875rem', color: '#6B7280' }}>Total Balance</span>
+                  <span style={{ 
+                    color: '#1E40AF', 
+                    fontWeight: '700',
+                    fontSize: '1.125rem'
+                  }}>
+                    ${((simulationData?.user?.depositedAmount || 0) + (simulationData?.user?.simulatedInterest || 0))?.toLocaleString('en-US', { minimumFractionDigits: 2 }) || user?.balance?.toLocaleString('en-US', { minimumFractionDigits: 2 }) || '0.00'}
+                  </span>
+                </div>
+              </div>
             </div>
+
+            {/* Breakdown if simulation data available */}
+            {(simulationData?.user?.simulatedInterest !== undefined || simulationData?.user?.depositedAmount !== undefined) && (
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+                {/* Deposited Amount */}
+                <div style={{
+                  padding: '0.75rem',
+                  background: '#F9FAFB',
+                  border: '1px solid #E5E7EB',
+                  borderRadius: '8px'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
+                    <span style={{ fontSize: '1rem' }}>💰</span>
+                    <span style={{ fontSize: '0.75rem', color: '#6B7280', fontWeight: '500' }}>Deposited</span>
+                  </div>
+                  <span style={{ 
+                    color: '#374151', 
+                    fontWeight: '600',
+                    fontSize: '0.875rem'
+                  }}>
+                    ${simulationData?.user?.depositedAmount?.toLocaleString('en-US', { minimumFractionDigits: 2 }) || '0.00'}
+                  </span>
+                </div>
+
+                {/* AI Earnings */}
+                <div style={{
+                  padding: '0.75rem',
+                  background: (simulationData?.user?.simulatedInterest || 0) > 0 ? '#F0FDF4' : '#F9FAFB',
+                  border: `1px solid ${(simulationData?.user?.simulatedInterest || 0) > 0 ? '#BBF7D0' : '#E5E7EB'}`,
+                  borderRadius: '8px'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
+                    <span style={{ fontSize: '1rem' }}>🤖</span>
+                    <span style={{ fontSize: '0.75rem', color: '#6B7280', fontWeight: '500' }}>AI Earned</span>
+                  </div>
+                  <span style={{ 
+                    color: (simulationData?.user?.simulatedInterest || 0) > 0 ? '#16A34A' : '#374151', 
+                    fontWeight: '600',
+                    fontSize: '0.875rem'
+                  }}>
+                    ${simulationData?.user?.simulatedInterest?.toLocaleString('en-US', { minimumFractionDigits: 2 }) || '0.00'}
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* ROI Display */}
+            {(simulationData?.user?.depositedAmount && simulationData?.user?.simulatedInterest && simulationData.user.depositedAmount > 0) && (
+              <div style={{
+                marginTop: '0.5rem',
+                padding: '0.5rem 0.75rem',
+                background: 'linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%)',
+                border: '1px solid #BBF7D0',
+                borderRadius: '6px',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}>
+                <span style={{ fontSize: '0.75rem', color: '#15803D', fontWeight: '500' }}>
+                  Return on Investment:
+                </span>
+                <span style={{ 
+                  color: '#16A34A', 
+                  fontWeight: '700',
+                  fontSize: '0.875rem'
+                }}>
+                  +{((simulationData.user.simulatedInterest / simulationData.user.depositedAmount) * 100).toFixed(2)}%
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Account Created */}

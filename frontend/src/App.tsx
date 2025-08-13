@@ -3,13 +3,16 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import './App.css';
 
 // Import components
+import Homepage from './components/Homepage';
 import Login from './components/Login';
 import UserDashboard from './components/UserDashboard';
 import AdminDashboard from './components/AdminDashboard';
 import DemoDashboard from './components/DemoDashboard';
+import DemoPage from './components/DemoPage';
 import DepositPage from './components/DepositPage';
 import PaymentMethodPage from './components/PaymentMethodPage';
 import WithdrawalPage from './components/WithdrawalPage';
+import SignupPage from './components/SignupPage';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
 
@@ -37,19 +40,29 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode; requireAdmin?: boole
 }) => {
   const { isAuthenticated, user, isLoading } = useAuth();
   
+  console.log('🔐 ProtectedRoute check:', { isAuthenticated, isLoading, userRole: user?.role, requireAdmin });
+  
   // Don't redirect while still loading
   if (isLoading) {
+    console.log('⏳ Auth still loading, showing loading screen');
     return null; // Let the main loading screen handle this
   }
   
   if (!isAuthenticated) {
+    console.log('🚫 Not authenticated, redirecting to login');
     return <Navigate to="/login" replace />;
   }
   
   if (requireAdmin && user?.role !== 'admin') {
+    console.log('🚫 Admin access denied. User role:', user?.role, 'User:', user);
     return <Navigate to="/user" replace />;
   }
   
+  if (requireAdmin) {
+    console.log('✅ Admin access granted. User role:', user?.role);
+  }
+  
+  console.log('✅ Access granted, rendering children');
   return <>{children}</>;
 };
 
@@ -100,6 +113,8 @@ function AppContent() {
     <div className="App">
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/trading-demo" element={<DemoPage />} />
         <Route 
           path="/demo" 
           element={
@@ -148,7 +163,7 @@ function AppContent() {
             </ProtectedRoute>
           } 
         />
-        <Route path="/" element={<Navigate to="/demo" replace />} />
+        <Route path="/" element={<Homepage />} />
       </Routes>
     </div>
   );

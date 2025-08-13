@@ -8,11 +8,36 @@ const router = express.Router();
 // Register new user
 router.post('/register', async (req, res) => {
   try {
-    const { email, password, role = 'user' } = req.body;
+    const { email, password, firstName, lastName, phone, role = 'user' } = req.body;
 
     // Validate input
     if (!email || !password) {
       return res.status(400).json({ error: 'Email and password are required' });
+    }
+
+    if (!firstName || !lastName) {
+      return res.status(400).json({ error: 'First name and last name are required' });
+    }
+
+    if (!phone) {
+      return res.status(400).json({ error: 'Phone number is required' });
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ error: 'Please enter a valid email address' });
+    }
+
+    // Validate phone format (basic validation)
+    const phoneRegex = /^[+]?[1-9][\d]{0,15}$/;
+    if (!phoneRegex.test(phone.replace(/[\s\-()]/g, ''))) {
+      return res.status(400).json({ error: 'Please enter a valid phone number' });
+    }
+
+    // Validate password strength
+    if (password.length < 8) {
+      return res.status(400).json({ error: 'Password must be at least 8 characters long' });
     }
 
     // Check if user already exists
@@ -28,6 +53,9 @@ router.post('/register', async (req, res) => {
     const newUser = await database.createUser({
       email,
       password: hashedPassword,
+      firstName: firstName.trim(),
+      lastName: lastName.trim(),
+      phone: phone.replace(/[\s\-()]/g, ''), // Clean phone number
       role
     });
 
@@ -51,22 +79,36 @@ router.post('/register', async (req, res) => {
 // Login user
 router.post('/login', async (req, res) => {
   try {
+    console.log('🔐 Backend received login request');
+    console.log('📦 Request body:', { ...req.body, password: req.body.password ? '***' : 'MISSING' });
+    console.log('📦 Email received:', `"${req.body.email}"`);
+    console.log('📦 Password received length:', req.body.password ? req.body.password.length : 0);
+    
     const { email, password } = req.body;
 
     // Validate input
     if (!email || !password) {
+      console.log('❌ Missing email or password');
       return res.status(400).json({ error: 'Email and password are required' });
     }
 
     // Find user
+    console.log('🔍 Looking for user with email:', `"${email}"`);
     const user = await database.getUserByEmail(email);
     if (!user) {
+      console.log('❌ User not found in database');
       return res.status(401).json({ error: 'Invalid credentials' });
     }
+    
+    console.log('✅ User found:', { id: user.id, email: user.email, role: user.role });
 
     // Verify password
+    console.log('🔒 Comparing password with hash...');
     const isValidPassword = await bcrypt.compare(password, user.password);
+    console.log('🔒 Password comparison result:', isValidPassword);
+    
     if (!isValidPassword) {
+      console.log('❌ Password validation failed');
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 

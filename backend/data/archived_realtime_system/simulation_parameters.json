@@ -1,0 +1,74 @@
+[
+  {
+    "id": "1",
+    "parameter_name": "min_monthly_target",
+    "parameter_value": "0.15",
+    "parameter_type": "number",
+    "description": "Minimum monthly target percentage (15%)",
+    "updated_at": "2025-01-07T12:00:00.000Z"
+  },
+  {
+    "id": "2",
+    "parameter_name": "max_monthly_target",
+    "parameter_value": "0.21",
+    "parameter_type": "number",
+    "description": "Maximum monthly target percentage (21%)",
+    "updated_at": "2025-01-07T12:00:00.000Z"
+  },
+  {
+    "id": "3",
+    "parameter_name": "min_daily_trades",
+    "parameter_value": "3",
+    "parameter_type": "number",
+    "description": "Minimum trades per day",
+    "updated_at": "2025-01-07T12:00:00.000Z"
+  },
+  {
+    "id": "4",
+    "parameter_name": "max_daily_trades",
+    "parameter_value": "8",
+    "parameter_type": "number",
+    "description": "Maximum trades per day",
+    "updated_at": "2025-01-07T12:00:00.000Z"
+  },
+  {
+    "id": "5",
+    "parameter_name": "win_rate_min",
+    "parameter_value": "0.60",
+    "parameter_type": "number",
+    "description": "Minimum win rate (60%)",
+    "updated_at": "2025-01-07T12:00:00.000Z"
+  },
+  {
+    "id": "6",
+    "parameter_name": "win_rate_max",
+    "parameter_value": "0.85",
+    "parameter_type": "number",
+    "description": "Maximum win rate (85%)",
+    "updated_at": "2025-01-07T12:00:00.000Z"
+  },
+  {
+    "id": "7",
+    "parameter_name": "crypto_symbols",
+    "parameter_value": "[\"BTC\", \"ETH\", \"ADA\", \"SOL\", \"DOT\", \"LINK\", \"UNI\", \"AAVE\"]",
+    "parameter_type": "json",
+    "description": "Available crypto symbols for simulation",
+    "updated_at": "2025-01-07T12:00:00.000Z"
+  },
+  {
+    "id": "8",
+    "parameter_name": "simulation_enabled",
+    "parameter_value": "true",
+    "parameter_type": "boolean",
+    "description": "Global simulation system toggle",
+    "updated_at": "2025-01-07T12:00:00.000Z"
+  },
+  {
+    "id": "9",
+    "parameter_name": "weekend_trading",
+    "parameter_value": "false",
+    "parameter_type": "boolean",
+    "description": "Whether to simulate trades on weekends",
+    "updated_at": "2025-01-07T12:00:00.000Z"
+  }
+]

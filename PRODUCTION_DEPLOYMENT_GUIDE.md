@@ -1,321 +1,209 @@
-# 🚀 CryptoSim AI - Production Deployment Guide
+# Production Deployment Guide
 
-## 📋 Overview
+## 🚀 Recent Updates (Latest Features)
 
-This guide will help you deploy your crypto trading simulator to production with live chat, admin approval system, and automated interest generation.
-
-## 🏗️ Architecture Overview
-
-```
-Frontend (React) → Backend (Node.js) → Database (PostgreSQL)
-     ↓                    ↓                ↓
-   Vercel            Railway/Render      Railway/AWS RDS
-```
+### New Features Added Since Last Deployment:
+- ✅ **Advanced Deposit System**: Tiered plans ($2500, $5000, $10000) with persuasive UI
+- ✅ **Enhanced Withdrawal System**: 20% available balance with forced liquidation warnings
+- ✅ **Risk Protection System**: Comprehensive warning popups for risky withdrawals
+- ✅ **AI Simulator Moved**: Relocated from user dashboard to demo account
+- ✅ **Improved Portfolio Management**: Real-time 80/20 balance calculations
+- ✅ **Better UX**: All hardcoded URLs replaced with environment variables
 
 ---
 
-## 🎯 **RECOMMENDED HOSTING STACK**
+## 📋 Pre-Deployment Checklist
 
-### **Option 1: Railway (Recommended - Easiest)**
-- ✅ **Backend + Database**: Railway
-- ✅ **Frontend**: Vercel or Railway
-- ✅ **Cost**: ~$15-25/month
-- ✅ **Benefits**: Easy setup, built-in PostgreSQL, automatic deployments
+### ✅ Code Quality
+- [x] All linter warnings fixed
+- [x] Unused imports removed
+- [x] TypeScript errors resolved
+- [x] Hardcoded URLs replaced with environment variables
 
-### **Option 2: Digital Ocean (Most Control)**
-- ✅ **Backend**: DigitalOcean Droplet
-- ✅ **Database**: DigitalOcean Managed PostgreSQL
-- ✅ **Frontend**: Vercel or same droplet
-- ✅ **Cost**: ~$20-40/month
-- ✅ **Benefits**: Full control, SSH access, scalable
-
-### **Option 3: AWS (Enterprise)**
-- ✅ **Backend**: AWS EC2 or Lambda
-- ✅ **Database**: AWS RDS PostgreSQL
-- ✅ **Frontend**: AWS S3 + CloudFront
-- ✅ **Cost**: ~$30-100/month
-- ✅ **Benefits**: Enterprise grade, highly scalable
+### ✅ Production Ready
+- [x] vercel.json updated for proper frontend deployment
+- [x] API endpoints using environment variables
+- [x] CORS configured for production URLs
+- [x] Database ready for production
 
 ---
 
-## 🗄️ **DATABASE MIGRATION (CRITICAL)**
+## 🌐 Frontend Deployment (Vercel)
 
-### **Current Issue**
-- JSON files won't work in production (no persistence, lost on redeploy)
-- Need proper database with ACID properties
+### Step 1: Environment Variables in Vercel
+Set these environment variables in your Vercel dashboard:
 
-### **Migration Steps**
-
-1. **Choose Database**: PostgreSQL (recommended)
-2. **Schema Design**:
-```sql
--- Users table
-CREATE TABLE users (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  email VARCHAR(255) UNIQUE NOT NULL,
-  password_hash VARCHAR(255) NOT NULL,
-  role VARCHAR(50) DEFAULT 'user',
-  balance DECIMAL(15,2) DEFAULT 0,
-  created_at TIMESTAMP DEFAULT NOW(),
-  updated_at TIMESTAMP DEFAULT NOW()
-);
-
--- Transactions table
-CREATE TABLE transactions (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES users(id),
-  type VARCHAR(50) NOT NULL,
-  amount DECIMAL(15,2) NOT NULL,
-  status VARCHAR(50) DEFAULT 'pending',
-  created_at TIMESTAMP DEFAULT NOW()
-);
-
--- Withdrawals table
-CREATE TABLE withdrawals (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES users(id),
-  amount DECIMAL(15,2) NOT NULL,
-  method VARCHAR(100),
-  status VARCHAR(50) DEFAULT 'pending',
-  processed_by UUID REFERENCES users(id),
-  processed_at TIMESTAMP,
-  created_at TIMESTAMP DEFAULT NOW()
-);
-
--- Pending deposits table
-CREATE TABLE pending_deposits (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES users(id),
-  amount DECIMAL(15,2) NOT NULL,
-  plan VARCHAR(100),
-  method VARCHAR(100),
-  status VARCHAR(50) DEFAULT 'pending',
-  created_at TIMESTAMP DEFAULT NOW()
-);
-
--- Chat messages table
-CREATE TABLE chat_messages (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  sender_id UUID REFERENCES users(id),
-  recipient_id UUID REFERENCES users(id),
-  sender_type VARCHAR(50) NOT NULL,
-  recipient_type VARCHAR(50) NOT NULL,
-  message TEXT NOT NULL,
-  is_read BOOLEAN DEFAULT FALSE,
-  created_at TIMESTAMP DEFAULT NOW()
-);
-
--- Interest payments table (NEW)
-CREATE TABLE interest_payments (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES users(id),
-  amount DECIMAL(15,2) NOT NULL,
-  rate DECIMAL(5,4) NOT NULL,
-  period VARCHAR(50) NOT NULL,
-  created_at TIMESTAMP DEFAULT NOW()
-);
-```
-
----
-
-## 🌐 **STEP-BY-STEP RAILWAY DEPLOYMENT**
-
-### **1. Database Setup**
 ```bash
-# 1. Create Railway account: railway.app
-# 2. Create new project
-# 3. Add PostgreSQL service
-# 4. Get connection string from Railway dashboard
+# Required Environment Variables
+REACT_APP_API_URL=https://coral-app-bh2u4.ondigitalocean.app/api
+REACT_APP_WS_URL=wss://coral-app-bh2u4.ondigitalocean.app/ws
+GENERATE_SOURCEMAP=false
 ```
 
-### **2. Backend Deployment**
+### Step 2: Deploy Commands
 ```bash
-# 1. Install Railway CLI
-npm install -g @railway/cli
+# From project root
+git add .
+git commit -m "Production deployment: All features ready"
+git push origin main
 
-# 2. Login and link project
-railway login
-railway link
+# Vercel will auto-deploy from main branch
+```
 
-# 3. Add environment variables in Railway dashboard:
+### Step 3: Verify Deployment
+- Check frontend loads at: `https://crypto-trading-simulator-five.vercel.app`
+- Test all new features:
+  - Deposit page with tiered plans
+  - Withdrawal page with risk warnings
+  - User dashboard (AI simulator removed)
+  - Demo page (AI simulator present)
+
+---
+
+## 🖥️ Backend Deployment (Digital Ocean)
+
+### Step 1: Environment Variables
+Create `.env` file in `/backend/` directory:
+
+```bash
+# Production Environment Variables
+NODE_ENV=production
+PORT=8080
+JWT_SECRET=your-super-secure-256-character-jwt-secret-key
+
+# CORS and Frontend
+FRONTEND_URL=https://crypto-trading-simulator-five.vercel.app
+CORS_ORIGIN=https://crypto-trading-simulator-five.vercel.app
+
+# Database
 DATABASE_URL=postgresql://username:password@host:port/database
-NODE_ENV=production
-JWT_SECRET=your-super-secret-jwt-key
-FRONTEND_URL=https://yourdomain.com
+POSTGRES_URL=postgresql://username:password@host:port/database
 
-# 4. Deploy backend
-railway up
+# WebSocket Configuration
+WS_MAX_PAYLOAD=16384
+WS_CONNECTION_TIMEOUT=1800000
+
+# Production Settings
+DEV_MODE=false
+INTEREST_INTERVAL_MINUTES=1440
 ```
 
-### **3. Frontend Deployment (Vercel)**
+### Step 2: Deploy to Digital Ocean
 ```bash
-# 1. Create vercel.json in frontend folder:
-{
-  "builds": [
-    { "src": "package.json", "use": "@vercel/static-build" }
-  ],
-  "routes": [
-    { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "/index.html" }
-  ]
-}
+# SSH to your Digital Ocean droplet
+ssh root@your-droplet-ip
 
-# 2. Add environment variables in Vercel:
-REACT_APP_API_URL=https://your-backend.railway.app
+# Navigate to app directory
+cd /var/www/crypto-trading-simulator
 
-# 3. Deploy to Vercel
-npm install -g vercel
-vercel --prod
+# Pull latest changes
+git pull origin main
+
+# Install dependencies
+cd backend
+npm install --production
+
+# Restart the application
+pm2 restart crypto-trading-backend
+
+# Check status
+pm2 status
+pm2 logs crypto-trading-backend
 ```
+
+### Step 3: Verify Backend
+- Check API health: `https://coral-app-bh2u4.ondigitalocean.app/api/health`
+- Check WebSocket: `wss://coral-app-bh2u4.ondigitalocean.app/ws`
 
 ---
 
-## 🔒 **SECURITY CHECKLIST**
+## 🔧 New Features Testing Guide
 
-### **Essential Security Measures**
-- ✅ **HTTPS**: Force HTTPS in production
-- ✅ **Environment Variables**: Never commit secrets
-- ✅ **CORS**: Configure for production domains only
-- ✅ **Rate Limiting**: Prevent API abuse
-- ✅ **Input Validation**: Sanitize all inputs
-- ✅ **JWT Expiration**: Short token lifetimes
-- ✅ **Password Hashing**: Use bcrypt (already implemented)
+### 1. Deposit System Testing
+- Navigate to user dashboard → Depositar
+- Verify 3 tiers display: $2500, $5000, $10000
+- Test current plan detection based on user balance
+- Verify "next plan" logic works correctly
 
-### **Production Environment Variables**
+### 2. Withdrawal System Testing
+- Navigate to user dashboard → Retirar
+- Enter amount > 20% of portfolio
+- Verify risk warning popup appears
+- Test "Quiero Retirar" confirmation requirement
+- Verify alternative timeline calculations
+
+### 3. Dashboard Testing
+- Confirm AI Simulator tab removed from user dashboard
+- Verify demo page still has AI simulator features
+- Check all live trading feeds work correctly
+
+---
+
+## 🔍 Post-Deployment Verification
+
+### Frontend Checks:
+- [ ] All pages load without errors
+- [ ] Navigation works correctly
+- [ ] API calls successful
+- [ ] WebSocket connections stable
+- [ ] New deposit/withdrawal flows working
+
+### Backend Checks:
+- [ ] All API endpoints responding
+- [ ] Database connections stable
+- [ ] WebSocket server running
+- [ ] Scheduled tasks working
+- [ ] CORS allowing frontend requests
+
+### Data Integrity:
+- [ ] User portfolios calculating correctly (80/20 split)
+- [ ] Compound interest system working
+- [ ] Trading simulations running
+- [ ] Real-time updates functioning
+
+---
+
+## 🚨 Rollback Plan
+
+If issues occur:
+
 ```bash
-# Backend (.env)
-NODE_ENV=production
-DATABASE_URL=postgresql://...
-JWT_SECRET=super-secret-random-string-256-chars
-FRONTEND_URL=https://yourdomain.com
-PORT=5001
+# Quick rollback on Digital Ocean
+cd /var/www/crypto-trading-simulator
+git checkout HEAD~1  # Go back one commit
+cd backend
+pm2 restart crypto-trading-backend
 
-# Frontend (.env.production)
-REACT_APP_API_URL=https://your-backend-api.railway.app
+# For Vercel, redeploy previous version through dashboard
 ```
 
 ---
 
-## 💬 **CHAT SYSTEM PRODUCTION UPGRADES**
+## 📞 Support Contacts
 
-### **Current System**: HTTP polling
-### **Production Upgrade**: WebSockets
-
-```javascript
-// Add to backend - WebSocket upgrade
-const { Server } = require('socket.io');
-const io = new Server(server, {
-  cors: {
-    origin: process.env.FRONTEND_URL,
-    methods: ["GET", "POST"]
-  }
-});
-
-// Real-time chat events
-io.on('connection', (socket) => {
-  socket.on('join-admin', () => {
-    socket.join('admin-room');
-  });
-  
-  socket.on('new-message', (data) => {
-    socket.to('admin-room').emit('admin-notification', data);
-  });
-});
-```
+- **Technical Issues**: Check logs with `pm2 logs`
+- **Database Issues**: Verify DATABASE_URL connection
+- **Frontend Issues**: Check Vercel deployment logs
+- **WebSocket Issues**: Verify SSL certificates and CORS
 
 ---
 
-## 💰 **INTEREST GENERATION SYSTEM**
+## 🎯 Success Metrics
 
-### **Implementation Plan**
-1. **Cron Job**: Run daily at midnight
-2. **Random Interest**: 0.1% - 2.5% daily
-3. **User Notification**: Via chat system
-4. **Admin Monitoring**: Track all payments
-
-### **Code Implementation** (see next section)
-
----
-
-## 📊 **MONITORING & ANALYTICS**
-
-### **Essential Monitoring**
-- ✅ **Application Logs**: Railway built-in
-- ✅ **Database Monitoring**: PostgreSQL metrics
-- ✅ **Error Tracking**: Sentry integration
-- ✅ **Uptime Monitoring**: UptimeRobot
-- ✅ **Performance**: New Relic or Railway analytics
-
-### **Admin Alerts**
-- New user registrations
-- Large deposit requests
-- System errors
-- Database connection issues
+After deployment, monitor:
+- User engagement with new deposit tiers
+- Withdrawal attempt patterns
+- Portfolio balance calculations accuracy
+- System performance and uptime
+- User feedback on new features
 
 ---
 
-## 🚀 **DEPLOYMENT CHECKLIST**
+## 📝 Next Steps
 
-### **Pre-deployment**
-- [ ] Database schema created
-- [ ] Environment variables configured
-- [ ] CORS settings updated
-- [ ] Frontend API URLs updated
-- [ ] SSL certificates configured
-
-### **Post-deployment**
-- [ ] Database seeded with initial data
-- [ ] Admin accounts created
-- [ ] Chat system tested
-- [ ] Deposit/withdrawal flow tested
-- [ ] Interest generation tested
-- [ ] Monitoring setup
-- [ ] Backup strategy implemented
-
----
-
-## 💡 **COST ESTIMATES**
-
-### **Railway + Vercel Stack**
-- Railway (Backend + DB): $15-20/month
-- Vercel (Frontend): $0-10/month
-- Domain: $12/year
-- **Total**: ~$25-30/month
-
-### **Production Features Included**
-- ✅ Unlimited users
-- ✅ Real-time chat
-- ✅ Automated backups
-- ✅ SSL certificates
-- ✅ CDN for frontend
-- ✅ 99.9% uptime SLA
-
----
-
-## 🔧 **NEXT STEPS**
-
-1. **Implement Interest Generation System**
-2. **Database Migration Scripts**
-3. **Environment Configuration**
-4. **WebSocket Chat Upgrade**
-5. **Production Security Hardening**
-6. **Monitoring Setup**
-
----
-
-## 📞 **SUPPORT & SCALING**
-
-### **When to Scale**
-- \>1000 users: Consider load balancing
-- \>10000 users: Microservices architecture
-- \>100000 users: Kubernetes + cloud native
-
-### **Scaling Options**
-- **Horizontal**: Multiple Railway services
-- **Vertical**: Upgrade Railway plans
-- **Database**: Read replicas for performance
-- **CDN**: CloudFlare for global performance
-
----
-
-*This guide will be continuously updated as we implement production features.*
+After successful deployment:
+1. Monitor user behavior with new features
+2. Gather feedback on withdrawal risk warnings
+3. Analyze deposit tier conversion rates
+4. Plan next feature iterations
+5. Scale infrastructure as needed

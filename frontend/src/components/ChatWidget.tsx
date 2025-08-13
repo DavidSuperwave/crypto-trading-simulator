@@ -15,7 +15,11 @@ interface ChatMessage {
   isRead: boolean;
 }
 
-const ChatWidget: React.FC = () => {
+interface ChatWidgetProps {
+  isInPopup?: boolean;
+}
+
+const ChatWidget: React.FC<ChatWidgetProps> = ({ isInPopup = false }) => {
   const { user } = useAuth();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState('');
@@ -153,17 +157,25 @@ const ChatWidget: React.FC = () => {
     // In future, this will update read status in backend
   };
 
+  const containerStyle = isInPopup ? {
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column' as const,
+    overflow: 'hidden'
+  } : {
+    background: 'white',
+    borderRadius: '16px',
+    boxShadow: '0 4px 6px rgba(0,0,0,0.05)',
+    height: '600px',
+    display: 'flex',
+    flexDirection: 'column' as const,
+    overflow: 'hidden'
+  };
+
   return (
-    <div style={{
-      background: 'white',
-      borderRadius: '16px',
-      boxShadow: '0 4px 6px rgba(0,0,0,0.05)',
-      height: '600px',
-      display: 'flex',
-      flexDirection: 'column',
-      overflow: 'hidden'
-    }}>
-      {/* Chat Header */}
+    <div style={containerStyle}>
+      {/* Chat Header - Only show if not in popup */}
+      {!isInPopup && (
       <div style={{
         padding: '1.5rem',
         borderBottom: '1px solid #E5E7EB',
@@ -221,6 +233,7 @@ const ChatWidget: React.FC = () => {
           </span>
         </div>
       </div>
+      )}
 
       {/* Messages Area */}
       <div 

@@ -40,7 +40,7 @@ export const useHybridNotifications = (options: HybridNotificationsOptions = {})
     } else if (wsStatus === 'error' || wsStatus === 'disconnected') {
       // WebSocket failed, fallback to polling
       if (mode !== 'polling') {
-        console.log('📊 WebSocket failed, falling back to polling notifications');
+        // console.log('📊 WebSocket failed, falling back to polling notifications');
         setMode('polling');
         pollingNotifications.startPolling();
       }
@@ -51,7 +51,7 @@ export const useHybridNotifications = (options: HybridNotificationsOptions = {})
   useEffect(() => {
     const fallbackTimer = setTimeout(() => {
       if (!websocketNotifications.isConnected) {
-        console.log(`📊 WebSocket connection timeout (${fallbackDelay}ms), falling back to polling`);
+        // console.log(`📊 WebSocket connection timeout (${fallbackDelay}ms), falling back to polling`);
         setMode('polling');
         pollingNotifications.startPolling();
       }

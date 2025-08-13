@@ -169,7 +169,7 @@ export const useWebSocket = (options: UseWebSocketOptions = {}) => {
       mountedRef.current = false;
       disconnect();
     };
-  }, [connect, disconnect]);
+  }, []); // Remove dependencies to prevent infinite loop
 
   // Cleanup on unmount
   useEffect(() => {
@@ -177,7 +177,7 @@ export const useWebSocket = (options: UseWebSocketOptions = {}) => {
       mountedRef.current = false;
       disconnect();
     };
-  }, [disconnect]);
+  }, []); // Remove dependency to prevent infinite loop
 
   // Ping to keep connection alive
   useEffect(() => {

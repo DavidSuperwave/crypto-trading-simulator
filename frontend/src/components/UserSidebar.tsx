@@ -1,6 +1,7 @@
 import React from 'react';
-import { Home, Download, Upload, Settings, LogOut, TrendingUp } from 'lucide-react';
+import { Home, Download, Upload, Settings, LogOut } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { usePortfolioData } from '../hooks/usePortfolioData';
 import { useNavigate } from 'react-router-dom';
 
 interface UserSidebarProps {
@@ -10,6 +11,7 @@ interface UserSidebarProps {
 
 const UserSidebar: React.FC<UserSidebarProps> = ({ activeView, onViewChange }) => {
   const { user, logout } = useAuth();
+  const { portfolioData } = usePortfolioData();
   const navigate = useNavigate();
 
   const menuItems = [
@@ -28,7 +30,7 @@ const UserSidebar: React.FC<UserSidebarProps> = ({ activeView, onViewChange }) =
     <div style={{
       width: '280px',
       height: '100vh',
-      background: 'linear-gradient(180deg, #1e293b 0%, #0f172a 100%)',
+      background: 'linear-gradient(180deg, #00509d 0%, #003d7a 100%)',
       color: 'white',
       display: 'flex',
       flexDirection: 'column',
@@ -40,45 +42,31 @@ const UserSidebar: React.FC<UserSidebarProps> = ({ activeView, onViewChange }) =
     }}>
       {/* Logo/Header */}
       <div style={{
-        padding: '2rem 1.5rem',
+        padding: '1.5rem 1.5rem',
         borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
       }}>
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '0.75rem',
-          marginBottom: '1rem'
+          justifyContent: 'center'
         }}>
           <div style={{
-            width: '40px',
-            height: '40px',
-            background: 'linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%)',
+            width: '180px',
+            height: '50px',
             borderRadius: '12px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center'
           }}>
-            <TrendingUp size={20} color="white" />
-          </div>
-          <div>
-            <h1 style={{
-              margin: 0,
-              fontSize: '1.25rem',
-              fontWeight: '700',
-              background: 'linear-gradient(135deg, #60A5FA 0%, #A78BFA 100%)',
-              backgroundClip: 'text',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent'
-            }}>
-              CryptoSim AI
-            </h1>
-            <p style={{
-              margin: 0,
-              fontSize: '0.75rem',
-              color: 'rgba(255, 255, 255, 0.6)'
-            }}>
-              Dashboard de Usuario
-            </p>
+            <img 
+              src="/logo.png" 
+              alt="Logo" 
+              style={{
+                width: '220px',
+                height: '80px',
+                objectFit: 'contain'
+              }}
+            />
           </div>
         </div>
       </div>
@@ -118,13 +106,32 @@ const UserSidebar: React.FC<UserSidebarProps> = ({ activeView, onViewChange }) =
             }}>
               {user?.email || 'Usuario'}
             </p>
-            <p style={{
-              margin: 0,
+            <div style={{
               fontSize: '0.75rem',
-              color: 'rgba(255, 255, 255, 0.6)'
+              color: 'rgba(255, 255, 255, 0.8)',
+              lineHeight: 1.3
             }}>
-              Balance: ${user?.balance?.toLocaleString('es-MX', { minimumFractionDigits: 2 }) || '0.00'} MXN
-            </p>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span>Total:</span>
+                <span style={{ fontWeight: '600' }}>
+                  ${portfolioData?.totalPortfolioValue?.toLocaleString('en-US', { minimumFractionDigits: 3 }) || user?.balance?.toLocaleString('en-US', { minimumFractionDigits: 2 }) || '0.00'}
+                </span>
+              </div>
+              {portfolioData && (
+                <>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', opacity: 0.7 }}>
+                    <span>Deposited:</span>
+                    <span>${portfolioData?.totalDeposited?.toLocaleString('en-US', { minimumFractionDigits: 2 }) || '0.00'}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', opacity: 0.7 }}>
+                    <span>AI Earned:</span>
+                    <span style={{ color: (portfolioData?.compoundInterestEarned || 0) > 0 ? '#4ade80' : 'inherit' }}>
+                      ${portfolioData?.compoundInterestEarned?.toLocaleString('en-US', { minimumFractionDigits: 3 }) || '0.00'}
+                    </span>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -155,7 +162,7 @@ const UserSidebar: React.FC<UserSidebarProps> = ({ activeView, onViewChange }) =
                   : 'transparent',
                 border: 'none',
                 borderRadius: '12px',
-                color: isActive ? 'white' : 'rgba(255, 255, 255, 0.7)',
+                color: 'white',
                 fontSize: '0.9rem',
                 fontWeight: isActive ? '600' : '500',
                 cursor: 'pointer',
@@ -172,7 +179,7 @@ const UserSidebar: React.FC<UserSidebarProps> = ({ activeView, onViewChange }) =
               onMouseLeave={(e) => {
                 if (!isActive) {
                   e.currentTarget.style.background = 'transparent';
-                  e.currentTarget.style.color = 'rgba(255, 255, 255, 0.7)';
+                  e.currentTarget.style.color = 'white';
                 }
               }}
             >

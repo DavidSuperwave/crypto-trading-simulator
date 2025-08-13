@@ -5,6 +5,9 @@ import { buildApiUrl, API_CONFIG } from '../config/api';
 interface User {
   id: string;
   email: string;
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
   role: string;
   balance: number;
   totalInterest: number;
@@ -16,7 +19,14 @@ interface AuthContextType {
   isLoading: boolean;
   login: (email: string, password: string) => Promise<User | null>;
   logout: () => void;
-  register: (email: string, password: string, role?: string) => Promise<User | null>;
+  register: (
+    email: string, 
+    password: string, 
+    firstName: string, 
+    lastName: string, 
+    phone: string, 
+    role?: string
+  ) => Promise<User | null>;
   updateUser: (userData: Partial<User>) => void;
   getAuthHeaders: () => { Authorization: string } | {};
 }
@@ -59,30 +69,66 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const login = async (email: string, password: string): Promise<User | null> => {
+    console.log('🔐 Starting login process:', { email, password: '***' });
+    console.log('🌐 API URL:', buildApiUrl(API_CONFIG.ENDPOINTS.LOGIN));
+    
+    const requestData = { email, password };
+    console.log('📦 Request data:', { ...requestData, password: '***' });
+    console.log('📦 Exact request JSON:', JSON.stringify(requestData));
+    
     try {
-      const response = await axios.post(buildApiUrl(API_CONFIG.ENDPOINTS.LOGIN), {
-        email,
-        password
+      const response = await axios.post(buildApiUrl(API_CONFIG.ENDPOINTS.LOGIN), requestData, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
 
-      const { user: userData, token } = response.data;
+      console.log('✅ Login HTTP status:', response.status);
+      console.log('✅ Login response data:', response.data);
       
-      localStorage.setItem('token', token);
-      setUser(userData);
-      setIsAuthenticated(true);
-      
-      return userData;
-    } catch (error) {
-      console.error('Login failed:', error);
+      if (response.status === 200 && response.data) {
+        const { user: userData, token } = response.data;
+        
+        if (userData && token) {
+          localStorage.setItem('token', token);
+          setUser(userData);
+          setIsAuthenticated(true);
+          
+          console.log('✅ Login successful, user role:', userData.role);
+          console.log('✅ Token saved:', token.substring(0, 20) + '...');
+          console.log('✅ Auth state updated');
+          return userData;
+        } else {
+          console.error('❌ Missing user data or token in response');
+          return null;
+        }
+      } else {
+        console.error('❌ Unexpected response status:', response.status);
+        return null;
+      }
+    } catch (error: any) {
+      console.error('❌ Login failed with error:', error);
+      console.error('❌ Error response:', error.response?.data || error.message);
+      console.error('❌ Error status:', error.response?.status);
       return null;
     }
   };
 
-  const register = async (email: string, password: string, role: string = 'user'): Promise<User | null> => {
+  const register = async (
+    email: string, 
+    password: string, 
+    firstName: string, 
+    lastName: string, 
+    phone: string, 
+    role: string = 'user'
+  ): Promise<User | null> => {
     try {
       const response = await axios.post(buildApiUrl(API_CONFIG.ENDPOINTS.REGISTER), {
         email,
         password,
+        firstName,
+        lastName,
+        phone,
         role
       });
 
@@ -93,7 +139,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setIsAuthenticated(true);
       
       return userData;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Registration failed:', error);
       return null;
     }

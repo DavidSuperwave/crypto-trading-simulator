@@ -1,5 +1,5 @@
 import React from 'react';
-import { BarChart3, Users, Upload, Download, MessageCircle, Eye, DollarSign, LogOut, Shield } from 'lucide-react';
+import { BarChart3, Users, Upload, Download, MessageCircle, Eye, DollarSign, LogOut, Shield, Activity } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -15,6 +15,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ activeView, onViewChange })
   const menuItems = [
     { id: 'overview', label: 'Dashboard', icon: BarChart3, color: '#4F46E5' },
     { id: 'users', label: 'Users', icon: Users, color: '#059669' },
+    { id: 'simulation', label: 'Compound Interest', icon: Activity, color: '#F59E0B' },
     { id: 'pending-deposits', label: 'Pending Deposits', icon: Upload, color: '#DC2626' },
     { id: 'withdrawals', label: 'Withdrawals', icon: Download, color: '#7C2D12' },
     { id: 'chat', label: 'Chat Management', icon: MessageCircle, color: '#0369A1' },
@@ -31,7 +32,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ activeView, onViewChange })
     <div style={{
       width: '280px',
       height: '100vh',
-      background: 'linear-gradient(180deg, #1f2937 0%, #111827 100%)',
+      background: 'linear-gradient(180deg, #00509d 0%, #003d7a 100%)',
       color: 'white',
       display: 'flex',
       flexDirection: 'column',
@@ -43,45 +44,31 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ activeView, onViewChange })
     }}>
       {/* Logo/Header */}
       <div style={{
-        padding: '2rem 1.5rem',
+        padding: '1.5rem 1.5rem',
         borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
       }}>
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '0.75rem',
-          marginBottom: '1rem'
+          justifyContent: 'center'
         }}>
           <div style={{
-            width: '40px',
-            height: '40px',
-            background: 'linear-gradient(135deg, #DC2626 0%, #991B1B 100%)',
+            width: '180px',
+            height: '50px',
             borderRadius: '12px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center'
           }}>
-            <Shield size={20} color="white" />
-          </div>
-          <div>
-            <h1 style={{
-              margin: 0,
-              fontSize: '1.25rem',
-              fontWeight: '700',
-              background: 'linear-gradient(135deg, #F87171 0%, #FCA5A5 100%)',
-              backgroundClip: 'text',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent'
-            }}>
-              Admin Panel
-            </h1>
-            <p style={{
-              margin: 0,
-              fontSize: '0.75rem',
-              color: 'rgba(255, 255, 255, 0.6)'
-            }}>
-              Control Center
-            </p>
+            <img 
+              src="/logo.png" 
+              alt="Logo" 
+              style={{
+                width: '220px',
+                height: '80px',
+                objectFit: 'contain'
+              }}
+            />
           </div>
         </div>
       </div>
@@ -158,7 +145,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ activeView, onViewChange })
                   : 'transparent',
                 border: 'none',
                 borderRadius: '12px',
-                color: isActive ? 'white' : 'rgba(255, 255, 255, 0.7)',
+                color: 'white',
                 fontSize: '0.9rem',
                 fontWeight: isActive ? '600' : '500',
                 cursor: 'pointer',
@@ -175,7 +162,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ activeView, onViewChange })
               onMouseLeave={(e) => {
                 if (!isActive) {
                   e.currentTarget.style.background = 'transparent';
-                  e.currentTarget.style.color = 'rgba(255, 255, 255, 0.7)';
+                  e.currentTarget.style.color = 'white';
                 }
               }}
             >

@@ -1,16 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const database = require('../database');
-const interestService = require('../services/interestService');
+// Note: interestService (real-time system) removed during migration to compound interest system
+const CompoundInterestSimulation = require('../services/compoundInterestSimulation');
 const scheduler = require('../services/scheduler');
 const websocketService = require('../services/websocketService');
+const { authenticateToken, requireAdmin } = require('../middleware/auth');
+
+// Apply authentication middleware to all admin routes
+router.use(authenticateToken);
+router.use(requireAdmin);
 
 // Get dashboard overview
 router.get('/dashboard', async (req, res) => {
   try {
-    if (req.user.role !== 'admin') {
-      return res.status(403).json({ error: 'Admin access required' });
-    }
+    // Admin check is now handled by requireAdmin middleware
 
     const users = await database.getAllUsers();
     const transactions = await database.getAllTransactions();
@@ -529,20 +533,37 @@ router.put('/demos/:id', async (req, res) => {
 // Interest Management Routes
 
 // Get interest statistics and history
-router.get('/interest/stats', (req, res) => {
+// Get interest processing statistics (migrated to compound interest system)
+router.get('/interest/stats', async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
       return res.status(403).json({ error: 'Admin access required' });
     }
 
-    const stats = interestService.getInterestStats();
-    const recentPayments = interestService.getAllInterestPayments()
-      .slice(-20) // Last 20 payments
-      .reverse(); // Most recent first
+    const compoundSim = new CompoundInterestSimulation();
+    
+    // Get stats from compound interest system
+    const users = await database.getAllUsers();
+    const activeSimulations = users.filter(user => user.simulationActive).length;
+    
+    // Get recent transactions for compound interest
+    const transactions = await database.getTransactions();
+    const recentPayments = transactions
+      .filter(t => t.type === 'interest' && t.metadata?.simulationType === 'compound_interest')
+      .slice(-20)
+      .reverse();
+
+    const stats = {
+      activeSimulations,
+      totalUsers: users.length,
+      recentPayments: recentPayments.length,
+      systemType: 'compound_interest'
+    };
 
     res.json({
       stats,
-      recentPayments
+      recentPayments,
+      migrationNote: 'Stats now from compound interest system (real-time system removed)'
     });
   } catch (error) {
     console.error('Get interest stats error:', error);
@@ -550,34 +571,52 @@ router.get('/interest/stats', (req, res) => {
   }
 });
 
-// Get all interest payments
-router.get('/interest/payments', (req, res) => {
+// Get all interest payments (migrated to compound interest system)
+router.get('/interest/payments', async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
       return res.status(403).json({ error: 'Admin access required' });
     }
 
-    const payments = interestService.getAllInterestPayments();
-    res.json(payments);
+    // Get all compound interest payments from transactions
+    const transactions = await database.getTransactions();
+    const payments = transactions
+      .filter(t => t.type === 'interest' && t.metadata?.simulationType === 'compound_interest')
+      .map(t => ({
+        id: t.id,
+        userId: t.userId,
+        amount: t.amount,
+        date: t.createdAt,
+        description: t.description,
+        systemType: 'compound_interest'
+      }));
+
+    res.json({
+      payments,
+      migrationNote: 'Payments now from compound interest system (real-time system removed)'
+    });
   } catch (error) {
     console.error('Get interest payments error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-// Manually trigger interest processing (for testing)
+// Manually trigger interest processing (migrated to compound interest system)
 router.post('/interest/trigger', async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
       return res.status(403).json({ error: 'Admin access required' });
     }
 
-    console.log(`Admin ${req.user.email} manually triggered interest processing`);
-    const results = await interestService.triggerManualInterest();
+    console.log(`Admin ${req.user.email} manually triggered compound interest processing`);
+    
+    // Use scheduler to trigger compound interest processing
+    const results = await scheduler.runDailyInterest();
     
     res.json({
-      message: 'Interest processing completed successfully',
-      results
+      message: 'Compound interest processing completed successfully',
+      results,
+      migrationNote: 'Now using compound interest system (real-time system removed)'
     });
   } catch (error) {
     console.error('Manual interest trigger error:', error);
@@ -624,6 +663,181 @@ router.post('/scheduler/trigger/:taskName', async (req, res) => {
     console.error(`Manual task trigger error (${req.params.taskName}):`, error);
     res.status(500).json({ 
       error: error.message || 'Internal server error' 
+    });
+  }
+});
+
+// Get scheduler status and health
+// Get detailed simulation data for admin dashboard
+router.get('/simulation-data', async (req, res) => {
+  try {
+    console.log('📊 Admin requesting simulation data...');
+    
+    // Get all users with their simulation data
+    const users = await database.getAllUsers();
+    const simulationPlans = database.readFile('data/simulation_plans.json') || [];
+    const simulatedTrades = database.readFile('data/simulated_trades.json') || [];
+    
+    const now = new Date();
+    const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    const oneYearAgo = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
+    
+    const simulationData = users.filter(user => user.role === 'user').map(user => {
+      const userPlan = simulationPlans.find(plan => plan.userId === user.id);
+      const userTrades = simulatedTrades.filter(trade => trade.userId === user.id);
+      
+      // Calculate timeframe earnings from PROJECTED simulation plan (not actual trades)
+      let sevenDayEarnings = 0;
+      let thirtyDayEarnings = 0; 
+      let yearEarnings = 0;
+      
+      if (userPlan && userPlan.months) {
+        // 7-Day: First 7 daily targets from first month
+        const firstMonth = userPlan.months[0];
+        if (firstMonth && firstMonth.dailyTargets) {
+          sevenDayEarnings = firstMonth.dailyTargets.slice(0, 7).reduce((sum, day) => sum + day.targetAmount, 0);
+        }
+        
+        // 30-Day: First month target amount
+        thirtyDayEarnings = firstMonth ? firstMonth.targetAmount : 0;
+        
+        // 12-Month: Total projected return
+        yearEarnings = userPlan.totalProjectedReturn || 0;
+      }
+      
+      return {
+        ...user,
+        simulationPlan: userPlan,
+        tradeStats: {
+          totalTrades: userTrades.length,
+          sevenDayEarnings,
+          thirtyDayEarnings,
+          yearEarnings,
+          sevenDayTrades: userTrades.filter(trade => new Date(trade.createdAt) >= sevenDaysAgo).length,
+          thirtyDayTrades: userTrades.filter(trade => new Date(trade.createdAt) >= thirtyDaysAgo).length,
+          yearTrades: userTrades.filter(trade => new Date(trade.createdAt) >= oneYearAgo).length
+        }
+      };
+    });
+    
+    // Calculate platform totals from projected earnings
+    const platformStats = {
+      totalActiveSimulations: simulationData.filter(user => user.balance > 0).length,
+      totalUsers: simulationData.length,
+      sevenDayTotalEarnings: simulationData.reduce((sum, user) => sum + user.tradeStats.sevenDayEarnings, 0),
+      thirtyDayTotalEarnings: simulationData.reduce((sum, user) => sum + user.tradeStats.thirtyDayEarnings, 0),
+      yearTotalEarnings: simulationData.reduce((sum, user) => sum + user.tradeStats.yearEarnings, 0),
+      totalTrades: simulationData.reduce((sum, user) => sum + (user.tradeStats.totalTrades || 0), 0)
+    };
+    
+    console.log(`✅ Returning simulation data for ${simulationData.length} users`);
+    console.log(`📊 Platform stats:`, platformStats);
+    
+    res.json({
+      users: simulationData,
+      platformStats,
+      lastUpdated: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('Error fetching simulation data:', error);
+    res.status(500).json({ error: 'Failed to fetch simulation data' });
+  }
+});
+
+router.get('/scheduler/status', async (req, res) => {
+  try {
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ error: 'Admin access required' });
+    }
+
+    const health = scheduler.getHealth();
+    
+    res.json({
+      scheduler: health,
+      system: {
+        nodeVersion: process.version,
+        platform: process.platform,
+        uptime: process.uptime(),
+        memory: process.memoryUsage(),
+        timestamp: new Date().toISOString()
+      }
+    });
+  } catch (error) {
+    console.error('Scheduler status error:', error);
+    res.status(500).json({ 
+      error: 'Internal server error',
+      details: error.message 
+    });
+  }
+});
+
+// Get detailed task information
+router.get('/scheduler/tasks', async (req, res) => {
+  try {
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ error: 'Admin access required' });
+    }
+
+    const taskStatus = scheduler.getTaskStatus();
+    
+    res.json({
+      tasks: taskStatus,
+      summary: {
+        totalTasks: Object.keys(taskStatus).length,
+        runningTasks: Object.values(taskStatus).filter(task => task.isRunning).length,
+        environment: process.env.NODE_ENV || 'development'
+      }
+    });
+  } catch (error) {
+    console.error('Scheduler tasks error:', error);
+    res.status(500).json({ 
+      error: 'Internal server error',
+      details: error.message 
+    });
+  }
+});
+
+// Manual scheduler task trigger (for testing)
+router.post('/scheduler/trigger/:taskName', async (req, res) => {
+  try {
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ error: 'Admin access required' });
+    }
+
+    const { taskName } = req.params;
+    
+    // Only allow specific tasks for security
+    const allowedTasks = ['daily-interest', 'weekly-cleanup'];
+    if (!allowedTasks.includes(taskName)) {
+      return res.status(400).json({ 
+        error: 'Invalid task name',
+        allowed: allowedTasks 
+      });
+    }
+
+    console.log(`📋 Admin ${req.user.email} manually triggering task: ${taskName}`);
+
+    let result;
+    if (taskName === 'daily-interest') {
+      result = await scheduler.runDailyInterest();
+    } else if (taskName === 'weekly-cleanup') {
+      result = await scheduler.runWeeklyCleanup();
+    }
+
+    res.json({
+      success: true,
+      message: `Task ${taskName} executed successfully`,
+      triggeredBy: req.user.email,
+      timestamp: new Date().toISOString(),
+      result
+    });
+
+  } catch (error) {
+    console.error(`Manual scheduler trigger error (${req.params.taskName}):`, error);
+    res.status(500).json({ 
+      error: error.message || 'Internal server error',
+      taskName: req.params.taskName
     });
   }
 });

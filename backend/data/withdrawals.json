@@ -37,10 +37,13 @@
     "id": "01f159fc-1d8d-42f1-b389-de8865901b3a",
     "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
     "amount": 10000,
-    "status": "pending",
+    "status": "approved",
     "createdAt": "2025-08-06T03:35:07.278Z",
     "method": "bank",
     "userEmail": "user@cryptosim.com",
-    "userName": "user"
+    "userName": "user",
+    "processedAt": "2025-08-08T05:39:56.210Z",
+    "processedBy": "9eee85eb-43df-45c1-8424-45ccf66791ca",
+    "updatedAt": "2025-08-08T05:39:56.211Z"
   }
 ]

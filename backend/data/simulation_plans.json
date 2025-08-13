@@ -1,0 +1,4579 @@
+[
+  {
+    "userId": "9eee85eb-43df-45c1-8424-45ccf66791ca",
+    "startDate": "2025-08-08T00:38:18.131Z",
+    "startingBalance": 2000,
+    "months": [
+      {
+        "id": "04c619dd-6cc6-4d76-923b-a880f503b7cf",
+        "userId": "9eee85eb-43df-45c1-8424-45ccf66791ca",
+        "year": 2025,
+        "month": 8,
+        "monthName": "August 2025",
+        "targetPercentage": 0.21085305139874325,
+        "startingBalance": 2000,
+        "targetAmount": 421.7061027974865,
+        "daysInMonth": 31,
+        "dailyTargets": [
+          {
+            "id": "b3fa7f1a-7b33-43c2-a876-9f659fcfb7bb",
+            "date": "2025-08-01",
+            "targetAmount": 11.046886139854415,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "a54332af-fdd0-4cf5-a832-6c8255f617e2",
+            "date": "2025-08-04",
+            "targetAmount": 18.143167005905998,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "ce07fa66-6cfc-474a-b5e2-deb6d2740c8c",
+            "date": "2025-08-05",
+            "targetAmount": 21.45166951329913,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "6e125abf-2311-4b99-875a-d9fae27239c8",
+            "date": "2025-08-06",
+            "targetAmount": 13.534959618994478,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "9e086426-09c3-4f1e-a2c9-277862bb29c0",
+            "date": "2025-08-07",
+            "targetAmount": 12.43563402355822,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "a586251c-33dd-4d19-859a-b3d6f054866e",
+            "date": "2025-08-08",
+            "targetAmount": 22.40741491157173,
+            "numberOfTrades": 4,
+            "trades": [
+              "364bb421-3712-4bd9-a370-647cd16f4e2b",
+              "7d3efbf7-8a91-4724-b7aa-703a60bc4bb9",
+              "5a615257-09ce-48de-9b20-87899460c798",
+              "7a4f6553-87a0-4722-8bd8-d4fd4b2602c5"
+            ],
+            "status": "completed",
+            "actualEarnings": 22.40741491157173,
+            "actualTrades": 4,
+            "completedAt": "2025-08-08T00:38:31.868Z",
+            "updatedAt": "2025-08-08T00:38:31.868Z"
+          },
+          {
+            "id": "a00745c1-46b2-48e7-8056-04185b93bd50",
+            "date": "2025-08-11",
+            "targetAmount": 17.361997170788456,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "878adca6-bc87-436c-bc3f-b84d73267af1",
+            "date": "2025-08-12",
+            "targetAmount": 8.640645087090713,
+            "numberOfTrades": 5,
+            "trades": [
+              "420e3146-926f-4389-a32c-81fd3c113abe",
+              "5dee70a5-cab3-49bd-93e4-f62fa626f2e4",
+              "bd319295-01a0-40f1-9542-58daf613ae57",
+              "69c0700b-f1d0-4b5f-b0ab-154830ccb82b",
+              "e90bf343-2067-4ec6-a0b4-49f380c5a249"
+            ],
+            "status": "completed",
+            "actualEarnings": 8.640645087090714,
+            "actualTrades": 5,
+            "completedAt": "2025-08-12T05:25:00.038Z",
+            "updatedAt": "2025-08-12T05:25:00.038Z"
+          },
+          {
+            "id": "b65f3fe4-8cf3-4b65-a6d4-c45f8c033677",
+            "date": "2025-08-13",
+            "targetAmount": 11.151781042709683,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "a1fb0613-5da7-45a2-b342-89e6bd658901",
+            "date": "2025-08-14",
+            "targetAmount": 12.090608901806748,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "7d0ea997-c0c5-48ac-8883-afc0dc555d2d",
+            "date": "2025-08-15",
+            "targetAmount": 15.714223801490458,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "a7c18085-9f06-4c21-b24e-f6bb03a35f44",
+            "date": "2025-08-18",
+            "targetAmount": 5.935489998027784,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "bef37bdb-3533-4c02-8c26-10752e6eec1f",
+            "date": "2025-08-19",
+            "targetAmount": 15.1680969969342,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "5e371946-5d8d-42a0-a568-18dee35d0eed",
+            "date": "2025-08-20",
+            "targetAmount": 18.13123908525426,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "ca08e5b2-78c5-4436-beba-3bed8dfd75f0",
+            "date": "2025-08-21",
+            "targetAmount": 15.648259511153418,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "d85a41a5-e53c-407e-8804-fb723a6804ef",
+            "date": "2025-08-22",
+            "targetAmount": 20.08284330040902,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "126f649f-f176-4e65-8f23-b1b23ef6f0fe",
+            "date": "2025-08-25",
+            "targetAmount": 13.882212284447432,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "34fb07d2-ddae-4a58-8a01-16a1bea97091",
+            "date": "2025-08-26",
+            "targetAmount": 16.3019471764827,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "435d5b1b-b0ec-404d-9845-3dc0a968b352",
+            "date": "2025-08-27",
+            "targetAmount": 5.049804068427928,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "cd033b04-082b-4eac-884a-3ec3d7ee962f",
+            "date": "2025-08-28",
+            "targetAmount": 4.584319079393964,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "604773e7-feea-4e10-9e27-9bf557ed619a",
+            "date": "2025-08-29",
+            "targetAmount": 19.704267351774018,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          }
+        ],
+        "isFirstMonth": true
+      },
+      {
+        "id": "732cdb46-4aea-4b84-908b-4858db0f2fec",
+        "userId": "9eee85eb-43df-45c1-8424-45ccf66791ca",
+        "year": 2025,
+        "month": 9,
+        "monthName": "September 2025",
+        "targetPercentage": 0.1682689699250157,
+        "startingBalance": 2421.7061027974864,
+        "targetAmount": 407.4979913788572,
+        "daysInMonth": 30,
+        "dailyTargets": [
+          {
+            "id": "a0621fbd-0fe9-48a3-b6e4-41f52aaf6792",
+            "date": "2025-09-01",
+            "targetAmount": 18.669459338709647,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "4c9f3df0-6960-434f-8300-ec8f70e0053e",
+            "date": "2025-09-02",
+            "targetAmount": 15.350709474218217,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "ff67d9ce-7441-4a97-8c2e-db7e18a8a7a4",
+            "date": "2025-09-03",
+            "targetAmount": 15.411787375025177,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "352ed929-8fa2-42cd-bb0f-4cbc6a5e7173",
+            "date": "2025-09-04",
+            "targetAmount": 6.2398068144014855,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "e91ac18e-9531-4e99-bd5a-b29d7b25c4a3",
+            "date": "2025-09-05",
+            "targetAmount": 21.641393886086952,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "ba920462-6a9d-4e6b-82a3-42160ee28b63",
+            "date": "2025-09-08",
+            "targetAmount": 3.8654983013980293,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "7b461670-c10a-4cb8-b527-b207fceb3247",
+            "date": "2025-09-09",
+            "targetAmount": 18.766459310197515,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "60196c06-94ec-410b-a9a8-b1c5312c6a19",
+            "date": "2025-09-10",
+            "targetAmount": 8.772658081411635,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "96e57568-33da-4245-935a-dd8417949791",
+            "date": "2025-09-11",
+            "targetAmount": 10.200746177086664,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "461f57b6-ad4a-4815-bde7-4da8917abded",
+            "date": "2025-09-12",
+            "targetAmount": 10.77733545154564,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "d3d28aa8-5bda-40a2-9882-8d7740275e49",
+            "date": "2025-09-15",
+            "targetAmount": 12.579334654959577,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "b2b90a96-c179-417b-af80-ab55d39116f4",
+            "date": "2025-09-16",
+            "targetAmount": 8.560735485923217,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "4220630b-b386-44ef-aa4c-7242d07149b7",
+            "date": "2025-09-17",
+            "targetAmount": 14.73292403426129,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "94ef4461-d3bc-4ecb-b0fe-3eb9599c7cd7",
+            "date": "2025-09-18",
+            "targetAmount": 18.14394444129313,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "b67dd8dd-f8bb-4bc0-94fb-be4c665962c7",
+            "date": "2025-09-19",
+            "targetAmount": 15.719080313392448,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "0d717684-20a2-42a6-9b9b-31102150b361",
+            "date": "2025-09-22",
+            "targetAmount": 5.467000494187352,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "c6b50cdb-8274-43fe-b73e-9c05dae4d784",
+            "date": "2025-09-23",
+            "targetAmount": 20.620695182375577,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "56057228-6113-42f9-bf7e-6d77d013153d",
+            "date": "2025-09-24",
+            "targetAmount": 13.031664399478105,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "ebee96e1-64f6-4bb1-9d15-cd2f0a869c6d",
+            "date": "2025-09-25",
+            "targetAmount": 6.793008948658514,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "bf9bfad0-70d9-47a5-b6e8-89b3cd9a315b",
+            "date": "2025-09-26",
+            "targetAmount": 16.33624290530674,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "3428cc8e-250f-477a-95f2-d90a4252315b",
+            "date": "2025-09-29",
+            "targetAmount": 7.135187895132888,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "1fdba7c3-ca7c-42b6-8065-671625737525",
+            "date": "2025-09-30",
+            "targetAmount": 19.154826116562326,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          }
+        ],
+        "isFirstMonth": false
+      },
+      {
+        "id": "7b5493bf-18f2-46c2-8d44-06eecd7d4af0",
+        "userId": "9eee85eb-43df-45c1-8424-45ccf66791ca",
+        "year": 2025,
+        "month": 10,
+        "monthName": "October 2025",
+        "targetPercentage": 0.15828276057629215,
+        "startingBalance": 2829.2040941763435,
+        "targetAmount": 447.8142342599797,
+        "daysInMonth": 31,
+        "dailyTargets": [
+          {
+            "id": "3681f6ac-79cc-426a-a908-3e41aed953e6",
+            "date": "2025-10-01",
+            "targetAmount": 10.153832782996904,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "c34f5b42-71d0-4ae0-9669-87dc8719a5b5",
+            "date": "2025-10-02",
+            "targetAmount": 21.246793264187616,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "134e7622-aa2b-4a14-848b-6502baa17f25",
+            "date": "2025-10-03",
+            "targetAmount": 4.798641778711818,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "808468e5-4a43-480e-a696-c50e6ef86b23",
+            "date": "2025-10-06",
+            "targetAmount": 19.013995250941853,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "41f2593b-0185-4807-950c-5ef16a9f5677",
+            "date": "2025-10-07",
+            "targetAmount": 4.151027332890471,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "9f1c4e9f-c94c-472e-b6f2-b76b339a4c60",
+            "date": "2025-10-08",
+            "targetAmount": 6.1455470302773385,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "ae4373d8-26ee-4779-bf8f-6d0ff51be029",
+            "date": "2025-10-09",
+            "targetAmount": 21.003070573766625,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "b87528c9-dbf1-4860-ba0c-152d192ee81a",
+            "date": "2025-10-10",
+            "targetAmount": 7.582839633415787,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "e6d8a8c4-1cee-4ad4-ac3f-73cbddcfe3dd",
+            "date": "2025-10-13",
+            "targetAmount": 7.048437462833378,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "9057a6f3-e80f-4c34-b5f2-9590c42be5b9",
+            "date": "2025-10-14",
+            "targetAmount": 11.311783693225133,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "e21617cb-adb6-470f-9aa9-2c27791bd7f4",
+            "date": "2025-10-15",
+            "targetAmount": 24.633935470213153,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "927cd280-a85e-461d-8ad9-4a02e9be8606",
+            "date": "2025-10-16",
+            "targetAmount": 10.426161801499308,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "06bc09a4-0939-450e-889a-7392d8676962",
+            "date": "2025-10-17",
+            "targetAmount": 21.958541525506373,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "55e42f2d-c03a-4248-aea8-5e0c89922b09",
+            "date": "2025-10-20",
+            "targetAmount": 24.42008479287995,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "db7d81ba-b1f7-4113-a775-925102507d82",
+            "date": "2025-10-21",
+            "targetAmount": 22.135520268466177,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "75c191b2-bd18-452d-bda5-98bf2bf9278e",
+            "date": "2025-10-22",
+            "targetAmount": 9.634719646622443,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "aa6cda0e-fd55-4337-85aa-1a5ab1eb9c16",
+            "date": "2025-10-23",
+            "targetAmount": 17.361331970367008,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "20d3de45-8d4c-4b99-a7b3-6cf05ccc1eeb",
+            "date": "2025-10-24",
+            "targetAmount": 15.046454463678835,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "69db3579-cc9a-4292-8499-23fa8dac0df6",
+            "date": "2025-10-27",
+            "targetAmount": 5.414452035202597,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "fc494b77-8f5a-4f39-ad32-41296dbfcc9c",
+            "date": "2025-10-28",
+            "targetAmount": 13.671102545538677,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "1d26829d-37f9-4abc-b63d-6809b4fa194a",
+            "date": "2025-10-29",
+            "targetAmount": 23.4426146005271,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "5ee267eb-cb03-45c6-a655-04325c937e10",
+            "date": "2025-10-30",
+            "targetAmount": 5.214551367873467,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "0d3f80e4-c899-46de-9dbc-afcbbc5e0d74",
+            "date": "2025-10-31",
+            "targetAmount": 10.691259066235396,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          }
+        ],
+        "isFirstMonth": false
+      },
+      {
+        "id": "cb855db5-0040-4c6c-9a4a-f0c2bdb3d231",
+        "userId": "9eee85eb-43df-45c1-8424-45ccf66791ca",
+        "year": 2025,
+        "month": 11,
+        "monthName": "November 2025",
+        "targetPercentage": 0.159343723299619,
+        "startingBalance": 3277.018328436323,
+        "targetAmount": 522.1723017741374,
+        "daysInMonth": 30,
+        "dailyTargets": [
+          {
+            "id": "8dc55397-bf6a-4624-b486-62799ac49aeb",
+            "date": "2025-11-03",
+            "targetAmount": 13.56776786496257,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "f9842713-8187-448a-9284-5418a4315ae1",
+            "date": "2025-11-04",
+            "targetAmount": 8.679306129320032,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "944028d3-203c-4da9-84e6-b512f1f8b67f",
+            "date": "2025-11-05",
+            "targetAmount": 10.89608439345445,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "c3e84a2a-a69f-4f2c-991f-531a9e33d9a8",
+            "date": "2025-11-06",
+            "targetAmount": 16.847369208501856,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "1ea5f899-fcb3-4bad-955c-21e85a43ded3",
+            "date": "2025-11-07",
+            "targetAmount": 29.912601319657522,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "c4c9f458-55ff-473b-a274-92c02eccfc1a",
+            "date": "2025-11-10",
+            "targetAmount": 9.845276917859376,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "362b1519-b0e8-422f-896f-b2b1177721bd",
+            "date": "2025-11-11",
+            "targetAmount": 30.968698367645093,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "f0daa2e5-447d-4ca4-8e86-c35bff06aa67",
+            "date": "2025-11-12",
+            "targetAmount": 15.263168823527158,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "6bfc0abd-8214-47f1-9165-b21b28cf869e",
+            "date": "2025-11-13",
+            "targetAmount": 26.006487040209535,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "99268c92-8f37-4f7c-b9d6-3bc00aca0155",
+            "date": "2025-11-14",
+            "targetAmount": 14.485432375610065,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "563ddabe-bd40-4201-9f8d-9497e5948348",
+            "date": "2025-11-17",
+            "targetAmount": 6.790401153421623,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "bc793969-6bf3-4331-9502-fa9d8cfde2a7",
+            "date": "2025-11-18",
+            "targetAmount": 23.865638113000802,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "8fde06a0-7a5d-459b-8804-8abde8bb2786",
+            "date": "2025-11-19",
+            "targetAmount": 21.439856998523474,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "2a8c07f2-7237-45b5-b4c4-14469c5de1fa",
+            "date": "2025-11-20",
+            "targetAmount": 15.944293510976445,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "bfa5ff9d-9456-4041-b553-415cdc4b8a1b",
+            "date": "2025-11-21",
+            "targetAmount": 10.945394395067755,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "a79abdc7-8143-468f-bdc9-f3e0874a03cf",
+            "date": "2025-11-24",
+            "targetAmount": 17.691817484695427,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "6b3483df-6bb5-4cb2-ba2c-8ff39c83460b",
+            "date": "2025-11-25",
+            "targetAmount": 14.467612786879366,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "d9f706d8-26f8-415f-8b7d-5b0004ec77fc",
+            "date": "2025-11-26",
+            "targetAmount": 9.288126071226202,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "c0ac203a-2060-4f14-b07f-1ee7bd8862be",
+            "date": "2025-11-27",
+            "targetAmount": 12.947217497770051,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "233dcaf8-b5cb-4a5d-8057-83a42a4d289c",
+            "date": "2025-11-28",
+            "targetAmount": 5.9329334118161094,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          }
+        ],
+        "isFirstMonth": false
+      },
+      {
+        "id": "09441cc8-b9d8-4497-8c92-57991b72ad21",
+        "userId": "9eee85eb-43df-45c1-8424-45ccf66791ca",
+        "year": 2025,
+        "month": 12,
+        "monthName": "December 2025",
+        "targetPercentage": 0.16415909359348843,
+        "startingBalance": 3799.1906302104603,
+        "targetAmount": 623.6716902442232,
+        "daysInMonth": 31,
+        "dailyTargets": [
+          {
+            "id": "42dd9821-b110-4c90-9f3f-9dee21b04b2e",
+            "date": "2025-12-01",
+            "targetAmount": 25.488312143006617,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "748ac86c-3e70-4813-93ae-18eee4148c8e",
+            "date": "2025-12-02",
+            "targetAmount": 16.18660058407838,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "c003e2ff-022b-4af4-a586-352a148ef24c",
+            "date": "2025-12-03",
+            "targetAmount": 19.314791385343955,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "75cbec40-87c8-4d59-be8c-1850a1829497",
+            "date": "2025-12-04",
+            "targetAmount": 33.36874407221877,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "606b6ab2-44d7-4118-8364-4a6bffa79770",
+            "date": "2025-12-05",
+            "targetAmount": 30.73379202610747,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "67ff4fbf-7f95-46b4-81e8-a0d6a19d34b4",
+            "date": "2025-12-08",
+            "targetAmount": 16.77166014622191,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "0ce76895-6381-457b-a392-d9d375434b9e",
+            "date": "2025-12-09",
+            "targetAmount": 28.591295492782134,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "0930b552-0098-4c71-88b4-1bc2a8245482",
+            "date": "2025-12-10",
+            "targetAmount": 11.567044342528279,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "52a9fedf-61cd-4ff5-8f60-f3b9f847068e",
+            "date": "2025-12-11",
+            "targetAmount": 19.236033525298417,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "3f400f11-2bee-4051-a8dc-e3f936cf1992",
+            "date": "2025-12-12",
+            "targetAmount": 29.180968887722315,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "e494e09b-ffc7-4a3c-a42e-135207758170",
+            "date": "2025-12-15",
+            "targetAmount": 30.054553260280844,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "9264e6f7-e791-49e1-9680-e4a2dbbfcf59",
+            "date": "2025-12-16",
+            "targetAmount": 29.553034012185407,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "336a4786-eaa1-44ee-958e-0d162f1319c1",
+            "date": "2025-12-17",
+            "targetAmount": 25.340097748496255,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "a0313a27-1bed-434e-8cf4-e6b3777f1385",
+            "date": "2025-12-18",
+            "targetAmount": 27.53295105414441,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "25776d31-986b-4f87-9692-0c32dc7ab8aa",
+            "date": "2025-12-19",
+            "targetAmount": 23.432185471922235,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "815ad97e-e31a-484f-a0fe-e4a4a0ba4e3e",
+            "date": "2025-12-22",
+            "targetAmount": 5.029035545962333,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "32cf4dd9-0792-4fea-9394-0857b94ab02d",
+            "date": "2025-12-23",
+            "targetAmount": 15.522027067026459,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "291b2005-b992-4934-9e31-696c4f77aa7c",
+            "date": "2025-12-24",
+            "targetAmount": 11.467070274283184,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "80f740b0-ca0e-4943-b281-832250340acb",
+            "date": "2025-12-25",
+            "targetAmount": 18.509880231096652,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "62b1caa1-94fe-4e07-b531-aa6277110191",
+            "date": "2025-12-26",
+            "targetAmount": 19.400449990963313,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "b5960491-9a1e-482b-aec7-2bf01bf08a62",
+            "date": "2025-12-29",
+            "targetAmount": 32.13512766371542,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "cb847841-8ee7-4ed7-98c2-7992248e1acb",
+            "date": "2025-12-30",
+            "targetAmount": 10.26649448676457,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "96ae2f63-a667-4f1e-8e22-4340d8cc90f0",
+            "date": "2025-12-31",
+            "targetAmount": 8.265853956572727,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          }
+        ],
+        "isFirstMonth": false
+      },
+      {
+        "id": "8f485e32-8353-4fae-8e37-40b4a382672b",
+        "userId": "9eee85eb-43df-45c1-8424-45ccf66791ca",
+        "year": 2026,
+        "month": 1,
+        "monthName": "January 2026",
+        "targetPercentage": 0.15286923075878164,
+        "startingBalance": 4422.862320454684,
+        "targetAmount": 676.1195606799075,
+        "daysInMonth": 31,
+        "dailyTargets": [
+          {
+            "id": "bd75d426-2655-463c-bc5a-e398e0256861",
+            "date": "2026-01-01",
+            "targetAmount": 27.03562624195311,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "3790879f-c827-49d0-a31c-984995515275",
+            "date": "2026-01-02",
+            "targetAmount": 17.34610321118945,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "d1904981-091f-45ef-88b0-b3a788462202",
+            "date": "2026-01-05",
+            "targetAmount": 23.418326079736037,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "70ebe773-3cb8-4fd4-b9e1-6dcc14a0e3cc",
+            "date": "2026-01-06",
+            "targetAmount": 22.611413764188324,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "1a92d4f7-1d0b-4b51-933e-4928bea4a612",
+            "date": "2026-01-07",
+            "targetAmount": 16.140963039415336,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "04c957dc-6e71-47d1-b105-37865654cf39",
+            "date": "2026-01-08",
+            "targetAmount": 15.276784619012616,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "751a1a41-87b5-4709-b8df-39b0595caea1",
+            "date": "2026-01-09",
+            "targetAmount": 16.733161191951115,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "bf103d95-9281-4ee7-92ac-cf94861d490f",
+            "date": "2026-01-12",
+            "targetAmount": 21.68104738579121,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "c938dd58-f037-4835-bf54-d59e1631e83f",
+            "date": "2026-01-13",
+            "targetAmount": 21.38446951648876,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "d8f9a674-3e5f-415f-846d-9f0dbbb4e1fe",
+            "date": "2026-01-14",
+            "targetAmount": 30.976779075439172,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "f65f4f00-bea9-4067-8c76-850bef97bdd0",
+            "date": "2026-01-15",
+            "targetAmount": 33.055485510137274,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "2408e344-37b8-449e-951d-fe2a1c029f4a",
+            "date": "2026-01-16",
+            "targetAmount": 21.914255080526438,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "8a88e2ea-68a9-455f-9225-7c5191742498",
+            "date": "2026-01-19",
+            "targetAmount": 18.57036767891114,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "c92feb65-14c0-45fd-8b0e-02ac2774ac07",
+            "date": "2026-01-20",
+            "targetAmount": 28.681013177588376,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "551045c1-a462-4ee7-ba4b-408bae637b36",
+            "date": "2026-01-21",
+            "targetAmount": 30.519650513076275,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "23569bee-3b00-4770-b391-ac4afadd6641",
+            "date": "2026-01-22",
+            "targetAmount": 17.853087231819877,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "4fcad36b-5e10-4463-a52f-f67b66e0654d",
+            "date": "2026-01-23",
+            "targetAmount": 12.10444493331209,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "12b5055e-1b18-4fca-96bb-9db28b0366e5",
+            "date": "2026-01-26",
+            "targetAmount": 32.88547241490357,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "e593c1e4-4090-4fa6-be5b-faedc977108f",
+            "date": "2026-01-27",
+            "targetAmount": 11.615662484147224,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "76e5a6d6-01ea-40d0-8fa6-1973f2be4492",
+            "date": "2026-01-28",
+            "targetAmount": 21.453316407938473,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "aec5925a-ccff-4f8d-b2d1-b0b82832c7d6",
+            "date": "2026-01-29",
+            "targetAmount": 10.268999614858036,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "3bae8fdf-4962-4f17-bb3c-4987c4c14447",
+            "date": "2026-01-30",
+            "targetAmount": 32.95460272133076,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          }
+        ],
+        "isFirstMonth": false
+      },
+      {
+        "id": "621a02c4-4c67-4386-8793-7e085de16828",
+        "userId": "9eee85eb-43df-45c1-8424-45ccf66791ca",
+        "year": 2026,
+        "month": 2,
+        "monthName": "February 2026",
+        "targetPercentage": 0.16930982570156128,
+        "startingBalance": 5098.981881134591,
+        "targetAmount": 863.3077335503167,
+        "daysInMonth": 28,
+        "dailyTargets": [
+          {
+            "id": "c1c46415-012a-41bc-9d91-ff71198b7ad9",
+            "date": "2026-02-02",
+            "targetAmount": 11.2290964874807,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "7462f562-d839-4089-a7d2-7daca14ce2e4",
+            "date": "2026-02-03",
+            "targetAmount": 24.30023202024873,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "85995143-18b2-4638-934a-a2f6f75267ae",
+            "date": "2026-02-04",
+            "targetAmount": 20.934855450326694,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "6873fd2d-2588-4c4f-9a58-03993395cde4",
+            "date": "2026-02-05",
+            "targetAmount": 18.053628250078667,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "ab2b1a5b-59dd-4e3b-9668-e98590f34a77",
+            "date": "2026-02-06",
+            "targetAmount": 47.27786674814096,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "2ec39e85-52a1-484f-8eea-e1a9540e1513",
+            "date": "2026-02-09",
+            "targetAmount": 52.298476353238506,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "75c45d2f-1856-4e09-a0bf-0159e0a14cfb",
+            "date": "2026-02-10",
+            "targetAmount": 39.409393758439094,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "2686e92d-0dd8-4691-87cf-3e786db13af9",
+            "date": "2026-02-11",
+            "targetAmount": 31.959809794615918,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "4d99e35a-ea10-43ec-aa25-07d7f8c3370d",
+            "date": "2026-02-12",
+            "targetAmount": 51.967037982741886,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "44d7ea4d-94d5-4357-9fa0-7fe64ad8ea53",
+            "date": "2026-02-13",
+            "targetAmount": 26.515351799190643,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "ed275bc9-a20b-4054-ba96-b1d5413a909b",
+            "date": "2026-02-16",
+            "targetAmount": 16.631249820440274,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "66389600-94bf-4d00-9466-4833753f6854",
+            "date": "2026-02-17",
+            "targetAmount": 15.16586692302557,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "16bb08e5-ceb5-48ab-94ab-ece1f31f41d0",
+            "date": "2026-02-18",
+            "targetAmount": 50.806430554471554,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "37e5f8db-7c21-4dd2-a55e-85f09ee5b1fe",
+            "date": "2026-02-19",
+            "targetAmount": 40.52850366041604,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "88bf3c32-e085-434a-b9f6-8139f75d9fff",
+            "date": "2026-02-20",
+            "targetAmount": 37.60631704827914,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "d514e579-afac-4332-b9ec-1a0d22f99c27",
+            "date": "2026-02-23",
+            "targetAmount": 48.3511131531465,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "3dd7dbe5-294f-4a8b-bdb5-c9e33d4446d9",
+            "date": "2026-02-24",
+            "targetAmount": 27.46414073087251,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "1cb40ac4-5a7c-4697-ae91-84dda6c4d54c",
+            "date": "2026-02-25",
+            "targetAmount": 42.28178619202092,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "d4cd7cca-39ad-4d1a-a0dc-1b4b5861d00f",
+            "date": "2026-02-26",
+            "targetAmount": 22.740248950281938,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "547664d1-2bf5-4b30-b229-6a80ec763273",
+            "date": "2026-02-27",
+            "targetAmount": 10.599550699213898,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          }
+        ],
+        "isFirstMonth": false
+      },
+      {
+        "id": "63ea39b0-b1ba-4386-92eb-0d7d86087307",
+        "userId": "9eee85eb-43df-45c1-8424-45ccf66791ca",
+        "year": 2026,
+        "month": 3,
+        "monthName": "March 2026",
+        "targetPercentage": 0.16185930454356148,
+        "startingBalance": 5962.289614684908,
+        "targetAmount": 965.0520505201983,
+        "daysInMonth": 31,
+        "dailyTargets": [
+          {
+            "id": "6a6550b3-29a0-4678-bf90-73976af1fca3",
+            "date": "2026-03-02",
+            "targetAmount": 8.452175101509292,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "ce77abc4-a4bc-4444-86c7-8c8afcfdb074",
+            "date": "2026-03-03",
+            "targetAmount": 44.78044753396836,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "16bff014-fea0-4c9a-8929-23f980f31f27",
+            "date": "2026-03-04",
+            "targetAmount": 21.322224541991947,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "34d9feff-8ba1-49bf-95d2-5c672e6a1219",
+            "date": "2026-03-05",
+            "targetAmount": 13.852276688289813,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "bacadefb-9c75-47c8-85b3-8d0a2fcc3d0b",
+            "date": "2026-03-06",
+            "targetAmount": 17.144775369743954,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "2f62270c-51cd-4d08-aa12-0f25496a2cd8",
+            "date": "2026-03-09",
+            "targetAmount": 53.51154741158447,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "1e6edcb2-b5f5-4998-879e-b3362538209a",
+            "date": "2026-03-10",
+            "targetAmount": 42.12395387746902,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "e002595b-9efa-44b8-9d39-ee017c3cc181",
+            "date": "2026-03-11",
+            "targetAmount": 11.80051627552012,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "47653652-33a9-4e94-91e7-2b7340963498",
+            "date": "2026-03-12",
+            "targetAmount": 49.85075312947136,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "e4080c9b-16c3-42aa-a5de-65477d50e35a",
+            "date": "2026-03-13",
+            "targetAmount": 22.376597842220402,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "af194907-ae72-4742-a8e9-fb2a36627f94",
+            "date": "2026-03-16",
+            "targetAmount": 21.82528251148433,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "ee93a85c-77c7-449f-8798-91bbf445dde6",
+            "date": "2026-03-17",
+            "targetAmount": 11.117458966752721,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "6bf9b0c8-b9f6-4874-bcb5-976c63202df4",
+            "date": "2026-03-18",
+            "targetAmount": 10.91536288423623,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "b40ddb93-a8e6-441c-9810-eaf9d5ac08e3",
+            "date": "2026-03-19",
+            "targetAmount": 30.663406198507502,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "9e473158-f2fb-408c-b582-afd556269d90",
+            "date": "2026-03-20",
+            "targetAmount": 28.73951818250099,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "1b35a9fc-501c-4c10-9f84-4655ea94b242",
+            "date": "2026-03-23",
+            "targetAmount": 41.85378855254727,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "b3b0ba2a-3c6e-459e-b2e2-279daad36221",
+            "date": "2026-03-24",
+            "targetAmount": 22.1540427801183,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "1c6a2dfe-dfa9-4942-910c-eb6da8310c49",
+            "date": "2026-03-25",
+            "targetAmount": 31.790785606775238,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "c7a0ab2b-7a2c-43b7-a99f-365787a5ce43",
+            "date": "2026-03-26",
+            "targetAmount": 21.195331500621013,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "5ffbdfe5-3a7d-449f-a611-b2e7b1346a72",
+            "date": "2026-03-27",
+            "targetAmount": 37.26723330819176,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "b2a654b4-d0b5-4694-b57f-ebea93bf540c",
+            "date": "2026-03-30",
+            "targetAmount": 46.11446309001544,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "787e50f1-ad33-4164-8d2c-fb137b603c48",
+            "date": "2026-03-31",
+            "targetAmount": 53.46511911114446,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          }
+        ],
+        "isFirstMonth": false
+      },
+      {
+        "id": "67c81bb8-0098-489a-9bed-05483bc17bed",
+        "userId": "9eee85eb-43df-45c1-8424-45ccf66791ca",
+        "year": 2026,
+        "month": 4,
+        "monthName": "April 2026",
+        "targetPercentage": 0.1667519166704647,
+        "startingBalance": 6927.341665205106,
+        "targetAmount": 1155.1475001041201,
+        "daysInMonth": 30,
+        "dailyTargets": [
+          {
+            "id": "1bdcacfc-75e4-4cdd-813c-359a636707d8",
+            "date": "2026-04-01",
+            "targetAmount": 19.69590296760611,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "3476277a-695d-41c8-bc08-f8c71e58d7e7",
+            "date": "2026-04-02",
+            "targetAmount": 36.28820527768287,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "1059cb56-7898-44f6-8d10-e07dd6ca15d8",
+            "date": "2026-04-03",
+            "targetAmount": 50.44018632446094,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "ace50f72-9cae-4c2e-aff3-abcb6038ae1e",
+            "date": "2026-04-06",
+            "targetAmount": 50.93246428203425,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "d7caa8b6-e319-4f34-be20-d49a64008221",
+            "date": "2026-04-07",
+            "targetAmount": 46.247891638275156,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "ca32d15c-f2bf-46fa-95d2-034d93229fc8",
+            "date": "2026-04-08",
+            "targetAmount": 23.804477815921203,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "9d23e2ac-ebec-441a-b197-ef574a883a08",
+            "date": "2026-04-09",
+            "targetAmount": 63.65462439045596,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "1bb8aa87-5ec7-4a39-818b-001e3e826c30",
+            "date": "2026-04-10",
+            "targetAmount": 47.73137668169237,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "131e12de-b159-45f9-aa30-8e4f237a23a3",
+            "date": "2026-04-13",
+            "targetAmount": 37.30514920554818,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "c9e630e9-2a55-4897-bd89-3afe9e02c27d",
+            "date": "2026-04-14",
+            "targetAmount": 59.94573354466119,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "8ea6cc61-470c-4308-9033-ba34ae2b0c14",
+            "date": "2026-04-15",
+            "targetAmount": 20.908175902923674,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "c6978588-feae-409b-ae35-9fd1dedf4074",
+            "date": "2026-04-16",
+            "targetAmount": 62.711392880176646,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "48b1f165-051b-4ae5-b674-3c5658ab2262",
+            "date": "2026-04-17",
+            "targetAmount": 34.27844366243337,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "a1369348-5e75-4e38-983a-d61ee04abb7b",
+            "date": "2026-04-20",
+            "targetAmount": 46.08381967334604,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "51291808-f5f7-47fc-bc3a-a15d58c49bab",
+            "date": "2026-04-21",
+            "targetAmount": 57.76765934944396,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "453ba5f5-f648-4019-bdf6-49f2126c67a4",
+            "date": "2026-04-22",
+            "targetAmount": 38.137262432064496,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "dc228dbf-e100-4044-8fcc-ad9e4efb451a",
+            "date": "2026-04-23",
+            "targetAmount": 15.35052682722148,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "b9d1b53f-fe67-455d-b2c9-166ae17c0393",
+            "date": "2026-04-24",
+            "targetAmount": 18.81658504327676,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "66447018-5134-408f-965c-4fbeb9463150",
+            "date": "2026-04-27",
+            "targetAmount": 48.890429057298405,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "cdd22943-5452-49ad-beff-6b183fd2a311",
+            "date": "2026-04-28",
+            "targetAmount": 40.593059874416966,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "de58c69e-80df-41ba-a7f4-f3fb61b9e282",
+            "date": "2026-04-29",
+            "targetAmount": 21.206142213403798,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "2c36db1a-b5dd-46e1-8de7-fd772692996a",
+            "date": "2026-04-30",
+            "targetAmount": 23.070501885415577,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          }
+        ],
+        "isFirstMonth": false
+      },
+      {
+        "id": "fe8e6f28-c841-48ab-9e5b-92ec61eb8317",
+        "userId": "9eee85eb-43df-45c1-8424-45ccf66791ca",
+        "year": 2026,
+        "month": 5,
+        "monthName": "May 2026",
+        "targetPercentage": 0.1575679697222386,
+        "startingBalance": 8082.489165309226,
+        "targetAmount": 1273.5414080797657,
+        "daysInMonth": 31,
+        "dailyTargets": [
+          {
+            "id": "45a384ac-f61c-4ebf-8d95-07c28146399e",
+            "date": "2026-05-01",
+            "targetAmount": 40.10526270708846,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "188bf4de-2f56-48e4-b4ed-38eb7d1a4cc8",
+            "date": "2026-05-04",
+            "targetAmount": 22.536850385278285,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "11be5098-b703-4155-ab5a-7769548d2390",
+            "date": "2026-05-05",
+            "targetAmount": 11.495239051678206,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "b9a4d137-4eca-4357-aa40-040f641620e0",
+            "date": "2026-05-06",
+            "targetAmount": 35.63012501662747,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "33870939-5c32-42d6-850e-9fff0f47b986",
+            "date": "2026-05-07",
+            "targetAmount": 35.79012029775951,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "d4c3318b-d413-44a5-92f1-e94473b5fa61",
+            "date": "2026-05-08",
+            "targetAmount": 37.21632495202315,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "b6db2723-f812-40fa-9a90-9d786505889e",
+            "date": "2026-05-11",
+            "targetAmount": 64.35780092267295,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "f1965507-02d7-4090-9d2b-6ac72942e3e4",
+            "date": "2026-05-12",
+            "targetAmount": 46.779281741379386,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "6dedea41-4767-4509-a5d6-c510a5322a77",
+            "date": "2026-05-13",
+            "targetAmount": 52.743257374919104,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "9f78b201-0d7b-40cc-a6d2-300a15083824",
+            "date": "2026-05-14",
+            "targetAmount": 60.560766807076384,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "20fdea20-41a2-4b33-9134-7fc39fd5e8cf",
+            "date": "2026-05-15",
+            "targetAmount": 33.256973097250714,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "1fb128a0-d89b-4e13-836a-d335f96d92e8",
+            "date": "2026-05-18",
+            "targetAmount": 48.92109649972749,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "6534bced-9720-43b7-af98-4f1650b0f60e",
+            "date": "2026-05-19",
+            "targetAmount": 58.86964181928369,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "853a45fe-0b87-4654-8072-cb05ffe493de",
+            "date": "2026-05-20",
+            "targetAmount": 56.04621823759066,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "cad8403d-a30f-4cbc-8dbf-93e23b7284d1",
+            "date": "2026-05-21",
+            "targetAmount": 49.70389833107824,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "36d2376b-cead-4bc5-9a3d-8ffa2e01b0fd",
+            "date": "2026-05-22",
+            "targetAmount": 54.97213959198592,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "9d2f8d2f-da2b-4c92-8e97-ebc58041634a",
+            "date": "2026-05-25",
+            "targetAmount": 26.239033321709794,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "414f73b4-3b90-44f1-938d-d2a78618dcae",
+            "date": "2026-05-26",
+            "targetAmount": 56.21897575294617,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "0673ca07-f199-44d2-83c3-ec632f38730f",
+            "date": "2026-05-27",
+            "targetAmount": 29.60606168472529,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "af368a24-f91f-467c-b858-67802681cf0e",
+            "date": "2026-05-28",
+            "targetAmount": 38.846226463580216,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "7d045a7a-ac40-426e-9628-eea1d84929b0",
+            "date": "2026-05-29",
+            "targetAmount": 28.545326358561258,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          }
+        ],
+        "isFirstMonth": false
+      },
+      {
+        "id": "8c30f114-862f-4af9-a13a-bf9e7da55b35",
+        "userId": "9eee85eb-43df-45c1-8424-45ccf66791ca",
+        "year": 2026,
+        "month": 6,
+        "monthName": "June 2026",
+        "targetPercentage": 0.1552834098257075,
+        "startingBalance": 9356.030573388993,
+        "targetAmount": 1452.836329869412,
+        "daysInMonth": 30,
+        "dailyTargets": [
+          {
+            "id": "e362f47d-1403-473d-825e-a5d153f39312",
+            "date": "2026-06-01",
+            "targetAmount": 75.40296936879759,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "90eb0306-51f7-4ac0-bc68-1bad01d50b25",
+            "date": "2026-06-02",
+            "targetAmount": 74.33762397800348,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "c0639baa-fb34-4d43-bf35-780fbb88d7f5",
+            "date": "2026-06-03",
+            "targetAmount": 79.29952490528851,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "311f27bf-758b-44bb-a45f-0ff577ead0c6",
+            "date": "2026-06-04",
+            "targetAmount": 20.28432402988226,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "7f74b059-4e21-4ea4-a171-28904ea3ce96",
+            "date": "2026-06-05",
+            "targetAmount": 15.04665769647346,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "119a5145-16dd-458f-a7a6-48b52a37ff23",
+            "date": "2026-06-08",
+            "targetAmount": 74.66042897270066,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "31ff2ec4-d5ae-4c01-ac73-a3994f3528de",
+            "date": "2026-06-09",
+            "targetAmount": 59.838613286613494,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "b939efcc-cc13-4aae-824f-4c1c35084fd5",
+            "date": "2026-06-10",
+            "targetAmount": 55.60636602654827,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "be28f5c4-3d80-463b-bc15-0eff57b3eaee",
+            "date": "2026-06-11",
+            "targetAmount": 20.542074532710078,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "52cab460-33bd-43f6-8fd8-1892bd477148",
+            "date": "2026-06-12",
+            "targetAmount": 34.88784438480249,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "0d8482c6-f592-454f-9376-dd905249d73a",
+            "date": "2026-06-15",
+            "targetAmount": 51.017623258809294,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "f590858f-960c-41e0-a7a9-23763666ba1e",
+            "date": "2026-06-16",
+            "targetAmount": 58.57684115610853,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "b1390b80-0478-44f7-93bf-d8e963e45131",
+            "date": "2026-06-17",
+            "targetAmount": 74.94020486121181,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "be2b2174-e364-46a2-8843-9d6662deb7b4",
+            "date": "2026-06-18",
+            "targetAmount": 66.53116692082303,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "7d7e93a8-c632-45a0-85cd-c5ece8f60383",
+            "date": "2026-06-19",
+            "targetAmount": 29.22662010087336,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "e8f90681-522a-45e5-9e87-00cd0c638b63",
+            "date": "2026-06-22",
+            "targetAmount": 77.65978240928551,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "22b72365-9797-418b-bde7-e02e4400730f",
+            "date": "2026-06-23",
+            "targetAmount": 68.277560775227,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "7dc3615b-2032-45ec-9fb2-92b3620d060b",
+            "date": "2026-06-24",
+            "targetAmount": 22.44236596336678,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "5e86fefa-01db-43fd-b17d-5aa0e0971ce7",
+            "date": "2026-06-25",
+            "targetAmount": 37.37611101546451,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "7ba9cf7f-c686-4e30-9213-0c41e5cfd173",
+            "date": "2026-06-26",
+            "targetAmount": 30.757597952643824,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "213d27cf-b14f-4318-8c11-e20550d6f9d9",
+            "date": "2026-06-29",
+            "targetAmount": 42.00722045701028,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "07a1079b-31de-44ef-84a6-76ef5fe31ab4",
+            "date": "2026-06-30",
+            "targetAmount": 54.1591275859861,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          }
+        ],
+        "isFirstMonth": false
+      },
+      {
+        "id": "3e95d4a5-01cc-4fc3-a97f-dcb9936b151b",
+        "userId": "9eee85eb-43df-45c1-8424-45ccf66791ca",
+        "year": 2026,
+        "month": 7,
+        "monthName": "July 2026",
+        "targetPercentage": 0.15802477721992264,
+        "startingBalance": 10808.866903258404,
+        "targetAmount": 1708.0687843872045,
+        "daysInMonth": 31,
+        "dailyTargets": [
+          {
+            "id": "33043a8a-12fc-4964-970e-77a81ab5f9c0",
+            "date": "2026-07-01",
+            "targetAmount": 24.32292633396799,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "e6c309f9-4c44-4a9a-93ea-a22997f72774",
+            "date": "2026-07-02",
+            "targetAmount": 24.332416402919268,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "bb2ae3d7-7d2e-4543-9389-6cb98b9243e1",
+            "date": "2026-07-03",
+            "targetAmount": 97.74185429475533,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "6e19ffd8-bb26-4e0c-89ee-edb4056cd0f6",
+            "date": "2026-07-06",
+            "targetAmount": 89.3606400327884,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "ac0e1751-a3f2-4115-b004-a14f09854f43",
+            "date": "2026-07-07",
+            "targetAmount": 24.298624098879483,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "c9588a90-552d-442d-b95b-845ad24b5c83",
+            "date": "2026-07-08",
+            "targetAmount": 87.49590536737888,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "88ef53ed-ef63-42d1-a1af-d1e063c286a5",
+            "date": "2026-07-09",
+            "targetAmount": 55.41432321326958,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "9fc1441d-b3a5-4e5d-97a2-55980369c90f",
+            "date": "2026-07-10",
+            "targetAmount": 36.77778627478978,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "0431e43c-7ece-4602-8329-a90ea5b465da",
+            "date": "2026-07-13",
+            "targetAmount": 60.35502851278123,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "f641c977-e006-43b3-9b45-43fa5ff558f1",
+            "date": "2026-07-14",
+            "targetAmount": 73.15069996913482,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "9cc5ea64-9b61-4316-b44a-2abdc3a73a78",
+            "date": "2026-07-15",
+            "targetAmount": 40.851936021467154,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "932d0d21-762b-413e-ad16-aee9c46dd4be",
+            "date": "2026-07-16",
+            "targetAmount": 46.92750987098727,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "23792e1b-71af-4817-865b-6a9f722bf575",
+            "date": "2026-07-17",
+            "targetAmount": 20.012732649468038,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "2bc3da56-3229-4103-8b3a-d829431d6101",
+            "date": "2026-07-20",
+            "targetAmount": 38.12588284494275,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "6d088138-eb9c-43df-b7da-55629ab8e525",
+            "date": "2026-07-21",
+            "targetAmount": 39.873655063499115,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "e4764625-1189-4028-87b0-8c543fbf715e",
+            "date": "2026-07-22",
+            "targetAmount": 85.61958532260081,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "cf005a8c-5cae-44bc-8eb0-0ff9fff83bca",
+            "date": "2026-07-23",
+            "targetAmount": 87.76944152114208,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "c6d2f1ad-d0fa-41de-810a-a04799e9927b",
+            "date": "2026-07-24",
+            "targetAmount": 91.76508733321715,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "79b35360-61b8-477e-a6ec-cfc2bb2cad14",
+            "date": "2026-07-27",
+            "targetAmount": 31.851325879145243,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "5814fcb9-363a-4ca8-ba8d-24e793819b61",
+            "date": "2026-07-28",
+            "targetAmount": 48.41374739629117,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "87efa170-c2e6-4c36-b408-2bcc3ac94b42",
+            "date": "2026-07-29",
+            "targetAmount": 89.58977146648164,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "2b4be81d-c972-45c6-bc67-208a0c3508d0",
+            "date": "2026-07-30",
+            "targetAmount": 72.95694499760687,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "94789218-6c10-4068-9d83-ab5a6714ec3a",
+            "date": "2026-07-31",
+            "targetAmount": 28.943593498391966,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          }
+        ],
+        "isFirstMonth": false
+      }
+    ],
+    "totalProjectedReturn": 10516.935687645608,
+    "createdAt": "2025-08-12T05:25:00.038Z",
+    "updatedAt": "2025-08-12T05:25:00.038Z"
+  },
+  {
+    "userId": "940858ce-488c-444e-817b-d87d6fc0c8f5",
+    "startDate": "2025-08-08T01:08:16.031Z",
+    "startingBalance": 10000,
+    "months": [
+      {
+        "id": "9f409738-661d-40d4-b9fa-1c44f90c4fa7",
+        "userId": "940858ce-488c-444e-817b-d87d6fc0c8f5",
+        "year": 2025,
+        "month": 8,
+        "monthName": "August 2025",
+        "targetPercentage": 0.2037794407480092,
+        "startingBalance": 10000,
+        "targetAmount": 2037.7944074800919,
+        "daysInMonth": 31,
+        "dailyTargets": [
+          {
+            "id": "ad77f8d3-f964-4835-bee8-60865e17c504",
+            "date": "2025-08-01",
+            "targetAmount": 72.49407999477219,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "e0a85618-d06a-42b8-9db6-e123160f3fd6",
+            "date": "2025-08-04",
+            "targetAmount": 29.523292801560807,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "fca70ea8-0c17-4735-8b12-b0b7f95c8a61",
+            "date": "2025-08-05",
+            "targetAmount": 83.49707283658532,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "f18b1c02-5b88-4e0b-a2bc-a9f320e62c56",
+            "date": "2025-08-06",
+            "targetAmount": 104.52818841771415,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "723edf07-225d-47bc-8557-0c739c742e9d",
+            "date": "2025-08-07",
+            "targetAmount": 72.78307438558977,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "b7541ab6-f45a-4cf4-acec-24ed10a943af",
+            "date": "2025-08-08",
+            "targetAmount": 92.3589851424777,
+            "numberOfTrades": 7,
+            "trades": [
+              "4869f53b-9cad-4a1b-ba7c-8faf88ec7925",
+              "c65a3701-bc3c-48cf-b12a-511941d2c527",
+              "d7670f72-9643-4325-b202-d7ba9bd143d5",
+              "a1d89159-a3eb-42b3-a13c-cdc9b3b0e7c0",
+              "4753d479-bd49-4de8-a655-706c493ac986",
+              "e7973307-3a67-42ec-a6f2-ab1e2d92863d",
+              "9381dda6-6654-438c-b803-f1d6d6358ea3"
+            ],
+            "status": "completed",
+            "actualEarnings": 92.3589851424777,
+            "actualTrades": 7,
+            "completedAt": "2025-08-08T01:08:33.781Z",
+            "updatedAt": "2025-08-08T01:08:33.781Z"
+          },
+          {
+            "id": "c52a0493-dda1-4ff8-ad99-a958d586d7ec",
+            "date": "2025-08-11",
+            "targetAmount": 86.57755565727409,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "d5752ce5-f814-4a15-a297-dd43406849fe",
+            "date": "2025-08-12",
+            "targetAmount": 23.415352870604266,
+            "numberOfTrades": 8,
+            "trades": [
+              "6dc5ce4a-a098-444a-9b3a-f364619a2266",
+              "6e8f3818-39dd-48da-822d-a6e8b7e5f7f4",
+              "4083fa5e-d479-4097-8d94-2fca7b1c1c01",
+              "3774928a-c985-4c2d-8cfa-59499b6662b0",
+              "34242edc-02d4-47e4-93db-0a02694b411c",
+              "c4128fdd-fd31-4ef3-97d4-8eb8c46d80ba",
+              "cab4251e-1a3b-4342-ba9e-57965c2881a4",
+              "9b20d856-46ed-4cf0-9480-edc300edef55"
+            ],
+            "status": "completed",
+            "actualEarnings": 23.415352870604266,
+            "actualTrades": 8,
+            "completedAt": "2025-08-12T05:25:00.043Z",
+            "updatedAt": "2025-08-12T05:25:00.043Z"
+          },
+          {
+            "id": "83fb336c-c63f-43c6-8499-30daa852c736",
+            "date": "2025-08-13",
+            "targetAmount": 49.00109288743031,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "97754298-c3d4-4e88-809a-321d6337f611",
+            "date": "2025-08-14",
+            "targetAmount": 25.114997090041893,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "e4b6b060-0913-4631-b0a7-5384f3ee1153",
+            "date": "2025-08-15",
+            "targetAmount": 98.17637022806841,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "66bfe6e2-77c2-4042-bcdf-27c82e4f03c9",
+            "date": "2025-08-18",
+            "targetAmount": 31.80032657474448,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "ac16d7d2-243e-4aa8-9a65-aead99aaed18",
+            "date": "2025-08-19",
+            "targetAmount": 64.5689024751234,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "0bc45838-d617-460b-befe-eade638579ca",
+            "date": "2025-08-20",
+            "targetAmount": 98.67041622716368,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "7799145f-8a33-43ea-919e-e4e2a3064779",
+            "date": "2025-08-21",
+            "targetAmount": 81.04828027895572,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "421471f0-10cd-4a1b-8370-d23dec59399e",
+            "date": "2025-08-22",
+            "targetAmount": 63.964103385071276,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "284a4c48-6f0a-4831-9040-c04045cc3c1f",
+            "date": "2025-08-25",
+            "targetAmount": 44.0646453982221,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "115246e7-7a98-427d-88a4-ed4ce74733fd",
+            "date": "2025-08-26",
+            "targetAmount": 69.62425450573133,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "742e3a7d-f18e-49dd-aed5-367ec890ba4a",
+            "date": "2025-08-27",
+            "targetAmount": 52.09204277003121,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "17afbba5-7269-40eb-ac61-d00dd8cda4ce",
+            "date": "2025-08-28",
+            "targetAmount": 102.01437385935243,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "ae6c75cb-76f4-4c10-84ae-8f6656532f50",
+            "date": "2025-08-29",
+            "targetAmount": 36.54047996418293,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          }
+        ],
+        "isFirstMonth": true
+      },
+      {
+        "id": "0c29d199-9deb-4be2-a7cf-61e2c9132655",
+        "userId": "940858ce-488c-444e-817b-d87d6fc0c8f5",
+        "year": 2025,
+        "month": 9,
+        "monthName": "September 2025",
+        "targetPercentage": 0.1566546870782386,
+        "startingBalance": 12037.794407480093,
+        "targetAmount": 1885.7769160159646,
+        "daysInMonth": 30,
+        "dailyTargets": [
+          {
+            "id": "283689a0-25ec-4be7-9fd1-c8bd58b71eff",
+            "date": "2025-09-01",
+            "targetAmount": 85.46514865512859,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "05ca8399-6124-49f3-a148-1aebe460c837",
+            "date": "2025-09-02",
+            "targetAmount": 81.70107554133159,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "2114e8af-8210-4097-a9fd-26aded9d3764",
+            "date": "2025-09-03",
+            "targetAmount": 45.49686007374664,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "36ba019f-7e5e-497c-8a42-7dbbac26a891",
+            "date": "2025-09-04",
+            "targetAmount": 64.97905779195165,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "9c2f8edb-b7d7-4ff0-bacd-7b296f5552a4",
+            "date": "2025-09-05",
+            "targetAmount": 14.59135903410525,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "613a2478-5dc9-420f-961c-6e3f592fbb87",
+            "date": "2025-09-08",
+            "targetAmount": 73.65810927534976,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "1105b9bd-d7ee-42d9-a64f-ce0fbae254e6",
+            "date": "2025-09-09",
+            "targetAmount": 60.98830953723564,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "f854bfa0-84cc-43f7-970b-faa0071fb89a",
+            "date": "2025-09-10",
+            "targetAmount": 78.60650081224584,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "d7fa3347-8285-4fb9-a75f-91298b05a697",
+            "date": "2025-09-11",
+            "targetAmount": 34.36579853071001,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "bcd24ef6-54c1-4cdf-998f-ef74e28e794b",
+            "date": "2025-09-12",
+            "targetAmount": 40.22647958419808,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "99c5c200-cd40-4388-a7e9-0951e3390395",
+            "date": "2025-09-15",
+            "targetAmount": 37.69841288774685,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "62b03b3b-a15c-4432-9e80-32de82524087",
+            "date": "2025-09-16",
+            "targetAmount": 72.04094267689885,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "247a748b-d6d7-4a09-9d84-4632000d7534",
+            "date": "2025-09-17",
+            "targetAmount": 50.566501407261384,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "db70cccf-5ee0-4a6b-a12f-d098ea835084",
+            "date": "2025-09-18",
+            "targetAmount": 55.45922905779941,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "8f43349f-81d1-441e-92aa-2ba9189419ce",
+            "date": "2025-09-19",
+            "targetAmount": 71.12149982438422,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "7a636200-d493-416a-a8e0-d0c52edda33a",
+            "date": "2025-09-22",
+            "targetAmount": 79.78568647085606,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "070de0c1-8409-43d6-ac9e-050ac1fd73d6",
+            "date": "2025-09-23",
+            "targetAmount": 84.22525670302771,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "f92671ef-468f-4d60-a536-ce1917134841",
+            "date": "2025-09-24",
+            "targetAmount": 85.58768689309062,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "05a8e87f-d65b-4483-9d0a-47ff8bae943c",
+            "date": "2025-09-25",
+            "targetAmount": 55.14412844171906,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "0acd047d-9649-470c-87e6-8ef27ad10f4a",
+            "date": "2025-09-26",
+            "targetAmount": 87.53531516912248,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "339bbd88-30eb-4093-b9a8-a45a2917c0f7",
+            "date": "2025-09-29",
+            "targetAmount": 35.0262636262472,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "7611c7ec-74fd-4cc1-a76f-ba68599d011e",
+            "date": "2025-09-30",
+            "targetAmount": 58.90131617445138,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          }
+        ],
+        "isFirstMonth": false
+      },
+      {
+        "id": "13bdacf4-d614-4dde-a0c3-3a22e820833c",
+        "userId": "940858ce-488c-444e-817b-d87d6fc0c8f5",
+        "year": 2025,
+        "month": 10,
+        "monthName": "October 2025",
+        "targetPercentage": 0.16525968194087484,
+        "startingBalance": 13923.571323496057,
+        "targetAmount": 2301.004968402044,
+        "daysInMonth": 31,
+        "dailyTargets": [
+          {
+            "id": "a96167a1-fa73-4b8a-9c5d-502ea855b163",
+            "date": "2025-10-01",
+            "targetAmount": 125.87133207530715,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "120ea675-2155-4e97-9189-109741a6dacb",
+            "date": "2025-10-02",
+            "targetAmount": 26.691497601713696,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "1b7a202a-e25a-407f-8fbb-a135d4a7a843",
+            "date": "2025-10-03",
+            "targetAmount": 66.54170080633259,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "4a5355de-e149-4dcd-9311-37c7373a7fbd",
+            "date": "2025-10-06",
+            "targetAmount": 121.88115890204679,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "6a1f8bf7-bcea-4f80-9d4d-bc4905ea475c",
+            "date": "2025-10-07",
+            "targetAmount": 56.83593129902709,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "7a613ee1-dc5e-4ee6-a4ce-eafa89663d15",
+            "date": "2025-10-08",
+            "targetAmount": 26.297277318917477,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "25575fe2-7d44-4a8a-a23c-1e0730ecda0e",
+            "date": "2025-10-09",
+            "targetAmount": 63.82440055506392,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "39d58933-6f86-4739-8618-761d6245c7e7",
+            "date": "2025-10-10",
+            "targetAmount": 95.82052592356304,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "9f064b5e-1e7e-421a-b5cf-0077ecd71deb",
+            "date": "2025-10-13",
+            "targetAmount": 86.32741779434248,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "820ed4e5-4dc6-4535-bc50-5d927df0193f",
+            "date": "2025-10-14",
+            "targetAmount": 104.97925543924893,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "15a110f7-5363-47c6-b857-057a43dfea6d",
+            "date": "2025-10-15",
+            "targetAmount": 27.77483705875437,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "bb1d54b3-2bac-430c-903e-76010b7c25b5",
+            "date": "2025-10-16",
+            "targetAmount": 34.79517107525863,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "a89676d5-000e-468b-81a5-e064f4f63f2b",
+            "date": "2025-10-17",
+            "targetAmount": 43.893157097087425,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "b0f379b3-e38c-46df-87ea-2ffc5607c38e",
+            "date": "2025-10-20",
+            "targetAmount": 36.52842232576493,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "69550377-b50b-4872-b124-aa1b11163fba",
+            "date": "2025-10-21",
+            "targetAmount": 53.92091827699716,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "41e9b3ee-87ae-4504-8897-dae28fc7a1f4",
+            "date": "2025-10-22",
+            "targetAmount": 48.157775449676784,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "7dc17a2e-2674-42b8-94c2-5a28936c672f",
+            "date": "2025-10-23",
+            "targetAmount": 110.96460454390309,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "1fae46b8-308e-4b6d-9a7c-aaa09d72572e",
+            "date": "2025-10-24",
+            "targetAmount": 98.01433403336962,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "ee029f02-90c6-49a5-9acf-cd8cd3d0796a",
+            "date": "2025-10-27",
+            "targetAmount": 128.6097263905707,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "5ef4aed3-54c6-4ec6-97dd-4575028a1bb0",
+            "date": "2025-10-28",
+            "targetAmount": 75.81406592568126,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "daf29be5-0ef3-400d-b05a-5a7aa98dc4a9",
+            "date": "2025-10-29",
+            "targetAmount": 76.06034928383309,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "59eff596-25f1-4924-8b5a-9b5e2e968eb0",
+            "date": "2025-10-30",
+            "targetAmount": 30.084047705936353,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "5b77e6d7-35d6-42f4-ab16-073a07041ef7",
+            "date": "2025-10-31",
+            "targetAmount": 97.4203742122192,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          }
+        ],
+        "isFirstMonth": false
+      },
+      {
+        "id": "96495f67-3f0e-4814-8e76-21f127a2a466",
+        "userId": "940858ce-488c-444e-817b-d87d6fc0c8f5",
+        "year": 2025,
+        "month": 11,
+        "monthName": "November 2025",
+        "targetPercentage": 0.16482043706404392,
+        "startingBalance": 16224.576291898102,
+        "targetAmount": 2674.1417556095703,
+        "daysInMonth": 30,
+        "dailyTargets": [
+          {
+            "id": "d1b7feb3-ff2e-48e3-8388-14f73cd8315c",
+            "date": "2025-11-03",
+            "targetAmount": 98.93638783680879,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "f664b4db-c107-484d-84c4-1b9f5f96d0f1",
+            "date": "2025-11-04",
+            "targetAmount": 48.23264179102476,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "d473bfbd-e530-4f77-a238-ac52e12500e5",
+            "date": "2025-11-05",
+            "targetAmount": 115.72276033058088,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "2ab29ece-6e26-40d4-a60f-458a75adbfca",
+            "date": "2025-11-06",
+            "targetAmount": 111.43160970603927,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "85c54ee6-a0c9-44e4-b29f-48bdd75d48b7",
+            "date": "2025-11-07",
+            "targetAmount": 132.7857004713133,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "c59123c2-282d-4bd6-986b-cf3a16a26bff",
+            "date": "2025-11-10",
+            "targetAmount": 27.76534517221359,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "94e7c0f0-045a-4adb-895d-c92316ae1e92",
+            "date": "2025-11-11",
+            "targetAmount": 117.84937185028747,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "5445dce1-cb70-4f2d-91d6-3170e14b81a4",
+            "date": "2025-11-12",
+            "targetAmount": 133.9752989124023,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "d81558bd-1a30-4d0d-9f1e-333a378f2d12",
+            "date": "2025-11-13",
+            "targetAmount": 96.35258795107217,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "5155bfb9-6929-48e7-ba80-82f77d33c818",
+            "date": "2025-11-14",
+            "targetAmount": 141.6850249304102,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "0198e585-a084-4581-8877-4e9d9656a347",
+            "date": "2025-11-17",
+            "targetAmount": 118.61555553441578,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "7c9cc5eb-ee76-4417-b5d5-a9e878ecad9b",
+            "date": "2025-11-18",
+            "targetAmount": 130.1493572843525,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "115899c0-b429-42de-8ed4-89d59f24adf0",
+            "date": "2025-11-19",
+            "targetAmount": 103.15674141535104,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "e71365ad-c1c4-43b5-a61c-a32e2c24e74f",
+            "date": "2025-11-20",
+            "targetAmount": 126.92562641595089,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "3faf5ffb-e704-40d1-bea9-a051221fe3f2",
+            "date": "2025-11-21",
+            "targetAmount": 44.4074909563253,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "adec5ad4-392d-435a-8b58-67c5a3d6085c",
+            "date": "2025-11-24",
+            "targetAmount": 52.3330350590867,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "5c297ab7-aff9-48e1-acd1-f5b42fa35f9e",
+            "date": "2025-11-25",
+            "targetAmount": 150.1788757093902,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "23394e5f-b93b-4f73-bd2d-9dda425a1974",
+            "date": "2025-11-26",
+            "targetAmount": 103.4162136084139,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "8fcb2ef7-53da-440c-a097-c799f997d049",
+            "date": "2025-11-27",
+            "targetAmount": 113.25316372450793,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "441429d2-d476-49fc-969a-cdc4ce239098",
+            "date": "2025-11-28",
+            "targetAmount": 73.04434616770476,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          }
+        ],
+        "isFirstMonth": false
+      },
+      {
+        "id": "80e2830e-1b9a-46d3-8426-ef62f0fa5df5",
+        "userId": "940858ce-488c-444e-817b-d87d6fc0c8f5",
+        "year": 2025,
+        "month": 12,
+        "monthName": "December 2025",
+        "targetPercentage": 0.16434553718444256,
+        "startingBalance": 18898.71804750767,
+        "targetAmount": 3105.9199696149676,
+        "daysInMonth": 31,
+        "dailyTargets": [
+          {
+            "id": "e3a6a173-e32a-4f3e-a7e7-f0abb91cac7f",
+            "date": "2025-12-01",
+            "targetAmount": 49.53691828002621,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "4d24a043-874e-468e-bfee-520875ca7c33",
+            "date": "2025-12-02",
+            "targetAmount": 171.96410575367568,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "1c9bcf33-5723-44dc-8755-989dd9b91c8f",
+            "date": "2025-12-03",
+            "targetAmount": 39.56118714845349,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "09c85859-d35f-4bb4-b047-5673bc6f0928",
+            "date": "2025-12-04",
+            "targetAmount": 143.00309301562055,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "d433796e-4dba-482d-8b5d-51ba3bd82ca6",
+            "date": "2025-12-05",
+            "targetAmount": 63.30133237463224,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "2056a3a8-22ff-4f3c-aec4-8d6c928e6e39",
+            "date": "2025-12-08",
+            "targetAmount": 89.23856888384117,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "05f6e941-8de2-4594-a551-a76079dfff65",
+            "date": "2025-12-09",
+            "targetAmount": 159.8750594383492,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "cc975867-8cab-4614-bfeb-c01984981adc",
+            "date": "2025-12-10",
+            "targetAmount": 59.48622515944906,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "5609477e-5e7f-448f-b1d4-5ada89f99127",
+            "date": "2025-12-11",
+            "targetAmount": 122.73060674605743,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "67739427-1586-4a9b-b4d3-f14bdd727fb4",
+            "date": "2025-12-12",
+            "targetAmount": 77.87296073834924,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "8babe276-1faa-423a-b441-f4bb6e310879",
+            "date": "2025-12-15",
+            "targetAmount": 127.42077227933875,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "4ce2110d-c0a2-4889-a787-92ee4d0dc6a8",
+            "date": "2025-12-16",
+            "targetAmount": 167.91037083172623,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "364e6876-be4e-4267-9eb1-c2347afbc349",
+            "date": "2025-12-17",
+            "targetAmount": 187.00599618725627,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "7d94490a-dd76-459d-ae0a-54166380616d",
+            "date": "2025-12-18",
+            "targetAmount": 69.34870484781929,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "f02d2584-ed82-435c-b1fb-1d9af0fd6562",
+            "date": "2025-12-19",
+            "targetAmount": 111.77886962748157,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "d1d7b420-924d-422a-8030-f2b6e1628d52",
+            "date": "2025-12-22",
+            "targetAmount": 58.7862741632721,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "da04820d-6049-4349-abb8-55ecc77e7608",
+            "date": "2025-12-23",
+            "targetAmount": 96.79775179378078,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "d3618098-8d2d-4218-b9c7-2b1451bc05ae",
+            "date": "2025-12-24",
+            "targetAmount": 40.94012194302139,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "c44f026e-69e3-4343-9771-b8d2eb62bf9f",
+            "date": "2025-12-25",
+            "targetAmount": 40.244045745565245,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "3e048a65-16e6-4e22-ad6a-a2831ac09805",
+            "date": "2025-12-26",
+            "targetAmount": 179.431739513494,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "fb2307fb-e613-4e8b-bfd3-3330383d2944",
+            "date": "2025-12-29",
+            "targetAmount": 97.19113603540754,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "ea2cfc65-f076-4bfe-9436-f7e1ebcb438f",
+            "date": "2025-12-30",
+            "targetAmount": 69.41793966164339,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "bc3dc029-65b3-4c35-8374-54aa52dc398c",
+            "date": "2025-12-31",
+            "targetAmount": 32.793344111827885,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          }
+        ],
+        "isFirstMonth": false
+      },
+      {
+        "id": "7e24db9b-942a-4a62-a88a-3663b5c3ced4",
+        "userId": "940858ce-488c-444e-817b-d87d6fc0c8f5",
+        "year": 2026,
+        "month": 1,
+        "monthName": "January 2026",
+        "targetPercentage": 0.16842011545453045,
+        "startingBalance": 22004.638017122637,
+        "targetAmount": 3706.0236753789445,
+        "daysInMonth": 31,
+        "dailyTargets": [
+          {
+            "id": "4c615de1-1095-499a-b6e1-5af27fcddee1",
+            "date": "2026-01-01",
+            "targetAmount": 42.44734012830775,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "45dc1250-6c43-4468-a43e-c60c80c76b93",
+            "date": "2026-01-02",
+            "targetAmount": 107.03414056886909,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "dc68514b-b6b3-4ac1-9f47-21916fdc6144",
+            "date": "2026-01-05",
+            "targetAmount": 169.60914959335352,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "97c84201-e9ac-40c8-b680-56552cd3ac65",
+            "date": "2026-01-06",
+            "targetAmount": 120.74650860779025,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "03ab330c-cf7c-4a15-b51a-d8694c7c5074",
+            "date": "2026-01-07",
+            "targetAmount": 167.22470125772728,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "9a804831-ce54-41d5-b132-5dd82e31dd3b",
+            "date": "2026-01-08",
+            "targetAmount": 155.2860101231998,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "c4f99a9e-d999-4a6e-a9f5-c5454bc97d48",
+            "date": "2026-01-09",
+            "targetAmount": 131.77070706605332,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "0caab538-7996-4502-8731-c4e7b6c9899a",
+            "date": "2026-01-12",
+            "targetAmount": 81.50933027281405,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "79dbba5b-5c02-4ddf-9576-714e8b412f66",
+            "date": "2026-01-13",
+            "targetAmount": 53.03085792841253,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "8eff5b69-2e3a-4b41-8574-4db1d7e70ca1",
+            "date": "2026-01-14",
+            "targetAmount": 67.83951332316214,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "0ebe33c3-2427-4a2a-bcd7-45140b1ff25e",
+            "date": "2026-01-15",
+            "targetAmount": 180.00111752908686,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "1fc1fcf1-68d1-44fc-9389-a741e519de85",
+            "date": "2026-01-16",
+            "targetAmount": 124.1914008605806,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "b1147e18-17b4-4ce6-8063-974433b2109e",
+            "date": "2026-01-19",
+            "targetAmount": 58.674239376460655,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "dea0ec00-cd01-4737-8bf8-5667f31bfdde",
+            "date": "2026-01-20",
+            "targetAmount": 135.9478356511663,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "cb6b42f8-e556-42b8-b5df-9463d790b4e9",
+            "date": "2026-01-21",
+            "targetAmount": 118.4741582766892,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "2148702a-5fd3-4fe7-ad8e-69a8dda67b01",
+            "date": "2026-01-22",
+            "targetAmount": 187.26656032605342,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "298d9367-bdbc-4e15-b633-4971af998d87",
+            "date": "2026-01-23",
+            "targetAmount": 48.97358323525151,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "86d2d8db-c6cf-47ad-8727-45d8285ed21e",
+            "date": "2026-01-26",
+            "targetAmount": 177.87822562749062,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "4cf9502f-157c-411a-b74f-43d942bb9e82",
+            "date": "2026-01-27",
+            "targetAmount": 72.92095414159776,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "fe5161e4-ea40-46c0-b2e8-fcf7e35327b6",
+            "date": "2026-01-28",
+            "targetAmount": 157.15405336527704,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "f319eb30-4726-43aa-8bd8-af461b50082e",
+            "date": "2026-01-29",
+            "targetAmount": 110.43080315063844,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "5d54eb3b-9763-4e17-bbe5-8474ff358845",
+            "date": "2026-01-30",
+            "targetAmount": 50.800371997569,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          }
+        ],
+        "isFirstMonth": false
+      },
+      {
+        "id": "26c2aeb2-5a26-45f9-a005-4d94ba0bb5f1",
+        "userId": "940858ce-488c-444e-817b-d87d6fc0c8f5",
+        "year": 2026,
+        "month": 2,
+        "monthName": "February 2026",
+        "targetPercentage": 0.15492409769624493,
+        "startingBalance": 25710.66169250158,
+        "targetAmount": 3983.201063884217,
+        "daysInMonth": 28,
+        "dailyTargets": [
+          {
+            "id": "00b5dbfd-f3c6-4030-9178-4374b388d7fb",
+            "date": "2026-02-02",
+            "targetAmount": 56.47712613707734,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "0fb6e474-9f4f-427f-9e89-678d698190eb",
+            "date": "2026-02-03",
+            "targetAmount": 43.984030161312525,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "00577cc0-314b-467f-b2e8-ad3f137c8266",
+            "date": "2026-02-04",
+            "targetAmount": 123.60200911765932,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "904e950e-2085-446e-aff0-ae4a782146e5",
+            "date": "2026-02-05",
+            "targetAmount": 193.9989140858458,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "5c8a3701-1693-418d-825a-9ec4b2993494",
+            "date": "2026-02-06",
+            "targetAmount": 160.04992023962978,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "e9c471a0-4e67-4d21-9b60-978fece6baea",
+            "date": "2026-02-09",
+            "targetAmount": 164.6393708866533,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "931a521e-bb7a-4ea8-ad67-433121d64b87",
+            "date": "2026-02-10",
+            "targetAmount": 178.97912369303646,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "4b8a39f2-c833-49ea-8096-eabc05c18bf9",
+            "date": "2026-02-11",
+            "targetAmount": 162.2138578704352,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "70bc12db-7814-417a-93a6-d205bbad3aef",
+            "date": "2026-02-12",
+            "targetAmount": 223.84132236030732,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "4934d696-90c7-4e73-a56b-2a16c8e9275c",
+            "date": "2026-02-13",
+            "targetAmount": 174.1842985082771,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "ce343693-2820-4b16-8c18-7821830c7e59",
+            "date": "2026-02-16",
+            "targetAmount": 143.14975659904016,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "6d99f1be-4c15-497e-8853-4973062d1243",
+            "date": "2026-02-17",
+            "targetAmount": 72.66695926533967,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "5170294b-1236-4ef2-a595-93fdf4f92476",
+            "date": "2026-02-18",
+            "targetAmount": 145.40059942569977,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "b0079e63-8d1d-47c2-b4ec-fb36b6ec723d",
+            "date": "2026-02-19",
+            "targetAmount": 211.39115136210566,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "3e660efe-5ac3-41b7-bc87-4fd1af4b13c2",
+            "date": "2026-02-20",
+            "targetAmount": 74.60133158456672,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "ac25f108-4284-430b-b69a-e0e67064217a",
+            "date": "2026-02-23",
+            "targetAmount": 105.38242739698505,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "c581fa29-d7ae-40c6-829b-22014bc00699",
+            "date": "2026-02-24",
+            "targetAmount": 143.16604765211446,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "db9ee589-95c6-4e71-a553-fe076074c9bb",
+            "date": "2026-02-25",
+            "targetAmount": 87.1454133529097,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "fe8f805e-e849-49d0-8aaf-ee5c4f4526cf",
+            "date": "2026-02-26",
+            "targetAmount": 155.8363276797087,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "d8d82bd2-a7b7-4d15-b55b-48c3f903d60c",
+            "date": "2026-02-27",
+            "targetAmount": 176.63360426461196,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          }
+        ],
+        "isFirstMonth": false
+      },
+      {
+        "id": "ca30daf2-25f6-474f-be4c-bd6c49222deb",
+        "userId": "940858ce-488c-444e-817b-d87d6fc0c8f5",
+        "year": 2026,
+        "month": 3,
+        "monthName": "March 2026",
+        "targetPercentage": 0.1673607292239369,
+        "startingBalance": 29693.8627563858,
+        "targetAmount": 4969.586524384229,
+        "daysInMonth": 31,
+        "dailyTargets": [
+          {
+            "id": "ba99cfd9-72ee-4258-a188-21b0506c60a6",
+            "date": "2026-03-02",
+            "targetAmount": 156.59750935370482,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "a8ac23d5-1807-4a75-9589-d08d4bc1d1b6",
+            "date": "2026-03-03",
+            "targetAmount": 191.68093098363497,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "0732a298-3578-4096-99a4-9986db5d25e8",
+            "date": "2026-03-04",
+            "targetAmount": 231.998816774935,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "56c3b5a2-df68-4d8c-81e5-c4be035ba573",
+            "date": "2026-03-05",
+            "targetAmount": 158.36562249524843,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "8ca4d6ef-5ae8-48bf-8d39-f724edcf1050",
+            "date": "2026-03-06",
+            "targetAmount": 139.3537848997139,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "d4581fde-737a-4442-8d37-7d7541823898",
+            "date": "2026-03-09",
+            "targetAmount": 144.4571232030316,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "ae0267c2-e638-42d3-b4ad-4b2a4fba2ad6",
+            "date": "2026-03-10",
+            "targetAmount": 161.15891877763266,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "27f14729-2e29-4679-826a-22a1044126d2",
+            "date": "2026-03-11",
+            "targetAmount": 214.69106357631952,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "d363f090-7a9a-4f18-b615-4457ac3a22f6",
+            "date": "2026-03-12",
+            "targetAmount": 133.4240575073286,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "3054dfe0-c2ab-4351-96aa-02c68bf94c64",
+            "date": "2026-03-13",
+            "targetAmount": 206.34697175818872,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "febee871-ab58-400e-9a55-017c3d545314",
+            "date": "2026-03-16",
+            "targetAmount": 48.68287012228285,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "fc7f09e0-732a-42b4-a067-6c687f13729b",
+            "date": "2026-03-17",
+            "targetAmount": 187.62503638489557,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "2fee6f2d-2b69-4af9-b7b8-bd790a1f2935",
+            "date": "2026-03-18",
+            "targetAmount": 106.89370493771844,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "da7fac59-a933-4b6f-9e2b-34ab11503709",
+            "date": "2026-03-19",
+            "targetAmount": 167.22467844511615,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "ce939410-9b51-4100-821f-e87e39af9693",
+            "date": "2026-03-20",
+            "targetAmount": 193.99015729086463,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "1185d29c-d902-4d35-afa4-a36e3fd7f088",
+            "date": "2026-03-23",
+            "targetAmount": 241.3630823745154,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "ccbeec51-9584-4ddc-b48a-6e9f03dcb0ac",
+            "date": "2026-03-24",
+            "targetAmount": 151.6740818352767,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "fd7ae77f-9da6-4232-911c-599a8dc497d9",
+            "date": "2026-03-25",
+            "targetAmount": 146.73621231861782,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "13d467fe-b496-495f-af2c-43975414b0b1",
+            "date": "2026-03-26",
+            "targetAmount": 150.5940237930507,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "10079378-4288-45f3-8d2e-835348c4317f",
+            "date": "2026-03-27",
+            "targetAmount": 119.79527561915764,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "05d0b2d0-e2a8-4e0d-bc61-55d4581af674",
+            "date": "2026-03-30",
+            "targetAmount": 61.26312949641482,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "4a122664-d6c3-400f-9a89-2797ba157a3d",
+            "date": "2026-03-31",
+            "targetAmount": 246.73337248118915,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          }
+        ],
+        "isFirstMonth": false
+      },
+      {
+        "id": "ce5d6e10-029b-49d6-a68f-6f66ad53924c",
+        "userId": "940858ce-488c-444e-817b-d87d6fc0c8f5",
+        "year": 2026,
+        "month": 4,
+        "monthName": "April 2026",
+        "targetPercentage": 0.16250242798046177,
+        "startingBalance": 34663.44928077003,
+        "targetAmount": 5632.894670302721,
+        "daysInMonth": 30,
+        "dailyTargets": [
+          {
+            "id": "abd4008e-dac4-45be-aa60-bbbc27a3b20b",
+            "date": "2026-04-01",
+            "targetAmount": 91.62401800311791,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "e524543b-1f4e-4c6e-801f-1cbeeee80e0a",
+            "date": "2026-04-02",
+            "targetAmount": 64.11335475573269,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "671c2a9a-5cec-41e4-9a19-1328df3d30bc",
+            "date": "2026-04-03",
+            "targetAmount": 139.70152963187874,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "be7e17b6-5e63-49c0-9d1c-66fb3bbd4c3c",
+            "date": "2026-04-06",
+            "targetAmount": 165.51462264733559,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "42dccff4-a669-411e-b2de-59c38a3da35f",
+            "date": "2026-04-07",
+            "targetAmount": 112.15691165595527,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "48eb056b-e515-4918-940b-8b8078648533",
+            "date": "2026-04-08",
+            "targetAmount": 128.79934280310547,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "46078722-ba5a-4716-9149-e60acbc80b3c",
+            "date": "2026-04-09",
+            "targetAmount": 191.12428280943988,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "183c3a65-e617-41b6-9c61-6c58549aef04",
+            "date": "2026-04-10",
+            "targetAmount": 277.1357864646353,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "c762a4e3-818d-4aa8-9603-1cd68fa78b14",
+            "date": "2026-04-13",
+            "targetAmount": 304.85514423304164,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "b3d2daf1-7087-486d-ae84-2ba5db5ecfaf",
+            "date": "2026-04-14",
+            "targetAmount": 146.88693155933262,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "1576cefa-bbdc-4385-8d07-83a09ce3569d",
+            "date": "2026-04-15",
+            "targetAmount": 115.14376774517523,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "8f0ccfca-b911-42d4-bce3-c788cfd47bfe",
+            "date": "2026-04-16",
+            "targetAmount": 245.07172074112404,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "5c6fc07d-2f23-42fb-88d9-5495c15c2e08",
+            "date": "2026-04-17",
+            "targetAmount": 240.07402157347923,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "737d8d8a-6ef5-476e-bcd3-da017235103a",
+            "date": "2026-04-20",
+            "targetAmount": 60.04563814538013,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "19a9e3b6-fdc7-46e6-a8c7-0662afe5ce89",
+            "date": "2026-04-21",
+            "targetAmount": 94.05497554780432,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "3f2889af-1daf-4940-9558-b488ec10cf0c",
+            "date": "2026-04-22",
+            "targetAmount": 283.3923152121476,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "bf217113-656f-4736-8009-61c6bc2cc6bc",
+            "date": "2026-04-23",
+            "targetAmount": 315.65845098813054,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "4bdd3807-da95-49ad-9fd5-63359ebcdb93",
+            "date": "2026-04-24",
+            "targetAmount": 264.2460442368786,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "816be89b-bc8b-473c-bd65-4ed6d9928fcd",
+            "date": "2026-04-27",
+            "targetAmount": 167.68373978594784,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "432b9b2f-7833-4ead-ab8c-de2de67d3539",
+            "date": "2026-04-28",
+            "targetAmount": 300.1058716016494,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "0502df8f-70d9-4b1b-ba3c-ed40e6b1e954",
+            "date": "2026-04-29",
+            "targetAmount": 228.29519015244122,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "29d99e61-e726-483b-a197-622d71067d91",
+            "date": "2026-04-30",
+            "targetAmount": 243.00267115054976,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          }
+        ],
+        "isFirstMonth": false
+      },
+      {
+        "id": "63daf24b-9696-4965-a527-e201b9fc64d2",
+        "userId": "940858ce-488c-444e-817b-d87d6fc0c8f5",
+        "year": 2026,
+        "month": 5,
+        "monthName": "May 2026",
+        "targetPercentage": 0.1579257407874313,
+        "startingBalance": 40296.34395107275,
+        "targetAmount": 6363.82996949829,
+        "daysInMonth": 31,
+        "dailyTargets": [
+          {
+            "id": "624c706c-5648-4819-81ea-32665c865087",
+            "date": "2026-05-01",
+            "targetAmount": 239.08927270138503,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "c6473696-9637-4cb7-986e-29973f37c86b",
+            "date": "2026-05-04",
+            "targetAmount": 276.19649157807896,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "9d4e6e2c-0a08-4c7d-9eb9-c507abf62843",
+            "date": "2026-05-05",
+            "targetAmount": 86.8337759603753,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "64af02d8-4893-4833-8b08-871512c4d607",
+            "date": "2026-05-06",
+            "targetAmount": 147.9251994143951,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "5ca8bcbd-eade-4c93-beef-3c811b0fd4bd",
+            "date": "2026-05-07",
+            "targetAmount": 199.40591888958977,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "8f47fec9-8139-4575-a36b-9bf93ebdae6d",
+            "date": "2026-05-08",
+            "targetAmount": 261.29855707838544,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "289d40f8-d1f5-4cd7-b617-7f85c723d2f8",
+            "date": "2026-05-11",
+            "targetAmount": 135.32933984407305,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "8d994dac-a590-4a11-8e82-ec3338ca1f7e",
+            "date": "2026-05-12",
+            "targetAmount": 75.1504736112731,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "cf86c164-c05f-449b-ac34-1ccb5decb3bb",
+            "date": "2026-05-13",
+            "targetAmount": 359.27227101685594,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "5cf8094e-a039-44c5-8540-a33625633243",
+            "date": "2026-05-14",
+            "targetAmount": 190.02002879784513,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "3ae3cb7d-b8ee-4cda-bcf2-55542a335ba3",
+            "date": "2026-05-15",
+            "targetAmount": 320.6587106291354,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "943b712d-2ebc-4f97-a50e-22462d7751d8",
+            "date": "2026-05-18",
+            "targetAmount": 85.31457391957537,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "75059bd8-7227-45e1-9d7f-e23691438cf7",
+            "date": "2026-05-19",
+            "targetAmount": 300.9501900247916,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "98ed25fa-b218-49c5-b3e3-e11462db7bac",
+            "date": "2026-05-20",
+            "targetAmount": 120.3036645392075,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "5e00d221-0a3e-401f-842a-c975261741e5",
+            "date": "2026-05-21",
+            "targetAmount": 59.92638396469047,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "fbb44f0b-53c5-4bc2-aa57-868d15316b68",
+            "date": "2026-05-22",
+            "targetAmount": 172.24216591307453,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "2b2c5176-4d7d-4a3f-ace8-e059b913dd85",
+            "date": "2026-05-25",
+            "targetAmount": 90.22223035947306,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "5dd2d7be-cc7a-4298-99a3-22ac795f5080",
+            "date": "2026-05-26",
+            "targetAmount": 335.18112225797375,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "3ccbad1d-9c75-443e-8e77-b98e31cd6be0",
+            "date": "2026-05-27",
+            "targetAmount": 171.4401023222438,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "d9a3ce01-bac3-4702-b48d-9d23c7a251f0",
+            "date": "2026-05-28",
+            "targetAmount": 212.27837834986008,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "a6f16bde-7a33-4ed0-b8a1-6e27e11fd1c0",
+            "date": "2026-05-29",
+            "targetAmount": 361.88069610420416,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          }
+        ],
+        "isFirstMonth": false
+      },
+      {
+        "id": "bf63c638-db7b-415e-b18d-8e33194c6d38",
+        "userId": "940858ce-488c-444e-817b-d87d6fc0c8f5",
+        "year": 2026,
+        "month": 6,
+        "monthName": "June 2026",
+        "targetPercentage": 0.1595773964548006,
+        "startingBalance": 46660.17392057104,
+        "targetAmount": 7445.909072372912,
+        "daysInMonth": 30,
+        "dailyTargets": [
+          {
+            "id": "7778c2d4-723c-4b23-ae5b-66b90a2d0962",
+            "date": "2026-06-01",
+            "targetAmount": 236.45138155175619,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "848ceb3c-e9b5-4ef5-866e-d5e77ee5360b",
+            "date": "2026-06-02",
+            "targetAmount": 110.74515585192049,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "59b65044-2ab6-4fc8-827a-56d56399c259",
+            "date": "2026-06-03",
+            "targetAmount": 143.87350214669007,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "d9a9fed7-4767-4c0f-9026-26a0e3a3ac11",
+            "date": "2026-06-04",
+            "targetAmount": 98.11662653119613,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "a9b3c292-0938-4e3b-8eaf-1829ff0882e9",
+            "date": "2026-06-05",
+            "targetAmount": 166.30680115305805,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "c7552f4d-b893-46d3-82f2-6840a330b8d8",
+            "date": "2026-06-08",
+            "targetAmount": 462.7824083065751,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "ef7f3ff4-7954-497f-8b7f-1a3cd9bf2dd2",
+            "date": "2026-06-09",
+            "targetAmount": 154.8893226085512,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "6533409b-5983-4a43-88f5-9abda666ccd0",
+            "date": "2026-06-10",
+            "targetAmount": 324.0055727229302,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "35131ba4-33d2-4de9-b95f-138f51b97cfa",
+            "date": "2026-06-11",
+            "targetAmount": 447.9249605809684,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "695be462-8dc0-436a-8494-dfb3314271af",
+            "date": "2026-06-12",
+            "targetAmount": 397.4973416252925,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "7d20db55-7a47-4999-b430-321a1a7ba3ec",
+            "date": "2026-06-15",
+            "targetAmount": 281.4516962608201,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "7d17f9f3-33ac-4be4-a221-b10dbcb0bccf",
+            "date": "2026-06-16",
+            "targetAmount": 293.11074236660534,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "90f76cf7-27a3-4ade-9ff1-1e6a91038554",
+            "date": "2026-06-17",
+            "targetAmount": 103.29785127439044,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "0fe8cc27-5ab5-4fea-a490-34489a1c49e1",
+            "date": "2026-06-18",
+            "targetAmount": 209.38059303021146,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "e740c985-85ae-4cb6-a9dd-fd9c33303f16",
+            "date": "2026-06-19",
+            "targetAmount": 101.35441324275557,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "24e16d33-9a96-4bbd-8deb-893d5a621a9a",
+            "date": "2026-06-22",
+            "targetAmount": 464.985618205503,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "90056ae1-163e-4819-a835-e9e26d086253",
+            "date": "2026-06-23",
+            "targetAmount": 89.10511712596308,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "17d24ce0-3150-40f3-bdf4-e400e5126f3d",
+            "date": "2026-06-24",
+            "targetAmount": 366.6875928089643,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "336d8d8a-2e28-477b-ab3f-854f09f4a520",
+            "date": "2026-06-25",
+            "targetAmount": 269.40377676568176,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "2e01d840-9c37-4503-bcdc-6b1270ec6f8e",
+            "date": "2026-06-26",
+            "targetAmount": 106.27042220265102,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "7e0153fe-9b68-4c4d-9aab-c7cd785809e2",
+            "date": "2026-06-29",
+            "targetAmount": 216.0219551895646,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "b1058c79-c904-4a21-acbf-9af206f53a04",
+            "date": "2026-06-30",
+            "targetAmount": 202.10390780196462,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          }
+        ],
+        "isFirstMonth": false
+      },
+      {
+        "id": "93069aff-3bf8-4286-a2cb-d9748c869f31",
+        "userId": "940858ce-488c-444e-817b-d87d6fc0c8f5",
+        "year": 2026,
+        "month": 7,
+        "monthName": "July 2026",
+        "targetPercentage": 0.15350063048555299,
+        "startingBalance": 54106.08299294395,
+        "targetAmount": 8305.317852520551,
+        "daysInMonth": 31,
+        "dailyTargets": [
+          {
+            "id": "ee12ec62-109d-4c13-bbb0-90d7ea24650d",
+            "date": "2026-07-01",
+            "targetAmount": 145.84607358341654,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "cfa6bbca-bbe4-4c50-8864-5cc67dd02075",
+            "date": "2026-07-02",
+            "targetAmount": 140.29284584552025,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "72de1bf9-9f0d-4676-8bcc-0d341e33cd3a",
+            "date": "2026-07-03",
+            "targetAmount": 362.26400530221,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "8907178a-b720-4a33-b32a-16a10d151a9e",
+            "date": "2026-07-06",
+            "targetAmount": 289.7448018522011,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "67c90254-939d-4105-bb92-732e050e8287",
+            "date": "2026-07-07",
+            "targetAmount": 200.76400827353274,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "83975738-a4d5-4b97-8d9e-692c10b329c1",
+            "date": "2026-07-08",
+            "targetAmount": 387.23915936923436,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "61b4a6a1-1fd0-4bd7-b011-b5930dc4fd42",
+            "date": "2026-07-09",
+            "targetAmount": 265.80060192618583,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "e224b115-bd93-4e38-8ba7-dfbe598d159f",
+            "date": "2026-07-10",
+            "targetAmount": 371.58339009624,
+            "numberOfTrades": 5,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "d54564a2-421a-4a1e-bbbf-0ec5f4dba9b4",
+            "date": "2026-07-13",
+            "targetAmount": 358.7135552035042,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "b8012e95-d9fc-4496-ac65-dd4b1023d725",
+            "date": "2026-07-14",
+            "targetAmount": 343.7208392105795,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "db8a2a2b-0e77-4ffc-9264-141143485f60",
+            "date": "2026-07-15",
+            "targetAmount": 322.0084893279491,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "d4361ca5-f883-4cca-a00a-7c477fa7ae1f",
+            "date": "2026-07-16",
+            "targetAmount": 364.81499181804,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "07bf6d52-0618-4ae6-bc39-9284e8073eca",
+            "date": "2026-07-17",
+            "targetAmount": 244.33707885829952,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "883d7ea6-e22b-4af8-8dbf-38492c5164c0",
+            "date": "2026-07-20",
+            "targetAmount": 380.47267034721676,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "5602ee1f-d29e-4752-b808-9ad2bc2d953b",
+            "date": "2026-07-21",
+            "targetAmount": 74.45884592859231,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "5264eb2b-b494-4e5b-abd6-baa528a580ca",
+            "date": "2026-07-22",
+            "targetAmount": 83.5690738279967,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "e9784efb-e850-4f3f-93a1-754acffb64ba",
+            "date": "2026-07-23",
+            "targetAmount": 386.182327273602,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "9af8bec7-fe85-43c4-ba1d-2eb7a1f58a59",
+            "date": "2026-07-24",
+            "targetAmount": 209.1180411038594,
+            "numberOfTrades": 8,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "2fa6e934-921a-4d0c-a0cb-40145a0c7e4d",
+            "date": "2026-07-27",
+            "targetAmount": 254.4070441629099,
+            "numberOfTrades": 6,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "960b3316-abc7-49b8-9054-6114bfa0988c",
+            "date": "2026-07-28",
+            "targetAmount": 333.5001975745525,
+            "numberOfTrades": 4,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "415c123d-31cb-43c4-971b-3da68baef598",
+            "date": "2026-07-29",
+            "targetAmount": 256.35993662691135,
+            "numberOfTrades": 7,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "6f6b79ec-e6c4-45da-9fd1-b901dee7d0d9",
+            "date": "2026-07-30",
+            "targetAmount": 347.6157182670327,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          },
+          {
+            "id": "ba481e6e-cb91-4ccb-b66e-7fc562e81c85",
+            "date": "2026-07-31",
+            "targetAmount": 351.53046247863523,
+            "numberOfTrades": 3,
+            "trades": [],
+            "status": "scheduled"
+          }
+        ],
+        "isFirstMonth": false
+      }
+    ],
+    "totalProjectedReturn": 52411.4008454645,
+    "createdAt": "2025-08-12T05:25:00.044Z",
+    "updatedAt": "2025-08-12T05:25:00.044Z"
+  }
+]
+

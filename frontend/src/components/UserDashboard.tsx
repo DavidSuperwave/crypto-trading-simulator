@@ -3,22 +3,17 @@ import { useAuth } from '../context/AuthContext';
 import DepositPage from './DepositPage';
 import WithdrawalPage from './WithdrawalPage';
 import UserSettings from './UserSettings';
-import ChatWidget from './ChatWidget';
 import PendingRequestsWidget from './PendingRequestsWidget';
 import UserSidebar from './UserSidebar';
-import { TrendingUp, TrendingDown } from 'lucide-react';
-import { buildApiUrl, API_CONFIG } from '../config/api';
-import { useRealTimeNotifications } from '../hooks/useRealTimeNotifications';
-import ConnectionStatus from './ConnectionStatus';
+import LiveTradingFeed from './LiveTradingFeed';
+import FloatingChatBubble from './FloatingChatBubble';
+import PrimaryBalanceCard from './PrimaryBalanceCard';
 
-interface Transaction {
-  id: string;
-  type: 'deposit' | 'withdrawal' | 'interest' | 'trade_profit' | 'trade_loss';
-  amount: number;
-  status: 'completed' | 'pending' | 'failed';
-  timestamp: string;
-  description: string;
-}
+import { TrendingUp, TrendingDown } from 'lucide-react';
+import { useRealTimeNotifications } from '../hooks/useRealTimeNotifications';
+import { LiveTradingProvider } from '../context/LiveTradingContext';
+
+// Removed unused Transaction interface
 
 interface Trade {
   id: string;
@@ -47,13 +42,14 @@ interface CryptoPrice {
 }
 
 const MAX_SIMULATIONS = 50;
+const ENABLE_TRADING_SIMULATOR = false; // Set to true to re-enable
 
 const UserDashboard: React.FC = () => {
   const { user, updateUser } = useAuth();
   const [activeView, setActiveView] = useState('home');
-
+  
   // Real-time notifications for user updates
-  const { isConnected, connectionStatus } = useRealTimeNotifications({
+  useRealTimeNotifications({
     onDepositStatusUpdate: (deposit) => {
       console.log('💰 Deposit status update:', deposit);
       
@@ -109,7 +105,7 @@ const UserDashboard: React.FC = () => {
       Notification.requestPermission();
     }
   }, []);
-  const [transactionHistory, setTransactionHistory] = useState<Transaction[]>([]);
+  // Removed unused transactionHistory state
   const [isSimulatorRunning, setIsSimulatorRunning] = useState(false);
   const [activeTrades, setActiveTrades] = useState<Trade[]>([]);
   const [simulationCount, setSimulationCount] = useState(0);
@@ -131,32 +127,7 @@ const UserDashboard: React.FC = () => {
     }).format(amount);
   };
 
-  // Load initial data
-  useEffect(() => {
-    const fetchTransactions = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          console.log('No auth token found, skipping transactions fetch');
-          return;
-        }
-
-        const response = await fetch(buildApiUrl(API_CONFIG.ENDPOINTS.USER_TRANSACTIONS), {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setTransactionHistory(data);
-        }
-      } catch (error) {
-        console.error('Error fetching transactions:', error);
-      }
-    };
-
-    fetchTransactions();
-  }, []);
+  // Removed unused transaction fetching
 
   // Crypto price updates
   const updateCryptoPrices = useCallback(() => {
@@ -173,7 +144,7 @@ const UserDashboard: React.FC = () => {
   }, [updateCryptoPrices]);
 
   // Update trading balance
-  const updateBalance = async (amount: number, type: 'increase' | 'decrease') => {
+  const updateBalance = useCallback(async (amount: number, type: 'increase' | 'decrease') => {
     try {
       const newBalance = type === 'increase' 
         ? (user?.balance || 0) + amount 
@@ -185,7 +156,7 @@ const UserDashboard: React.FC = () => {
     } catch (error) {
       console.error('Error updating balance:', error);
     }
-  };
+  }, [user?.balance, updateUser]);
 
   // Get available balance for trading
   const tradingBalance = user?.balance || 0;
@@ -225,7 +196,7 @@ const UserDashboard: React.FC = () => {
     setSimulationResults(prev => [...prev, result]);
 
     return trade;
-  }, [activeTrades.length, tradingBalance, cryptoPrices]);
+  }, [activeTrades.length, tradingBalance, cryptoPrices, updateBalance]);
 
   const closeRandomTrade = useCallback(() => {
     if (activeTrades.length === 0) return;
@@ -254,7 +225,7 @@ const UserDashboard: React.FC = () => {
     setSimulationResults(prev => [...prev, result]);
 
     return { trade, profitLoss };
-  }, [activeTrades, cryptoPrices]);
+  }, [activeTrades, cryptoPrices, updateBalance]);
 
   const startTradingSimulator = () => {
     if (simulationCount >= MAX_SIMULATIONS) {
@@ -369,115 +340,16 @@ const UserDashboard: React.FC = () => {
       default:
         return (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            {/* Main Balance Card */}
-            <div style={{
-              background: 'linear-gradient(180deg, #4285F4 0%, #1565C0 100%)',
-              borderRadius: '24px',
-              padding: '2.5rem',
-              color: 'white',
-              position: 'relative',
-              overflow: 'hidden'
-            }}>
-              <div style={{ position: 'relative', zIndex: 2 }}>
-                <p style={{ margin: '0 0 0.5rem 0', fontSize: '1rem', opacity: 0.9 }}>
-                  Tu balance actual:
-                </p>
-                <h2 style={{ 
-                  margin: '0 0 1.5rem 0', 
-                  fontSize: '3rem', 
-                  fontWeight: '700',
-                  textShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                }}>
-                  {formatCurrency(user?.balance || 0)}
-                </h2>
-                <div style={{
-                  display: 'flex',
-                  gap: '1.5rem',
-                  alignItems: 'center',
-                  flexWrap: 'wrap'
-                }}>
-                  <div>
-                    <p style={{ margin: '0 0 0.25rem 0', fontSize: '0.9rem', opacity: 0.8 }}>Balance Disponible:</p>
-                    <p style={{ margin: 0, fontSize: '1.3rem', fontWeight: '600' }}>
-                      {formatCurrency(tradingBalance)}
-                    </p>
-                  </div>
-                  <div>
-                    <p style={{ margin: '0 0 0.25rem 0', fontSize: '0.9rem', opacity: 0.8 }}>En Posiciones:</p>
-                    <p style={{ margin: 0, fontSize: '1.3rem', fontWeight: '600' }}>
-                      {formatCurrency(totalInvested)}
-                    </p>
-                  </div>
-                  <div>
-                    <p style={{ margin: '0 0 0.25rem 0', fontSize: '0.9rem', opacity: 0.8 }}>P&L Total:</p>
-                    <p style={{ 
-                      margin: 0, 
-                      fontSize: '1.3rem', 
-                      fontWeight: '600',
-                      color: totalProfitLoss >= 0 ? '#4ADE80' : '#F87171'
-                    }}>
-                      {totalProfitLoss >= 0 ? '+' : ''}{formatCurrency(totalProfitLoss)}
-                    </p>
-                  </div>
-                </div>
-              </div>
+            {/* Primary Balance Card */}
+            <PrimaryBalanceCard />
 
-              {/* AI Trader Status Indicator */}
-              <div style={{
-                position: 'absolute',
-                top: '1rem',
-                right: '1rem',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                background: 'rgba(0, 0, 0, 0.2)',
-                padding: '0.5rem 1rem',
-                borderRadius: '20px',
-                zIndex: 3
-              }}>
-                <div style={{
-                  width: '8px',
-                  height: '8px',
-                  backgroundColor: '#10B981',
-                  borderRadius: '50%',
-                  animation: 'pulse 2s infinite'
-                }} />
-                <span style={{
-                  fontSize: '0.8rem',
-                  fontWeight: '500',
-                  color: 'white'
-                }}>
-                  AI Trader Activo
-                </span>
-              </div>
-              
-              {/* Decorative Elements */}
-              <div style={{
-                position: 'absolute',
-                top: '-50px',
-                right: '-50px',
-                width: '200px',
-                height: '200px',
-                background: 'rgba(255,255,255,0.1)',
-                borderRadius: '50%',
-                zIndex: 1
-              }} />
-              <div style={{
-                position: 'absolute',
-                bottom: '-30px',
-                left: '-30px',
-                width: '120px',
-                height: '120px',
-                background: 'rgba(255,255,255,0.05)',
-                borderRadius: '50%',
-                zIndex: 1
-              }} />
-            </div>
+
 
             {/* Pending Requests */}
             <PendingRequestsWidget />
 
-            {/* Trading Simulator */}
+            {/* Trading Simulator - DISABLED */}
+            {ENABLE_TRADING_SIMULATOR && (
             <div style={{
               background: 'white',
               borderRadius: '16px',
@@ -737,7 +609,7 @@ const UserDashboard: React.FC = () => {
                 </div>
               )}
             </div>
-
+            )}
 
           </div>
         );
@@ -766,8 +638,8 @@ const UserDashboard: React.FC = () => {
           flexDirection: 'column',
           gap: '2rem'
         }}>
-          {/* Connection Status */}
-          {activeView === 'home' && (
+          {/* Connection Status - Temporarily hidden for development */}
+          {/* {activeView === 'home' && (
             <div style={{ 
               display: 'flex', 
               justifyContent: 'flex-end',
@@ -779,27 +651,35 @@ const UserDashboard: React.FC = () => {
                 className="mr-4"
               />
             </div>
-          )}
+          )} */}
           
           {/* Content Area */}
-          <div style={{
-            display: 'flex',
-            gap: '2rem'
-          }}>
-            {/* Main Content */}
-            <div style={{ flex: 1 }}>
-              {renderMainContent()}
-            </div>
-            
-            {/* Chat Widget - Only show on home view */}
-            {activeView === 'home' && (
-              <div style={{ width: '350px' }}>
-                <ChatWidget />
+          <LiveTradingProvider>
+            <div style={{
+              display: 'flex',
+              gap: '2rem'
+            }}>
+              {/* Main Content */}
+              <div style={{ flex: 1 }}>
+                {renderMainContent()}
               </div>
-            )}
-          </div>
+              
+              {/* Right Sidebar - Live Trading Feed - Only show on home view */}
+              {activeView === 'home' && (
+                <div style={{ 
+                  width: '400px'
+                }}>
+                  {/* Live Trading Feed */}
+                  <LiveTradingFeed />
+                </div>
+              )}
+            </div>
+          </LiveTradingProvider>
         </div>
       </div>
+      
+      {/* Floating Chat Bubble - Available on all views */}
+      <FloatingChatBubble />
     </div>
   );
 };
