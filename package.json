@@ -4,8 +4,6 @@
   "description": "AI-powered crypto trading simulator with admin dashboard",
   "scripts": {
     "start": "cd backend && npm start",
-    "build": "cd frontend && npm install && npm run build",
-    "install": "cd frontend && npm install",
     "backend": "cd backend && npm start",
     "frontend": "cd frontend && npm start",
     "dev": "node dev-server.js",

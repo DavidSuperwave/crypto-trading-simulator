@@ -16,8 +16,6 @@ export const usePollingNotifications = (options: PollingNotificationsOptions = {
   const { 
     onNewDeposit, 
     onNewWithdrawal, 
-    onDepositStatusUpdate, 
-    onWithdrawalStatusUpdate, 
     onNewChatMessage,
     pollInterval = 3000 // 3 seconds default
   } = options;
