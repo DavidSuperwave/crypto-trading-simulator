@@ -73,15 +73,15 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
           
           if (compoundData.success && compoundData.portfolioState) {
             const state = compoundData.portfolioState;
-            totalPortfolioValue = state.totalPortfolioValue || 0;
-            availableBalance = state.availableBalance || 0;
-            lockedCapital = state.lockedCapital || 0;
-            dailyPL = state.dailyPL || 0;
-            dailyPLPercent = state.dailyPLPercent || 0;
-            compoundInterestEarned = state.totalInterestEarned || 0;
-            totalDeposited = state.totalDeposited || 0;
-            utilizationPercent = state.utilizationPercent || 0;
-            openPositionsCount = state.openPositionsCount || 0;
+            totalPortfolioValue = Number(state.totalPortfolioValue) || 0;
+            availableBalance = Number(state.availableBalance) || 0;
+            lockedCapital = Number(state.lockedCapital) || 0;
+            dailyPL = Number(state.dailyPL) || 0;
+            dailyPLPercent = Number(state.dailyPLPercent) || 0;
+            compoundInterestEarned = Number(state.totalInterestEarned) || 0;
+            totalDeposited = Number(state.totalDeposited) || 0;
+            utilizationPercent = Number(state.utilizationPercent) || 0;
+            openPositionsCount = Number(state.openPositionsCount) || 0;
             hasValidData = true;
           }
         }
