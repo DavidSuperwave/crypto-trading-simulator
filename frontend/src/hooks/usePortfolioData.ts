@@ -46,6 +46,7 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
       // Debug logging for production
       console.log('🔐 Portfolio data fetch - token exists:', !!token);
       console.log('🌐 API URL:', buildApiUrl('/compound-interest/portfolio-state'));
+      console.log('🌐 Base URL detected:', buildApiUrl('').replace('/api', ''));
 
 
 
