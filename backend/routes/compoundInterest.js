@@ -918,9 +918,9 @@ router.get('/portfolio-state', authenticateToken, async (req, res) => {
     const basePortfolioValue = totalDeposited + compoundInterestEarned;
     
     console.log(`📊 Portfolio calculation for ${user.email}:`, {
-      totalDeposited,
-      compoundInterestEarned,
-      basePortfolioValue
+      totalDeposited: typeof totalDeposited + ' = ' + totalDeposited,
+      compoundInterestEarned: typeof compoundInterestEarned + ' = ' + compoundInterestEarned,
+      basePortfolioValue: typeof basePortfolioValue + ' = ' + basePortfolioValue
     });
     
     // Get position data (open/closed trading positions)
@@ -940,10 +940,10 @@ router.get('/portfolio-state', authenticateToken, async (req, res) => {
       
       console.log(`📊 Position data:`, {
         positionData: positionData ? {
-          totalPortfolioValue: positionData.totalPortfolioValue,
+          totalPortfolioValue: typeof positionData.totalPortfolioValue + ' = ' + positionData.totalPortfolioValue,
           openPositionsCount: positionData.openPositionsCount
         } : null,
-        positionsPL
+        positionsPL: typeof positionsPL + ' = ' + positionsPL
       });
     } catch (positionError) {
       // Position manager error - continue with base portfolio value
@@ -955,9 +955,9 @@ router.get('/portfolio-state', authenticateToken, async (req, res) => {
     const totalPortfolioValue = basePortfolioValue + positionsPL; // Include compound interest + positions
     
     console.log(`📊 Final calculation:`, {
-      basePortfolioValue,
-      positionsPL,
-      totalPortfolioValue
+      basePortfolioValue: typeof basePortfolioValue + ' = ' + basePortfolioValue,
+      positionsPL: typeof positionsPL + ' = ' + positionsPL,
+      totalPortfolioValue: typeof totalPortfolioValue + ' = ' + totalPortfolioValue
     });
     // Locked capital is always 80% of total portfolio value (simulation design)
     const lockedCapital = totalPortfolioValue * 0.8;
@@ -990,6 +990,8 @@ router.get('/portfolio-state', authenticateToken, async (req, res) => {
     
 
 
+    console.log(`📤 API Response totalPortfolioValue:`, typeof portfolioState.totalPortfolioValue, '=', portfolioState.totalPortfolioValue);
+    
     res.json({
       success: true,
       portfolioState
