@@ -929,7 +929,14 @@ router.get('/portfolio-state', authenticateToken, async (req, res) => {
     
     try {
       positionData = await positionBalanceManager.getPortfolioSummary(userId);
-      positionsPL = positionData ? (positionData.totalPortfolioValue - totalDeposited) : 0;
+      
+      // TEMPORARY FIX: Skip position calculations if they seem wrong
+      if (positionData && positionData.totalPortfolioValue < totalDeposited * 0.5) {
+        console.log(`⚠️ Position data seems invalid (${positionData.totalPortfolioValue} < ${totalDeposited * 0.5}), using base portfolio only`);
+        positionsPL = 0;
+      } else {
+        positionsPL = positionData ? (positionData.totalPortfolioValue - totalDeposited) : 0;
+      }
       
       console.log(`📊 Position data:`, {
         positionData: positionData ? {
