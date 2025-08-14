@@ -16,7 +16,7 @@ const LiveTradingContext = createContext<LiveTradingContextType | undefined>(und
 // Export the context for direct use
 export { LiveTradingContext };
 
-export const useLiveTradingData = () => {
+export const useLiveTradingData = (): LiveTradingContextType => {
   const context = useContext(LiveTradingContext);
   if (context === undefined) {
     throw new Error('useLiveTradingData must be used within a LiveTradingProvider');

@@ -34,7 +34,21 @@ interface LiveActivity {
 }
 
 const useLiveTradingData = () => {
-  return useContext(LiveTradingContext);
+  const context = useContext(LiveTradingContext);
+  if (!context) {
+    // Return default context if not within provider
+    return {
+      liveTradingData: {
+        liveTotalPL: 0,
+        unrealizedPL: 0,
+        dailyTarget: 0,
+        dailyPL: 0,
+        openPositions: 0
+      },
+      updateLiveTradingData: () => {}
+    };
+  }
+  return context;
 };
 
 const LiveTradingFeed: React.FC = () => {
