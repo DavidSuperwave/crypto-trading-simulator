@@ -599,34 +599,7 @@ class CompoundInterestSimulation {
     }
   }
 
-  /**
-   * Get daily trades for a user on a specific date
-   * @param {string} userId - User ID
-   * @param {string} date - Date (YYYY-MM-DD)
-   * @returns {Object|null} Daily trades data or null if not found
-   */
-  async getDailyTrades(userId, date) {
-    try {
-      const dailyTradesFile = path.join(__dirname, '../data/daily_trades.json');
-      const existingTrades = database.readFile(dailyTradesFile) || [];
-      
-      const userTrades = existingTrades.find(trade => 
-        trade.userId === userId && trade.date === date
-      );
-      
-      if (userTrades) {
-        console.log(`📊 Found daily trades for user ${userId} on ${date}: $${userTrades.validation?.actualTotal?.toFixed(2) || 'N/A'}`);
-        return userTrades;
-      } else {
-        console.log(`❌ No daily trades found for user ${userId} on ${date}`);
-        return null;
-      }
-      
-    } catch (error) {
-      console.error('Error retrieving daily trades:', error);
-      throw error;
-    }
-  }
+  // REMOVED: Duplicate getDailyTrades function (kept the second one with better implementation)
 
   /**
    * Get daily trades for a user and date
@@ -640,14 +613,28 @@ class CompoundInterestSimulation {
         date = new Date().toISOString().split('T')[0];
       }
       
+      console.log(`📊 getDailyTrades: Looking for userId=${userId}, date=${date}`);
+      
       const dailyTradesFile = path.join(__dirname, '../data/daily_trades.json');
       const allTrades = database.readFile(dailyTradesFile) || [];
+      
+      console.log(`📊 getDailyTrades: Found ${allTrades.length} total trade records`);
       
       const userDayTrades = allTrades.find(trade => 
         trade.userId === userId && trade.date === date
       );
       
-      return userDayTrades || null;
+      if (userDayTrades) {
+        console.log(`✅ getDailyTrades: Found trades for ${userId} on ${date}: ${userDayTrades.tradeCount} trades`);
+        return userDayTrades;
+      } else {
+        console.log(`❌ getDailyTrades: No trades found for ${userId} on ${date}`);
+        // Debug: Show what dates exist for this user
+        const userTrades = allTrades.filter(trade => trade.userId === userId);
+        const userDates = userTrades.map(trade => trade.date);
+        console.log(`📅 Available dates for user ${userId}:`, userDates);
+        return null;
+      }
       
     } catch (error) {
       console.error('Error getting daily trades:', error);
