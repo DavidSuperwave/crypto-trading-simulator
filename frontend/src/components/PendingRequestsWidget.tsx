@@ -31,7 +31,7 @@ const PendingRequestsWidget: React.FC = () => {
   // Real-time notifications for status updates
   const { isConnected } = useRealTimeNotifications({
     onDepositStatusUpdate: (deposit) => {
-      console.log('💰 Pending deposits - status update:', deposit);
+
       
       // Update the deposit status in real-time
       setPendingDeposits(prev => 
@@ -43,7 +43,7 @@ const PendingRequestsWidget: React.FC = () => {
       );
     },
     onWithdrawalStatusUpdate: (withdrawal) => {
-      console.log('💸 Pending withdrawals - status update:', withdrawal);
+
       
       // Update the withdrawal status in real-time
       setWithdrawalRequests(prev => 

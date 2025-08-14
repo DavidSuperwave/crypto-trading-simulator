@@ -17,9 +17,6 @@ body {
 
 .App {
   background-color: #f8fafc;
-}
-
-.App {
   min-height: 100vh;
 }
 
@@ -62,8 +59,11 @@ button:disabled {
 
 /* Global table styles removed - now using CSS modules for admin dashboard */
 
-/* Form styles */
-input, textarea, select {
+/* Form styles - Only apply to form elements with .form-input class */
+.form-input,
+form input:not([class*="demo"]):not([id*="demo"]),
+form textarea:not([class*="demo"]):not([id*="demo"]),
+form select:not([class*="demo"]):not([id*="demo"]) {
   width: 100%;
   padding: 12px;
   border: 2px solid #e1e5e9;
@@ -75,20 +75,165 @@ input, textarea, select {
   font-family: inherit;
 }
 
-input:focus,
-textarea:focus,
-select:focus {
+.form-input:focus,
+form input:not([class*="demo"]):not([id*="demo"]):focus,
+form textarea:not([class*="demo"]):not([id*="demo"]):focus,
+form select:not([class*="demo"]):not([id*="demo"]):focus {
   border-color: #667eea;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-input::placeholder,
-textarea::placeholder {
+.form-input::placeholder,
+form input:not([class*="demo"]):not([id*="demo"])::placeholder,
+form textarea:not([class*="demo"]):not([id*="demo"])::placeholder {
   color: #9ca3af;
 }
 
-/* Label styles */
-label {
+/* REMOVED ALL DEMO CSS - Using pure inline styles like signup page */
+
+/* REMOVED - Using inline styles */
+
+/* REMOVED - Using inline styles */
+
+/* REMOVED - Using inline styles */
+
+/* REMOVED - Using inline styles */
+
+/* REMOVED - Using inline styles */
+
+/* REMOVED - Using inline styles */
+
+/* REMOVED ALL ID-SPECIFIC DEMO CSS - Using pure inline styles */
+
+/* REMOVED ALL DEMO CSS - Using pure inline styles */
+
+/* REMOVED ALL DEMO CSS - Using pure inline styles */
+
+/* REMOVED ALL DEMO CSS - Using pure inline styles */
+
+/* REMOVED ALL DEMO CSS - Using pure inline styles */
+
+/* REMOVED ALL DEMO CSS - Using pure inline styles */
+
+/* REMOVED ALL "all: unset" CSS - These were resetting inline styles! */
+
+/* REMOVED ALL "all: unset" CSS - These were resetting inline styles! */
+
+/* REMOVED ALL "all: unset" CSS - These were resetting inline styles! */
+
+/* REMOVED CONFLICTING APP CSS - Now using pure inline styles like signup page */
+
+/* REMOVED - Using inline styles like signup page */
+
+/* REMOVED - Using inline styles like signup page */
+
+/* REMOVED - Using inline styles like signup page */
+
+/* REMOVED ALL CONFLICTING APP DEMO CSS - Using pure inline styles */
+
+/* REMOVED - Using inline styles */
+
+/* REMOVED - Using inline styles */
+
+/* REMOVED LAST "all: unset" CSS - Using inline styles! */
+/* button.demo-button,
+.demo-form button.demo-button {
+  all: unset !important;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 0.875rem 1.5rem !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  cursor: pointer !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2), 0 2px 4px -1px rgba(16, 185, 129, 0.06) !important;
+  white-space: nowrap !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+  box-sizing: border-box !important;
+}
+
+button.demo-button:hover,
+.demo-form button.demo-button:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3), 0 4px 6px -2px rgba(16, 185, 129, 0.1) !important;
+  background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+}
+
+button.demo-button:active,
+.demo-form button.demo-button:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2), 0 2px 4px -1px rgba(16, 185, 129, 0.06) !important;
+}
+
+button.demo-button:focus,
+.demo-form button.demo-button:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2), 0 4px 6px -1px rgba(16, 185, 129, 0.2), 0 2px 4px -1px rgba(16, 185, 129, 0.06) !important;
+}
+
+/* REMOVED DEMO PLAN BUTTON CSS WITH "all: unset" - Using inline styles! */
+
+button.demo-plan-button:hover,
+.demo-form button.demo-plan-button:hover {
+  transform: scale(1.05) !important;
+  box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3), 0 4px 6px -2px rgba(59, 130, 246, 0.1) !important;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+}
+
+button.demo-plan-button:active,
+.demo-form button.demo-plan-button:active {
+  transform: scale(1.02) !important;
+}
+
+button.demo-plan-button:focus,
+.demo-form button.demo-plan-button:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2), 0 10px 15px -3px rgba(59, 130, 246, 0.3), 0 4px 6px -2px rgba(59, 130, 246, 0.1) !important;
+}
+
+.demo-plan-button .amount {
+  font-size: 1.3rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.demo-plan-button .plan-name {
+  font-size: 0.8rem;
+  opacity: 0.9;
+  margin-bottom: 0.5rem;
+}
+
+.demo-plan-button .breakdown {
+  font-size: 0.75rem;
+  opacity: 0.8;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding-top: 0.5rem;
+}
+
+.demo-plan-button .end-amount {
+  color: #4ade80;
+  font-weight: 600;
+}
+
+/* Demo Form Label Styles */
+.demo-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #1f2937;
+  font-weight: 600;
+  font-size: 0.925rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  letter-spacing: -0.025em;
+}
+
+/* Global Label styles (for other forms) */
+label:not(.demo-form label) {
   display: block;
   margin-bottom: 8px;
   color: #374151;
@@ -524,7 +669,7 @@ label {
     color: #f9fafb;
   }
   
-  input, textarea, select {
+  input:not(.demo-input), textarea:not(.demo-input), select:not(.demo-input) {
     background: #374151;
     border-color: #4b5563;
     color: #f9fafb;
@@ -1101,6 +1246,57 @@ label {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* Trading Animation - slideDown keyframe */
+@keyframes slideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateY(-5px) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Trade card styling */
+.trade-card-custom {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 12px !important;
+  padding: 12px !important;
+  margin-bottom: 8px !important;
+  color: white !important;
+  position: relative !important;
+  overflow: hidden !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+}
+
+.trade-card-custom::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.trade-card-custom:hover::before {
+  left: 100%;
+}
+
+.symbol-white-text {
+  color: white !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
 }
 
 /* Signup Footer */

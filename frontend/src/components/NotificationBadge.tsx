@@ -15,46 +15,76 @@ const NotificationBadge: React.FC<NotificationBadgeProps> = ({
   size = 'md'
 }) => {
   const sizeClasses = {
-    sm: 'w-6 h-6',
-    md: 'w-8 h-8', 
-    lg: 'w-10 h-10'
+    sm: { width: '24px', height: '24px' },
+    md: { width: '32px', height: '32px' }, 
+    lg: { width: '40px', height: '40px' }
   };
 
   const iconSizeClasses = {
-    sm: 'w-3 h-3',
-    md: 'w-4 h-4',
-    lg: 'w-5 h-5'
+    sm: { width: '12px', height: '12px' },
+    md: { width: '16px', height: '16px' },
+    lg: { width: '20px', height: '20px' }
   };
 
   const badgeSizeClasses = {
-    sm: 'text-xs min-w-[16px] h-4',
-    md: 'text-xs min-w-[18px] h-5',
-    lg: 'text-sm min-w-[20px] h-6'
+    sm: { fontSize: '12px', minWidth: '16px', height: '16px' },
+    md: { fontSize: '12px', minWidth: '18px', height: '20px' },
+    lg: { fontSize: '14px', minWidth: '20px', height: '24px' }
   };
 
   const hasNotifications = count > 0;
 
   return (
-    <div className={`relative inline-flex ${className}`}>
+    <div 
+      className={className}
+      style={{ position: 'relative', display: 'inline-flex' }}
+    >
       <button
         onClick={onClick}
-        className={`${sizeClasses[size]} flex items-center justify-center rounded-full transition-colors duration-200 ${
-          hasNotifications 
-            ? 'bg-blue-100 text-blue-600 hover:bg-blue-200' 
-            : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
-        }`}
+        style={{
+          ...sizeClasses[size],
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderRadius: '9999px',
+          transition: 'colors 0.2s',
+          backgroundColor: hasNotifications ? '#dbeafe' : '#f3f4f6',
+          color: hasNotifications ? '#2563eb' : '#9ca3af',
+          border: 'none',
+          cursor: 'pointer'
+        }}
         title={hasNotifications ? `${count} unread notification${count > 1 ? 's' : ''}` : 'No notifications'}
       >
         {hasNotifications ? (
-          <BellRing className={`${iconSizeClasses[size]} animate-pulse`} />
+          <BellRing 
+            style={{
+              ...iconSizeClasses[size],
+              animation: 'pulse 2s ease-in-out infinite'
+            }} 
+          />
         ) : (
-          <Bell className={iconSizeClasses[size]} />
+          <Bell style={iconSizeClasses[size]} />
         )}
       </button>
       
       {hasNotifications && (
         <span 
-          className={`absolute -top-1 -right-1 ${badgeSizeClasses[size]} flex items-center justify-center px-1 bg-red-500 text-white rounded-full font-bold leading-none`}
+          style={{
+            position: 'absolute',
+            top: '-4px',
+            right: '-4px',
+            ...badgeSizeClasses[size],
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingLeft: '4px',
+            paddingRight: '4px',
+            backgroundColor: '#ef4444',
+            color: 'white',
+            borderRadius: '9999px',
+            fontWeight: 'bold',
+            lineHeight: 'none'
+          }}
         >
           {count > 99 ? '99+' : count}
         </span>

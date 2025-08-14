@@ -211,14 +211,14 @@
     "balance": 10000,
     "totalInterest": 0,
     "createdAt": "2025-08-08T05:55:36.579Z",
-    "updatedAt": "2025-08-13T00:47:07.900Z",
+    "updatedAt": "2025-08-14T03:15:00.122Z",
     "firstName": "Nigga",
     "lastName": "Niggamode",
     "phone": "9513782762",
     "simulationActive": true,
     "simulationStartDate": "2025-08-13T00:46:09.467Z",
     "depositedAmount": 10000,
-    "simulatedInterest": 239.86764407831322,
-    "lastSimulationUpdate": "2025-08-13T00:47:07.900Z"
+    "simulatedInterest": 341.6568807436429,
+    "lastSimulationUpdate": "2025-08-14T03:15:00.122Z"
   }
 ]

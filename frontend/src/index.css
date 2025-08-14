@@ -36,7 +36,11 @@ body {
 
 /* Gradient text */
 .text-gradient {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-800;
+  background: linear-gradient(to right, #2563eb, #1e40af);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 /* Scrollbar styling */
@@ -45,36 +49,68 @@ body {
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  @apply bg-gray-100;
+  background: #f3f4f6;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-blue-500 rounded-full;
+  background: #3b82f6;
+  border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-blue-600;
+  background: #2563eb;
 }
 
 /* Tooltip styling */
 .tooltip {
-  @apply relative inline-block;
+  position: relative;
+  display: inline-block;
 }
 .tooltip .tooltip-text {
-  @apply invisible absolute z-50 p-2 text-sm text-white bg-gray-900 rounded-md opacity-0 transition-opacity duration-300 w-max max-w-xs;
+  visibility: hidden;
+  position: absolute;
+  z-index: 50;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  color: white;
+  background: #111827;
+  border-radius: 0.375rem;
+  opacity: 0;
+  transition: opacity 0.3s;
+  width: max-content;
+  max-width: 20rem;
   bottom: 125%;
   left: 50%;
   transform: translateX(-50%);
 }
 .tooltip:hover .tooltip-text {
-  @apply visible opacity-100;
+  visibility: visible;
+  opacity: 1;
 }
 
 /* WhatsApp floating button */
 .whatsapp-float {
-  @apply fixed bottom-6 right-6 z-50 bg-green-500 text-white p-3 rounded-full shadow-lg transition-all duration-300 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2;
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 50;
+  background: #10b981;
+  color: white;
+  padding: 0.75rem;
+  border-radius: 9999px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s;
+}
+.whatsapp-float:hover {
+  background: #059669;
+}
+.whatsapp-float:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #4ade80, 0 0 0 4px rgba(74, 222, 128, 0.5);
 }
 @media (min-width: 768px) {
   .whatsapp-float {
-    @apply bottom-8 right-8 p-4;
+    bottom: 2rem;
+    right: 2rem;
+    padding: 1rem;
   }
 }
 

@@ -175,12 +175,10 @@ const LiveTradingFeed: React.FC = () => {
 
   const updateVisibleTrades = useCallback(() => {
     if (!todaysTrades.length) {
-      console.log('⚠️ No trades available for filtering');
       return;
     }
 
     const now = new Date();
-    console.log(`🔍 Updating visible trades: ${todaysTrades.length} total trades, ${positionOpenTimes.size} open positions, ${executingTrades.size} executing`);
     // First filter trades that should have appeared by now
     const availableTrades = todaysTrades.filter(trade => {
       const tradeTime = new Date(trade.timestamp);
@@ -201,16 +199,10 @@ const LiveTradingFeed: React.FC = () => {
                       (hasProgress && progress < 0.98) ||
                       hasOpenTime; // Keep trades with open times even if no progress yet
       
-      // Debug logging for trades that are being filtered out
-      if (!isActive && availableTrades.length > 0 && positionOpenTimes.size === 0) {
-        console.log(`⚠️ No positions initialized yet - ${trade.cryptoSymbol} waiting for initialization`);
-      } else if (!isActive) {
-        console.log(`❌ Filtering out ${trade.cryptoSymbol}: executing=${isExecuting}, pulsing=${isPulsing}, hasProgress=${hasProgress}, progress=${(progress * 100).toFixed(1)}%, hasOpenTime=${hasOpenTime}`);
-      }
+
       
       // Only clean up position open times for trades that are truly completed (progress >= 98%)
       if (!isActive && hasOpenTime && hasProgress && progress >= 0.98) {
-        console.log(`🧹 Cleaning up completed trade ${trade.cryptoSymbol} after ${((progress * 100).toFixed(1))}% progress`);
         setTimeout(() => {
           setPositionOpenTimes(prev => {
             const newMap = new Map(prev);
@@ -244,13 +236,11 @@ const LiveTradingFeed: React.FC = () => {
     // Safety mechanism: If no trades are visible but we have available trades and no positions initialized,
     // show some available trades temporarily to allow initialization
     if (newVisibleTrades.length === 0 && availableTrades.length > 0 && positionOpenTimes.size === 0 && !initializedRef.current) {
-      console.log(`🚨 Emergency: Showing ${Math.min(3, availableTrades.length)} uninitialized trades to break initialization deadlock`);
       const emergencyTrades = availableTrades.slice(0, Math.min(3, availableTrades.length));
       setVisibleTrades(emergencyTrades);
       
       // Trigger initialization manually
       setTimeout(() => {
-        console.log(`⚡ Triggering manual initialization due to deadlock`);
         if (!initializedRef.current && todaysTrades.length > 0) {
           const now = new Date();
           const tradesToOpen = availableTrades
@@ -274,16 +264,12 @@ const LiveTradingFeed: React.FC = () => {
           setPositionPLs(newPLs);
           initializedRef.current = true;
           
-          console.log(`✅ Manual initialization complete - ${newOpenTimes.size} positions opened`);
-          
           // The useEffect should automatically trigger updateVisibleTrades after state updates
         }
       }, 200);
       
       return;
     }
-    
-    console.log(`📋 Visible trades result: ${newVisibleTrades.length} trades`, newVisibleTrades.map(t => `${t.cryptoSymbol}(${t.tradeType})`));
     
     setVisibleTrades(newVisibleTrades);
     
@@ -334,10 +320,7 @@ const LiveTradingFeed: React.FC = () => {
     const elapsed = now.getTime() - positionOpenTime.getTime();
     const progress = Math.max(0, Math.min(1, elapsed / positionDuration));
     
-    // Debug logging for positions approaching completion
-    if (progress > 0.9) {
-      console.log(`🎯 Trade ${trade.cryptoSymbol} progress: ${(progress * 100).toFixed(1)}%, elapsed: ${(elapsed / 1000).toFixed(0)}s, duration: ${(positionDuration / 1000).toFixed(0)}s`);
-    }
+
     
     return progress;
   };
@@ -481,14 +464,11 @@ const LiveTradingFeed: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log(`🔄 useEffect triggered: trades=${todaysTrades.length}, executing=${executingTrades.size}, pulsing=${pulsingTrades.size}, openTimes=${positionOpenTimes.size}, initialized=${initializedRef.current}`);
     updateVisibleTrades();
   }, [todaysTrades, executingTrades, pulsingTrades, positionOpenTimes]);
 
   // Initialize starting positions when trades first load (run only once)
   useEffect(() => {
-    console.log(`🔄 Initialization check: trades=${todaysTrades.length}, initialized=${initializedRef.current}`);
-    
     if (todaysTrades.length > 0 && !initializedRef.current) {
       const now = new Date();
       const availableTrades = todaysTrades.filter(trade => {
@@ -496,19 +476,12 @@ const LiveTradingFeed: React.FC = () => {
         return tradeTime <= now;
       });
       
-      console.log(`📊 Available trades: ${availableTrades.length}/${todaysTrades.length}`);
-      
       if (availableTrades.length > 0) {
         // Open 2-4 random positions to start
         const numToOpen = Math.min(availableTrades.length, 2 + Math.floor(Math.random() * 3));
         const tradesToOpen = availableTrades
           .sort(() => Math.random() - 0.5)
           .slice(0, numToOpen);
-        
-        console.log(`🚀 Opening ${numToOpen} initial positions:`, tradesToOpen.map(t => {
-          const positionSize = t.positionSize || Math.abs(t.amount * 20);
-          return `${t.cryptoSymbol} (Entry: $${positionSize.toFixed(0)} vs Old: $${Math.abs(t.amount).toFixed(2)})`;
-        }));
         
         const newProgresses = new Map();
         const newPLs = new Map();
@@ -530,13 +503,6 @@ const LiveTradingFeed: React.FC = () => {
         setTradeProgresses(newProgresses);
         setPositionPLs(newPLs);
         initializedRef.current = true;
-        
-        console.log(`✅ Initialization complete - ${newOpenTimes.size} positions opened`);
-        
-        // Force update visible trades after initialization
-        setTimeout(() => {
-          console.log(`🔄 Force updating visible trades after initialization`);
-        }, 100);
       }
     }
   }, [todaysTrades]);

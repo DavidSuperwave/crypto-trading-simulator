@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { User, Mail, Phone, Lock, Eye, EyeOff, CheckCircle, XCircle } from 'lucide-react';
@@ -67,21 +67,22 @@ const SignupPage: React.FC = () => {
     }
   };
 
-  // Simple input handlers
-  const handleInputChange = (field: string, value: string) => {
+  // Optimized input handlers with useCallback to prevent unnecessary re-renders
+  const handleInputChange = useCallback((field: string, value: string) => {
+    // Batch state updates to reduce re-renders
     setFormData(prev => ({ ...prev, [field]: value }));
-    // Clear error when user starts typing
+    // Only clear error if it exists to avoid unnecessary state updates
     if (fieldErrors[field]) {
       setFieldErrors(prev => ({ ...prev, [field]: '' }));
     }
-  };
+  }, [fieldErrors]);
 
-  const handleInputBlur = (field: string, value: string) => {
+  const handleInputBlur = useCallback((field: string, value: string) => {
     const error = validateField(field, value);
     if (error) {
       setFieldErrors(prev => ({ ...prev, [field]: error }));
     }
-  };
+  }, []);
 
   // Memoized password strength calculation
   const passwordStrength = useMemo(() => {

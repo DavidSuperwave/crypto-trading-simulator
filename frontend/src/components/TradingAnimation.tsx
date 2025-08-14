@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 
 interface Trade {
   id: string;
@@ -342,4 +342,4 @@ const TradingAnimation: React.FC = () => {
   );
 };
 
-export default TradingAnimation;
+export default memo(TradingAnimation);

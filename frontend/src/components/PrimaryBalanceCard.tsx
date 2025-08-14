@@ -13,41 +13,60 @@ import { useLiveTradingData } from '../context/LiveTradingContext';
 
 // Helper functions outside component to avoid re-creation
 const formatCurrency = (value: number): string => {
+  const numValue = Number(value) || 0;
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
-  }).format(value);
+  }).format(numValue);
 };
 
 const formatPercentage = (value: number): string => {
-  return `${value >= 0 ? '+' : ''}${value.toFixed(2)}%`;
+  const numValue = Number(value) || 0;
+  return `${numValue >= 0 ? '+' : ''}${numValue.toFixed(2)}%`;
 };
 
 const PrimaryBalanceCard: React.FC = () => {
   const { portfolioData, loading, error } = usePortfolioData();
   const { liveTradingData } = useLiveTradingData();
   
+  // Mobile detection
+  const [isMobile, setIsMobile] = React.useState(false);
+  
+  React.useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  
   // Calculate live portfolio value including trading P&L (memoized to prevent loops)
   // ALL HOOKS MUST BE CALLED BEFORE ANY EARLY RETURNS
-  const livePnL = useMemo(() => 
-    (liveTradingData?.liveTotalPL || 0) + (liveTradingData?.unrealizedPL || 0), 
-    [liveTradingData?.liveTotalPL, liveTradingData?.unrealizedPL]
-  );
+  const livePnL = useMemo(() => {
+    const totalPL = Number(liveTradingData?.liveTotalPL) || 0;
+    const unrealizedPL = Number(liveTradingData?.unrealizedPL) || 0;
+    return totalPL + unrealizedPL;
+  }, [liveTradingData?.liveTotalPL, liveTradingData?.unrealizedPL]);
   
-  const livePortfolioValue = useMemo(() => 
-    portfolioData ? portfolioData.totalPortfolioValue + livePnL : 0,
-    [portfolioData, livePnL]
-  );
+  const livePortfolioValue = useMemo(() => {
+    if (!portfolioData) return 0;
+    const baseValue = Number(portfolioData.totalPortfolioValue) || 0;
+    const pnl = Number(livePnL) || 0;
+    return baseValue + pnl;
+  }, [portfolioData, livePnL]);
   
-  const liveDailyPL = useMemo(() => 
-    portfolioData ? portfolioData.dailyPL + livePnL : 0,
-    [portfolioData, livePnL]
-  );
+  const liveDailyPL = useMemo(() => {
+    if (!portfolioData) return 0;
+    const basePL = Number(portfolioData.dailyPL) || 0;
+    const pnl = Number(livePnL) || 0;
+    return basePL + pnl;
+  }, [portfolioData, livePnL]);
   
-  // Debug logging
-  console.log('🎯 PrimaryBalanceCard rendering:', { portfolioData, loading, error });
+
 
   if (loading) {
     return (
@@ -69,7 +88,10 @@ const PrimaryBalanceCard: React.FC = () => {
           fontSize: '1.1rem',
           fontWeight: '500'
         }}>
-          <Activity className="animate-pulse" size={24} />
+          <Activity 
+          style={{ animation: 'pulse 2s ease-in-out infinite' }} 
+          size={24} 
+        />
           Loading portfolio data...
         </div>
       </div>
@@ -105,17 +127,17 @@ const PrimaryBalanceCard: React.FC = () => {
   return (
     <div style={{
       background: 'linear-gradient(135deg, #3B82F6 0%, #1E40AF 100%)',
-      borderRadius: '20px',
-      padding: '2rem',
+      borderRadius: isMobile ? '16px' : '20px',
+      padding: isMobile ? '1.5rem' : '2rem',
       color: 'white',
-      marginBottom: '1.5rem',
+      marginBottom: isMobile ? '1rem' : '1.5rem',
       boxShadow: '0 10px 30px rgba(59, 130, 246, 0.3)',
       border: '1px solid rgba(255, 255, 255, 0.1)'
     }}>
       {/* Hero Balance */}
-      <div style={{ marginBottom: '2rem' }}>
+      <div style={{ marginBottom: isMobile ? '1.5rem' : '2rem' }}>
         <div style={{ 
-          fontSize: '0.9rem', 
+          fontSize: isMobile ? '0.8rem' : '0.9rem', 
           opacity: 0.8, 
           marginBottom: '0.5rem',
           fontWeight: '500',
@@ -125,7 +147,7 @@ const PrimaryBalanceCard: React.FC = () => {
           Total Portfolio Value
         </div>
         <div style={{ 
-          fontSize: '3rem', 
+          fontSize: isMobile ? '2rem' : '3rem', 
           fontWeight: '800', 
           lineHeight: 1,
           marginBottom: '0.75rem',
@@ -139,13 +161,14 @@ const PrimaryBalanceCard: React.FC = () => {
           display: 'flex', 
           alignItems: 'center', 
           gap: '0.75rem',
-          fontSize: '1.25rem',
-          fontWeight: '600'
+          fontSize: isMobile ? '1rem' : '1.25rem',
+          fontWeight: '600',
+          flexWrap: 'wrap'
         }}>
           {liveDailyPL >= 0 ? (
-            <TrendingUp size={20} style={{ color: '#4ade80' }} />
+            <TrendingUp size={isMobile ? 16 : 20} style={{ color: '#4ade80' }} />
           ) : (
-            <TrendingDown size={20} style={{ color: '#f87171' }} />
+            <TrendingDown size={isMobile ? 16 : 20} style={{ color: '#f87171' }} />
           )}
           <span style={{ 
             color: liveDailyPL >= 0 ? '#4ade80' : '#f87171'
@@ -158,15 +181,15 @@ const PrimaryBalanceCard: React.FC = () => {
       {/* Secondary Metrics Grid */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-        gap: '1rem',
-        marginBottom: '1.5rem'
+        gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(180px, 1fr))',
+        gap: isMobile ? '0.75rem' : '1rem',
+        marginBottom: isMobile ? '1rem' : '1.5rem'
       }}>
         {/* Available Balance */}
         <div style={{
           background: 'rgba(255, 255, 255, 0.1)',
-          borderRadius: '12px',
-          padding: '1rem',
+          borderRadius: isMobile ? '10px' : '12px',
+          padding: isMobile ? '0.75rem' : '1rem',
           backdropFilter: 'blur(10px)',
           border: '1px solid rgba(255, 255, 255, 0.1)'
         }}>
@@ -176,12 +199,12 @@ const PrimaryBalanceCard: React.FC = () => {
             gap: '0.5rem',
             marginBottom: '0.5rem'
           }}>
-            <Unlock size={16} style={{ opacity: 0.8 }} />
-            <span style={{ fontSize: '0.85rem', opacity: 0.8, fontWeight: '500' }}>
+            <Unlock size={isMobile ? 14 : 16} style={{ opacity: 0.8 }} />
+            <span style={{ fontSize: isMobile ? '0.8rem' : '0.85rem', opacity: 0.8, fontWeight: '500' }}>
               Available
             </span>
           </div>
-          <div style={{ fontSize: '1.4rem', fontWeight: '700' }}>
+          <div style={{ fontSize: isMobile ? '1.2rem' : '1.4rem', fontWeight: '700' }}>
             {formatCurrency(portfolioData.availableBalance)}
           </div>
         </div>
@@ -189,8 +212,8 @@ const PrimaryBalanceCard: React.FC = () => {
         {/* Locked Capital */}
         <div style={{
           background: 'rgba(255, 255, 255, 0.1)',
-          borderRadius: '12px',
-          padding: '1rem',
+          borderRadius: isMobile ? '10px' : '12px',
+          padding: isMobile ? '0.75rem' : '1rem',
           backdropFilter: 'blur(10px)',
           border: '1px solid rgba(255, 255, 255, 0.1)'
         }}>
@@ -200,12 +223,12 @@ const PrimaryBalanceCard: React.FC = () => {
             gap: '0.5rem',
             marginBottom: '0.5rem'
           }}>
-            <Lock size={16} style={{ opacity: 0.8 }} />
-            <span style={{ fontSize: '0.85rem', opacity: 0.8, fontWeight: '500' }}>
+            <Lock size={isMobile ? 14 : 16} style={{ opacity: 0.8 }} />
+            <span style={{ fontSize: isMobile ? '0.8rem' : '0.85rem', opacity: 0.8, fontWeight: '500' }}>
               Locked
             </span>
           </div>
-          <div style={{ fontSize: '1.4rem', fontWeight: '700' }}>
+          <div style={{ fontSize: isMobile ? '1.2rem' : '1.4rem', fontWeight: '700' }}>
             {formatCurrency(portfolioData.lockedCapital)}
           </div>
         </div>
@@ -213,8 +236,8 @@ const PrimaryBalanceCard: React.FC = () => {
         {/* Compound Interest */}
         <div style={{
           background: 'rgba(255, 255, 255, 0.1)',
-          borderRadius: '12px',
-          padding: '1rem',
+          borderRadius: isMobile ? '10px' : '12px',
+          padding: isMobile ? '0.75rem' : '1rem',
           backdropFilter: 'blur(10px)',
           border: '1px solid rgba(255, 255, 255, 0.1)'
         }}>
@@ -224,12 +247,12 @@ const PrimaryBalanceCard: React.FC = () => {
             gap: '0.5rem',
             marginBottom: '0.5rem'
           }}>
-            <PiggyBank size={16} style={{ opacity: 0.8 }} />
-            <span style={{ fontSize: '0.85rem', opacity: 0.8, fontWeight: '500' }}>
+            <PiggyBank size={isMobile ? 14 : 16} style={{ opacity: 0.8 }} />
+            <span style={{ fontSize: isMobile ? '0.8rem' : '0.85rem', opacity: 0.8, fontWeight: '500' }}>
               Interest Earned
             </span>
           </div>
-          <div style={{ fontSize: '1.4rem', fontWeight: '700' }}>
+          <div style={{ fontSize: isMobile ? '1.2rem' : '1.4rem', fontWeight: '700' }}>
             {formatCurrency(portfolioData.compoundInterestEarned)}
           </div>
         </div>
@@ -238,12 +261,14 @@ const PrimaryBalanceCard: React.FC = () => {
       {/* Bottom Stats */}
       <div style={{
         display: 'flex',
+        flexDirection: isMobile ? 'column' : 'row',
         justifyContent: 'space-between',
-        alignItems: 'center',
+        alignItems: isMobile ? 'stretch' : 'center',
         paddingTop: '1rem',
-        borderTop: '1px solid rgba(255, 255, 255, 0.1)'
+        borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+        gap: isMobile ? '1rem' : '0'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '1rem' : '1.5rem', flexWrap: 'wrap' }}>
           <div>
             <div style={{ fontSize: '0.8rem', opacity: 0.7, marginBottom: '0.25rem' }}>
               Portfolio Growth

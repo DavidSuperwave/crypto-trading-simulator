@@ -114,7 +114,11 @@ const UserSidebar: React.FC<UserSidebarProps> = ({ activeView, onViewChange }) =
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span>Total:</span>
                 <span style={{ fontWeight: '600' }}>
-                  ${portfolioData?.totalPortfolioValue?.toLocaleString('en-US', { minimumFractionDigits: 3 }) || user?.balance?.toLocaleString('en-US', { minimumFractionDigits: 2 }) || '0.00'}
+                  ${portfolioData?.totalPortfolioValue 
+                    ? portfolioData.totalPortfolioValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                    : user?.balance 
+                      ? user.balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) 
+                      : '0.00'}
                 </span>
               </div>
               {portfolioData && (

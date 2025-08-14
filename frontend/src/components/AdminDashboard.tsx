@@ -129,8 +129,7 @@ const AdminDashboard: React.FC = () => {
           
           // Decrease global unread count
           setUnreadCount(prev => Math.max(0, prev - conversation.unreadCount));
-          
-          console.log(`✅ Marked ${unreadMessageIds.length} messages as read for user ${userId}`);
+
         }
       }
     } catch (error) {
@@ -164,7 +163,6 @@ const AdminDashboard: React.FC = () => {
   /* DISABLED TO STOP INFINITE LOOP
   const { mode, connectionStatus, isConnected, statusMessage } = useHybridNotifications({
     onNewDeposit: (deposit) => {
-      console.log(`💰 New deposit request (${mode}):`, deposit);
       setPendingDeposits(prev => [deposit, ...prev]);
       setUnreadCount(prev => prev + 1);
       
@@ -177,7 +175,6 @@ const AdminDashboard: React.FC = () => {
       }
     },
     onNewWithdrawal: (withdrawal) => {
-      console.log(`💸 New withdrawal request (${mode}):`, withdrawal);
       setWithdrawals(prev => [withdrawal, ...prev]);
       setUnreadCount(prev => prev + 1);
       
@@ -190,7 +187,6 @@ const AdminDashboard: React.FC = () => {
       }
     },
     onNewChatMessage: (message) => {
-      console.log(`💬 New chat message from user (${mode}):`, message);
       
       // Update chat conversations with new message
       setChatConversations(prev => {
@@ -267,17 +263,9 @@ const AdminDashboard: React.FC = () => {
       let simulationRes = null;
       try {
         const token = localStorage.getItem('token');
-        console.log('🔍 Attempting to fetch simulation data...');
-        console.log('Token exists:', !!token);
-        console.log('Token preview:', token ? token.substring(0, 20) + '...' : 'none');
-        console.log('Auth headers:', authHeaders);
         simulationRes = await axios.get(buildApiUrl('/admin/simulation-data'), authHeaders);
-        console.log('✅ Simulation data loaded successfully:', simulationRes.data);
       } catch (simError: any) {
-        console.error('❌ SIMULATION DATA ERROR:', simError.response?.status, simError.response?.data?.error);
-        console.error('Full error:', simError);
         // Create fallback that shows auth issue but doesn't break the UI
-        console.warn('🔄 Auth failed - simulation data unavailable. User table will show $0.00 until re-login.');
         simulationRes = {
           data: {
             users: [],
@@ -301,7 +289,6 @@ const AdminDashboard: React.FC = () => {
       setPendingDeposits(pendingDepositsRes.data.pendingDeposits || []);
       setChatConversations(chatRes.data.conversations || []);
       setSimulationData(simulationRes.data);
-      console.log('📊 Dashboard data loaded successfully');
     } catch (error) {
       console.error('Failed to fetch dashboard data:', error);
     }
@@ -548,7 +535,7 @@ const AdminDashboard: React.FC = () => {
               </div>
               <NotificationBadge 
                 count={unreadCount} 
-                onClick={() => console.log('Show notifications panel')}
+                onClick={() => {}}
                 size="lg"
               />
             </div>

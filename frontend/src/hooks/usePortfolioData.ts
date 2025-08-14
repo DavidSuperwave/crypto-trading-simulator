@@ -31,7 +31,6 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
     // Throttle requests to prevent rapid successive calls
     const now = Date.now();
     if (now - lastFetchTime < 2000) { // Minimum 2 seconds between calls
-      console.log('🔄 Throttling portfolio data request');
       return;
     }
     setLastFetchTime(now);
@@ -39,13 +38,12 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
-        console.log('🔐 No authentication token found');
         setError('Authentication required');
         setLoading(false);
         return;
       }
 
-      console.log('🔄 Fetching portfolio data from multiple endpoints...');
+
 
       // Initialize default values
       let totalPortfolioValue = 0;
@@ -61,14 +59,12 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
 
       // Try to fetch data from compound interest endpoint first (most reliable)
       try {
-        console.log('📊 Fetching compound interest data...');
         const compoundResponse = await fetch(buildApiUrl('/compound-interest/portfolio-state'), {
           headers: { 'Authorization': `Bearer ${token}` }
         });
 
         if (compoundResponse.ok) {
           const compoundData = await compoundResponse.json();
-          console.log('✅ Compound Interest Response:', compoundData);
           
           if (compoundData.success && compoundData.portfolioState) {
             const state = compoundData.portfolioState;
@@ -83,21 +79,13 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
             openPositionsCount = state.openPositionsCount || 0;
             hasValidData = true;
           }
-        } else {
-          try {
-            const errorText = await compoundResponse.text();
-            console.warn('⚠️ Compound interest API error:', compoundResponse.status, errorText.slice(0, 200));
-          } catch (textError) {
-            console.warn('⚠️ Compound interest API error:', compoundResponse.status, 'Unable to read response');
-          }
         }
       } catch (compoundError) {
-        console.error('❌ Error fetching compound interest data:', compoundError);
+        // Error fetching compound interest data - continue with fallback
       }
 
       // Try to fetch enhanced trading data for additional info
       try {
-        console.log('⚡ Fetching enhanced trading data...');
         const [tradingResponse, positionsResponse] = await Promise.all([
           fetch(buildApiUrl('/enhanced-trading/status'), {
             headers: { 'Authorization': `Bearer ${token}` }
@@ -109,7 +97,6 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
 
         if (tradingResponse.ok) {
           const tradingData = await tradingResponse.json();
-          console.log('✅ Trading Status Response:', tradingData);
           
           if (tradingData.success && tradingData.data) {
             // Use trading data to supplement compound data (don't override totalPortfolioValue)
@@ -129,30 +116,21 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
               utilizationPercent = portfolio.utilizationPercent || utilizationPercent;
             }
           }
-        } else {
-          try {
-            const errorText = await tradingResponse.text();
-            console.warn('⚠️ Trading status API error:', tradingResponse.status, errorText.slice(0, 200));
-          } catch (textError) {
-            console.warn('⚠️ Trading status API error:', tradingResponse.status, 'Unable to read response');
-          }
         }
 
         if (positionsResponse.ok) {
           const positionsData = await positionsResponse.json();
-          console.log('✅ Positions Response:', positionsData);
           
           if (positionsData.success && positionsData.data) {
             openPositionsCount = positionsData.data.openPositions?.length || openPositionsCount;
           }
         }
       } catch (tradingError) {
-        console.warn('⚠️ Error fetching trading data (non-critical):', tradingError);
+        // Error fetching trading data (non-critical) - continue
       }
 
       // Fallback to realistic data if no valid data found
       if (!hasValidData) {
-        console.log('🔄 No valid data found, using realistic fallback values...');
         totalPortfolioValue = 10224.30;
         availableBalance = 10000.00;
         lockedCapital = 224.30;
@@ -182,12 +160,10 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
         openPositionsCount
       };
 
-      console.log('✅ Final portfolio data:', portfolioResult);
       setPortfolioData(portfolioResult);
       setError(null);
 
     } catch (err) {
-      console.warn('⚠️ Portfolio data fetch error:', err instanceof Error ? err.message : 'Unknown error');
       
       // Only set fallback data if we don't already have data
       if (!portfolioData) {

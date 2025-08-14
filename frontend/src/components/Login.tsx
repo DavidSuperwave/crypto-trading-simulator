@@ -10,23 +10,14 @@ const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Check for debug info from previous attempt
-  React.useEffect(() => {
-    const debugInfo = localStorage.getItem('login-debug');
-    if (debugInfo) {
-      console.log('🔍 PREVIOUS LOGIN ATTEMPT:', JSON.parse(debugInfo));
-    }
-  }, []);
+
 
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    console.log('🔥 FORM SUBMIT TRIGGERED - BEFORE preventDefault');
     e.preventDefault();
     e.stopPropagation();
-    console.log('🚀 Form submitted with:', { email, password: password ? '***' : 'EMPTY' });
-    console.log('📝 Email length:', email.length, 'Password length:', password.length);
     
     setLoading(true);
     setError('');
@@ -35,27 +26,19 @@ const Login: React.FC = () => {
       const userData = await login(email, password);
 
       if (userData) {
-        console.log('✅ Login successful, user data:', userData);
-        console.log('✅ User role:', userData.role);
-        console.log('✅ About to navigate to:', userData.role === 'admin' ? '/admin' : '/user');
-        
         // Add a small delay to ensure auth state is updated
         setTimeout(() => {
           // Route based on user role
           if (userData.role === 'admin') {
-            console.log('🚀 Navigating to /admin');
             navigate('/admin');
           } else {
-            console.log('🚀 Navigating to /user');
             navigate('/user');
           }
         }, 100);
       } else {
-        console.log('❌ No user data returned from login');
         setError('Invalid credentials');
       }
     } catch (err) {
-      console.log('❌ Login catch block error:', err);
       setError('Something went wrong. Please try again.');
     } finally {
       setLoading(false);
@@ -238,7 +221,6 @@ const Login: React.FC = () => {
                     type="email"
                     value={email}
                     onChange={(e) => {
-                      console.log('📧 Email changed to:', e.target.value);
                       setEmail(e.target.value);
                     }}
                     required
@@ -281,7 +263,6 @@ const Login: React.FC = () => {
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => {
-                      console.log('🔒 Password changed, length:', e.target.value.length);
                       setPassword(e.target.value);
                     }}
                     required
@@ -340,35 +321,11 @@ const Login: React.FC = () => {
                 disabled={loading}
                 onClick={async (e) => {
                   try {
-                    console.log('🖱️ BUTTON CLICKED - STARTING');
                     e.preventDefault();
                     e.stopPropagation();
-                    
-                    // Store in localStorage so we can see it even if page reloads
-                    localStorage.setItem('login-debug', JSON.stringify({
-                      timestamp: new Date().toISOString(),
-                      step: 'button-clicked',
-                      email,
-                      passwordLength: password.length
-                    }));
-                    
-                    console.log('📧 Current email state:', email);
-                    console.log('🔒 Current password state length:', password.length);
-                    
                     await handleSubmit(e as any);
-                    
-                    localStorage.setItem('login-debug', JSON.stringify({
-                      timestamp: new Date().toISOString(),
-                      step: 'after-handleSubmit',
-                      completed: true
-                    }));
                   } catch (error) {
-                    console.error('🚨 ERROR in button click:', error);
-                    localStorage.setItem('login-debug', JSON.stringify({
-                      timestamp: new Date().toISOString(),
-                      step: 'error',
-                      error: String(error)
-                    }));
+                    // Error handling is already done in handleSubmit
                   }
                 }}
                 style={{

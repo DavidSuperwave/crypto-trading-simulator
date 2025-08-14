@@ -16,20 +16,9 @@ import SignupPage from './components/SignupPage';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
 
-// Demo route component - only for unauthenticated users or admins
-const DemoRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isAuthenticated, user, isLoading } = useAuth();
-  
-  // Don't redirect while still loading
-  if (isLoading) {
-    return null; // Let the main loading screen handle this
-  }
-  
-  // If user is authenticated and not admin, redirect to their dashboard
-  if (isAuthenticated && user?.role !== 'admin') {
-    return <Navigate to="/user" replace />;
-  }
-  
+// Public route component - accessible to everyone (no authentication required)
+const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // No authentication checks - publicly accessible
   return <>{children}</>;
 };
 
@@ -40,29 +29,29 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode; requireAdmin?: boole
 }) => {
   const { isAuthenticated, user, isLoading } = useAuth();
   
-  console.log('🔐 ProtectedRoute check:', { isAuthenticated, isLoading, userRole: user?.role, requireAdmin });
+  // console.log('🔐 ProtectedRoute check:', { isAuthenticated, isLoading, userRole: user?.role, requireAdmin }); // Disabled debug logging
   
   // Don't redirect while still loading
   if (isLoading) {
-    console.log('⏳ Auth still loading, showing loading screen');
+    // console.log('⏳ Auth still loading, showing loading screen'); // Disabled debug logging
     return null; // Let the main loading screen handle this
   }
   
   if (!isAuthenticated) {
-    console.log('🚫 Not authenticated, redirecting to login');
+    // console.log('🚫 Not authenticated, redirecting to login'); // Disabled debug logging
     return <Navigate to="/login" replace />;
   }
   
   if (requireAdmin && user?.role !== 'admin') {
-    console.log('🚫 Admin access denied. User role:', user?.role, 'User:', user);
+    // console.log('🚫 Admin access denied. User role:', user?.role, 'User:', user); // Disabled debug logging
     return <Navigate to="/user" replace />;
   }
   
   if (requireAdmin) {
-    console.log('✅ Admin access granted. User role:', user?.role);
+    // console.log('✅ Admin access granted. User role:', user?.role); // Disabled debug logging
   }
   
-  console.log('✅ Access granted, rendering children');
+  // console.log('✅ Access granted, rendering children'); // Disabled debug logging
   return <>{children}</>;
 };
 
@@ -118,9 +107,9 @@ function AppContent() {
         <Route 
           path="/demo" 
           element={
-            <DemoRoute>
+            <PublicRoute>
               <DemoDashboard />
-            </DemoRoute>
+            </PublicRoute>
           } 
         />
         <Route 

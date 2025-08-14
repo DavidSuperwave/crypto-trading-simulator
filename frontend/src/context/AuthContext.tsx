@@ -64,7 +64,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       });
       setUser(response.data);
       setIsAuthenticated(true);
-      console.log('✅ Automatically logged in from stored token');
     } catch (error) {
       console.error('Token verification failed:', error);
       localStorage.removeItem('token');
@@ -76,12 +75,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const login = async (email: string, password: string): Promise<User | null> => {
-    console.log('🔐 Starting login process:', { email, password: '***' });
-    console.log('🌐 API URL:', buildApiUrl(API_CONFIG.ENDPOINTS.LOGIN));
-    
     const requestData = { email, password };
-    console.log('📦 Request data:', { ...requestData, password: '***' });
-    console.log('📦 Exact request JSON:', JSON.stringify(requestData));
     
     try {
       const response = await axios.post(buildApiUrl(API_CONFIG.ENDPOINTS.LOGIN), requestData, {
@@ -90,9 +84,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
       });
 
-      console.log('✅ Login HTTP status:', response.status);
-      console.log('✅ Login response data:', response.data);
-      
       if (response.status === 200 && response.data) {
         const { user: userData, token } = response.data;
         
@@ -100,23 +91,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           localStorage.setItem('token', token);
           setUser(userData);
           setIsAuthenticated(true);
-          
-          console.log('✅ Login successful, user role:', userData.role);
-          console.log('✅ Token saved:', token.substring(0, 20) + '...');
-          console.log('✅ Auth state updated');
           return userData;
         } else {
-          console.error('❌ Missing user data or token in response');
           return null;
         }
       } else {
-        console.error('❌ Unexpected response status:', response.status);
         return null;
       }
     } catch (error: any) {
-      console.error('❌ Login failed with error:', error);
-      console.error('❌ Error response:', error.response?.data || error.message);
-      console.error('❌ Error status:', error.response?.status);
       return null;
     }
   };
@@ -130,9 +112,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     role: string = 'user'
   ): Promise<User | null> => {
     try {
-      console.log('🚀 Starting registration for:', email);
-      console.log('🌐 API URL:', buildApiUrl(API_CONFIG.ENDPOINTS.REGISTER));
-      
       const requestData = {
         email,
         password,
@@ -142,12 +121,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         role
       };
       
-      console.log('📦 Request data:', { ...requestData, password: '***' });
-      
       const response = await axios.post(buildApiUrl(API_CONFIG.ENDPOINTS.REGISTER), requestData);
-
-      console.log('✅ Registration response status:', response.status);
-      console.log('✅ Registration response data:', response.data);
 
       const { user: userData, token } = response.data;
       
@@ -157,12 +131,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       
       return userData;
     } catch (error: any) {
-      console.error('❌ Registration failed - Full error:', error);
-      console.error('❌ Error response:', error.response);
-      console.error('❌ Error status:', error.response?.status);
-      console.error('❌ Error data:', error.response?.data);
-      console.error('❌ Error message:', error.message);
-      console.error('❌ API URL used:', buildApiUrl(API_CONFIG.ENDPOINTS.REGISTER));
       return null;
     }
   };
@@ -172,7 +140,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setUser(null);
     setIsAuthenticated(false);
     setIsLoading(false);
-    console.log('🚪 User logged out');
   };
 
   const updateUser = (userData: Partial<User>) => {

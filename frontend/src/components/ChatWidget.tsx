@@ -31,7 +31,7 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ isInPopup = false }) => {
   // Hybrid real-time notifications for new chat messages (WebSocket with polling fallback)
   const { isConnected, mode, statusMessage } = useHybridNotifications({
     onNewChatMessage: (message) => {
-      console.log(`📨 New chat message received (${mode}):`, message);
+
       // Convert timestamp to Date object to match interface
       const chatMessage: ChatMessage = {
         ...message,
@@ -64,7 +64,7 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ isInPopup = false }) => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
-        console.log('No auth token found, skipping chat messages fetch');
+  
         return;
       }
       
