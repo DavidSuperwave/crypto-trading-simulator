@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { MessageCircle, X, Shield } from 'lucide-react';
 import ChatWidget from './ChatWidget';
 import { useAuth } from '../context/AuthContext';
@@ -23,7 +23,7 @@ const FloatingChatBubble: React.FC = () => {
   const [hasNewMessage, setHasNewMessage] = useState(false);
 
   // Fetch latest admin message for preview
-  const fetchLatestAdminMessage = async () => {
+  const fetchLatestAdminMessage = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
       if (!token || !user) return;
@@ -55,7 +55,7 @@ const FloatingChatBubble: React.FC = () => {
     } catch (error) {
       console.error('Error fetching latest admin message:', error);
     }
-  };
+  }, [user]);
 
   useEffect(() => {
     fetchLatestAdminMessage();
@@ -67,7 +67,7 @@ const FloatingChatBubble: React.FC = () => {
     }, 30000);
 
     return () => clearInterval(interval);
-  }, [user, isOpen]);
+  }, [user, isOpen, fetchLatestAdminMessage]);
 
   const toggleChat = () => {
     setIsOpen(!isOpen);

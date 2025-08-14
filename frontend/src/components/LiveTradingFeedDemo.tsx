@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { TrendingUp, TrendingDown, Activity } from 'lucide-react';
 
 interface Trade {
@@ -18,7 +18,7 @@ interface Trade {
 
 const LiveTradingFeedDemo: React.FC = () => {
   // Sample trades data based on our 24/7 crypto system
-  const sampleTrades: Trade[] = [
+  const sampleTrades: Trade[] = useMemo(() => [
     {
       id: "1",
       timestamp: "2025-08-08T21:51:33.000Z",
@@ -159,11 +159,11 @@ const LiveTradingFeedDemo: React.FC = () => {
       isWinningTrade: false,
       variance: "minimal"
     }
-  ];
+  ], []);
 
   const [visibleTrades, setVisibleTrades] = useState<Trade[]>([]);
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [isLive, setIsLive] = useState(true);
+  const [isLive] = useState(true);
 
   // Simulate real-time trade revelation
   useEffect(() => {
@@ -180,7 +180,7 @@ const LiveTradingFeedDemo: React.FC = () => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [sampleTrades]);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -206,9 +206,7 @@ const LiveTradingFeedDemo: React.FC = () => {
   const totalProfit = visibleTrades.reduce((sum, trade) => sum + trade.profitLoss, 0);
 
   // Get next upcoming trade
-  const nextTrade = sampleTrades.find(trade => 
-    new Date(trade.timestamp) > currentTime
-  );
+  
 
   return (
     <div style={{

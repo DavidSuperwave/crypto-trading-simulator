@@ -35,7 +35,7 @@ const SignupPage: React.FC = () => {
   }, []);
 
   // Simple validation function
-  const validateField = (field: string, value: string) => {
+  const validateField = useCallback((field: string, value: string): string => {
     switch (field) {
       case 'firstName':
         if (!value.trim()) return 'First name is required';
@@ -67,7 +67,7 @@ const SignupPage: React.FC = () => {
       default:
         return '';
     }
-  };
+  }, [formData.password]);
 
   // Optimized input handlers with useCallback to prevent unnecessary re-renders
   const handleInputChange = useCallback((field: string, value: string) => {
@@ -105,7 +105,7 @@ const SignupPage: React.FC = () => {
         setFieldErrors(prev => ({ ...prev, [field]: '' }));
       }
     }
-  }, []);
+  }, [validateField]);
 
   // Memoized password strength calculation
   const passwordStrength = useMemo(() => {

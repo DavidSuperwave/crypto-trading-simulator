@@ -51,7 +51,7 @@ export const useWebSocket = (options: UseWebSocketOptions = {}) => {
       return `${baseWsUrl}?token=${token}`;
     } else {
       // Fallback to auto-detection for backwards compatibility
-      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      // protocol variable removed
       const isProduction = window.location.hostname !== 'localhost';
       
       if (window.location.hostname.includes('railway.app')) {
@@ -172,7 +172,7 @@ export const useWebSocket = (options: UseWebSocketOptions = {}) => {
       mountedRef.current = false;
       disconnect();
     };
-  }, []); // Remove dependencies to prevent infinite loop
+  }, [connect, disconnect]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -180,7 +180,7 @@ export const useWebSocket = (options: UseWebSocketOptions = {}) => {
       mountedRef.current = false;
       disconnect();
     };
-  }, []); // Remove dependency to prevent infinite loop
+  }, [disconnect]);
 
   // Ping to keep connection alive
   useEffect(() => {

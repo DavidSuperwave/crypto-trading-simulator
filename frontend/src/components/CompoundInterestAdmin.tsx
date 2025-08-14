@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { buildApiUrl } from '../config/api';
 import { 
   DollarSign, 
@@ -58,13 +58,7 @@ const SimulationDetailModal: React.FC<SimulationDetailModalProps> = ({
   const [previewVisible, setPreviewVisible] = useState(false);
   const [impactPreview, setImpactPreview] = useState<any>(null);
 
-  useEffect(() => {
-    if (isOpen && userId) {
-      fetchUserDetails();
-    }
-  }, [isOpen, userId]);
-
-  const fetchUserDetails = async () => {
+  const fetchUserDetails = useCallback(async () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
@@ -74,7 +68,7 @@ const SimulationDetailModal: React.FC<SimulationDetailModalProps> = ({
           'Content-Type': 'application/json'
         }
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         setUserDetails(data);
@@ -84,7 +78,13 @@ const SimulationDetailModal: React.FC<SimulationDetailModalProps> = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [userId]);
+
+  useEffect(() => {
+    if (isOpen && userId) {
+      fetchUserDetails();
+    }
+  }, [isOpen, userId, fetchUserDetails]);
 
   const handleRateOverride = async () => {
     if (!editingMonth || !newRate || !userId) return;

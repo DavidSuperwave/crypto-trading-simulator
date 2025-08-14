@@ -1,5 +1,5 @@
 import { useWebSocket } from './useWebSocket';
-import { useEffect, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 export interface ChatMessage {
   id: string;

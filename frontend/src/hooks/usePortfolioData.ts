@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { buildApiUrl } from '../config/api';
 
 interface PortfolioData {
@@ -27,7 +27,7 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
   const [error, setError] = useState<string | null>(null);
   const [lastFetchTime, setLastFetchTime] = useState<number>(0);
 
-  const fetchPortfolioData = async () => {
+  const fetchPortfolioData = useCallback(async () => {
     // Throttle requests to prevent rapid successive calls
     const now = Date.now();
     if (now - lastFetchTime < 2000) { // Minimum 2 seconds between calls
@@ -205,13 +205,13 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [lastFetchTime]); // token accessed from localStorage inside function
 
   useEffect(() => {
     fetchPortfolioData();
     const interval = setInterval(fetchPortfolioData, 10000); // Update every 10 seconds (reduced from 3s)
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchPortfolioData]);
 
   return {
     portfolioData,

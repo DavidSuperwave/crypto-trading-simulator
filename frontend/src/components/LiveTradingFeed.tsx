@@ -30,6 +30,8 @@ interface Trade {
   progress?: number;         // 0-1, how close to completion
 }
 
+// EnhancedPosition interface removed - was unused
+/*
 interface EnhancedPosition {
   id: string;
   trade: Trade;
@@ -43,6 +45,7 @@ interface EnhancedPosition {
   phase: 'WILD_SWINGS' | 'STEERING' | 'CONVERGENCE';
   timeProgress: number;      // 0-1, time elapsed since open
 }
+*/
 
 interface TradingSummary {
   totalAmount: number;
@@ -91,9 +94,9 @@ const LiveTradingFeed: React.FC = () => {
   const [priceDirections, setPriceDirections] = useState<Map<string, 'up' | 'down' | 'neutral'>>(new Map());
   const [lastPrices, setLastPrices] = useState<Map<string, number>>(new Map());
   
-  // Enhanced position system
-  const [enhancedPositions, setEnhancedPositions] = useState<Map<string, EnhancedPosition>>(new Map());
-  const [totalLockedCapital, setTotalLockedCapital] = useState<number>(0);
+  // Enhanced position system (currently unused)
+  // const [enhancedPositions, setEnhancedPositions] = useState<Map<string, EnhancedPosition>>(new Map());
+  // const [totalLockedCapital, setTotalLockedCapital] = useState<number>(0);
   
   // Portfolio data for locked capital
   const { portfolioData } = usePortfolioData();
@@ -164,16 +167,9 @@ const LiveTradingFeed: React.FC = () => {
     }
   };
 
-  const startPolling = () => {
-    // Poll every 8 seconds to prevent infinite loops
-    pollIntervalRef.current = setInterval(() => {
-      updateVisibleTrades();
-      fetchLiveActivity();
-      simulateRealtimeUpdates();
-    }, 8000);
-  };
+  // startPolling moved below dependencies
 
-  const fetchLiveActivity = async () => {
+  const fetchLiveActivity = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
               const response = await fetch(buildApiUrl('/compound-interest/live-activity'), {
@@ -192,7 +188,7 @@ const LiveTradingFeed: React.FC = () => {
     } catch (error) {
       console.error('Error fetching live activity:', error);
     }
-  };
+  }, []); // No dependencies needed - uses localStorage directly
 
   const updateVisibleTrades = useCallback(() => {
     if (!todaysTrades.length) {
@@ -263,7 +259,6 @@ const LiveTradingFeed: React.FC = () => {
       // Trigger initialization manually
       setTimeout(() => {
         if (!initializedRef.current && todaysTrades.length > 0) {
-          const now = new Date();
           const tradesToOpen = availableTrades
             .sort(() => Math.random() - 0.5)
             .slice(0, Math.min(availableTrades.length, 2 + Math.floor(Math.random() * 3)));
@@ -298,7 +293,7 @@ const LiveTradingFeed: React.FC = () => {
     const totalProgress = newVisibleTrades.reduce((sum, trade) => sum + trade.profitLoss, 0);
     setCurrentProgress(totalProgress);
     animateValueTo(animatedProgress, totalProgress, setAnimatedProgress);
-  }, [todaysTrades, tradeProgresses, positionOpenTimes, executingTrades, pulsingTrades, animatedProgress]);
+  }, [todaysTrades, tradeProgresses, positionOpenTimes, executingTrades, pulsingTrades, animatedProgress, visibleTrades.length]);
 
   // Animate number changes smoothly
   const animateValueTo = (current: number, target: number, setter: (value: number) => void, duration = 1500) => {
@@ -321,7 +316,7 @@ const LiveTradingFeed: React.FC = () => {
   };
 
   // Calculate position progress and convergence based on ACTUAL position open time
-  const calculatePositionProgress = (trade: Trade): number => {
+  const calculatePositionProgress = useCallback((trade: Trade): number => {
     const now = new Date();
     const positionOpenTime = positionOpenTimes.get(trade.id);
     
@@ -344,9 +339,11 @@ const LiveTradingFeed: React.FC = () => {
 
     
     return progress;
-  };
+  }, [positionOpenTimes]); // Depends on positionOpenTimes
 
   // Get convergence factor based on progress
+  // getConvergenceFactor function removed - was unused
+  /*
   const getConvergenceFactor = (progress: number, variance: string): number => {
     const baseVariance = variance === 'high' ? 0.8 : variance === 'medium' ? 0.5 : 0.3;
     
@@ -355,12 +352,13 @@ const LiveTradingFeed: React.FC = () => {
     if (progress < 0.95) return baseVariance * 0.2; // Late: Low variance
     return baseVariance * 0.05;                   // Final: Minimal variance
   };
+  */
 
   // Calculate fluctuating P&L for a position with HIGH SWINGS based on position size
-  const calculateFluctuatingPL = (trade: Trade, progress: number): number => {
+  const calculateFluctuatingPL = useCallback((trade: Trade, progress: number): number => {
     const finalPL = trade.profitLoss;
     const positionSize = trade.positionSize || Math.abs(trade.amount * 20); // Fallback if no positionSize
-    const convergenceFactor = getConvergenceFactor(progress, trade.variance);
+    // convergenceFactor removed
     
     // Get current stored P&L or start near zero
     const currentPL = positionPLs.get(trade.id) || 0;
@@ -405,10 +403,10 @@ const LiveTradingFeed: React.FC = () => {
     }
     
     return newPL;
-  };
+  }, [positionPLs]); // Depends on positionPLs
 
   // Simulate exciting real-time market movement with position P&L
-  const simulateRealtimeUpdates = () => {
+  const simulateRealtimeUpdates = useCallback(() => {
     const now = new Date();
     
     // Get all available trades that could be opened
@@ -482,11 +480,20 @@ const LiveTradingFeed: React.FC = () => {
     
     // Update visible trades list to reflect new/closed positions
     setTimeout(() => updateVisibleTrades(), 100);
-  };
+  }, [visibleTrades, positionPLs, tradeProgresses, todaysTrades, updateVisibleTrades, calculateFluctuatingPL, calculatePositionProgress, unrealizedPL]); // Include all dependencies
+
+  const startPolling = useCallback(() => {
+    // Poll every 8 seconds to prevent infinite loops
+    pollIntervalRef.current = setInterval(() => {
+      updateVisibleTrades();
+      fetchLiveActivity();
+      simulateRealtimeUpdates();
+    }, 8000);
+  }, [updateVisibleTrades, fetchLiveActivity, simulateRealtimeUpdates]); // Include all dependencies
 
   useEffect(() => {
     updateVisibleTrades();
-  }, [todaysTrades, executingTrades, pulsingTrades, positionOpenTimes]);
+  }, [todaysTrades, executingTrades, pulsingTrades, positionOpenTimes, updateVisibleTrades]);
 
   // Initialize starting positions when trades first load (run only once)
   useEffect(() => {
@@ -601,14 +608,16 @@ const LiveTradingFeed: React.FC = () => {
       if (pollIntervalRef.current) {
         clearInterval(pollIntervalRef.current);
       }
-      if (animationRef.current) {
-        clearTimeout(animationRef.current);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      const currentAnimation = animationRef.current;
+      if (currentAnimation) {
+        clearTimeout(currentAnimation);
       }
       if (priceMovementRef.current) {
         clearInterval(priceMovementRef.current);
       }
     };
-  }, []);
+  }, [startPolling]);
 
   // Start price movements when we have visible trades
   useEffect(() => {
@@ -629,170 +638,15 @@ const LiveTradingFeed: React.FC = () => {
   }, [visibleTrades.length, startPriceMovements]);
 
   // Enhanced trading system helper functions
-  const calculatePositionSize = (availableCapital: number, targetPL: number): number => {
-    const baseSize = availableCapital / 8; // Spread across ~8 positions
-    const riskFactor = Math.abs(targetPL) / 100; // Risk adjustment
-    return Math.min(baseSize * (1 + riskFactor), availableCapital * 0.3);
-  };
+  // calculatePositionSize and getPhase functions removed - were unused
 
-  const getPhase = (timeProgress: number): 'WILD_SWINGS' | 'STEERING' | 'CONVERGENCE' => {
-    if (timeProgress < 0.6) return 'WILD_SWINGS';
-    if (timeProgress < 0.85) return 'STEERING'; 
-    return 'CONVERGENCE';
-  };
+  // calculateRealisticSwing function removed - was unused
 
-  const calculateRealisticSwing = (position: EnhancedPosition): number => {
-    const { targetPL, phase, currentPL, timeProgress } = position;
-    
-    if (phase === 'WILD_SWINGS') {
-      // ±50% swings with high volatility
-      const maxSwing = Math.abs(targetPL) * 0.5;
-      const baseSwing = (Math.random() - 0.5) * 2 * maxSwing;
-      const volatility = (Math.random() - 0.5) * 20; // Additional market noise
-      return targetPL + baseSwing + volatility;
-    }
-    
-    if (phase === 'STEERING') {
-      // Gradual convergence toward target with reduced volatility
-      const pullForce = (timeProgress - 0.6) / 0.25; // 0 to 1 over steering phase
-      const targetDirection = targetPL - currentPL;
-      const pull = targetDirection * pullForce * 0.3;
-      const volatility = (Math.random() - 0.5) * Math.abs(targetPL) * 0.2;
-      return currentPL + pull + volatility;
-    }
-    
-    if (phase === 'CONVERGENCE') {
-      // Strong convergence to exact target
-      const convergenceForce = (timeProgress - 0.85) / 0.15; // 0 to 1 over convergence phase
-      const convergenceStrength = Math.pow(convergenceForce, 2); // Exponential convergence
-      return currentPL + (targetPL - currentPL) * convergenceStrength;
-    }
-    
-    return targetPL;
-  };
+  // getMaxLockedCapital function removed - was unused
 
-  const getMaxLockedCapital = useCallback((): number => {
-    return (portfolioData?.totalPortfolioValue || 10000) * 0.8; // 80% of portfolio
-  }, [portfolioData?.totalPortfolioValue]);
+  // getAvailableCapital function removed - was unused
 
-  const getAvailableCapital = useCallback((): number => {
-    return getMaxLockedCapital() - totalLockedCapital;
-  }, [getMaxLockedCapital, totalLockedCapital]);
-
-  const openEnhancedPosition = useCallback((trade: Trade): void => {
-    const availableCapital = getAvailableCapital();
-    const positionSize = calculatePositionSize(availableCapital, trade.profitLoss);
-    
-    // Don't open if not enough capital
-    if (positionSize < 500) return;
-    
-    const now = new Date();
-    // Random duration between 3-7 minutes
-    const durationMs = (3 + Math.random() * 4) * 60 * 1000;
-    const closeTime = new Date(now.getTime() + durationMs);
-    
-    const newPosition: EnhancedPosition = {
-      id: trade.id,
-      trade,
-      openTime: now,
-      closeTime,
-      targetPL: trade.profitLoss,
-      currentPL: 0, // Start at breakeven
-      positionSize,
-      peakGain: 0,
-      lowestLoss: 0,
-      phase: 'WILD_SWINGS',
-      timeProgress: 0
-    };
-    
-    setEnhancedPositions(prev => new Map(prev).set(trade.id, newPosition));
-    setTotalLockedCapital(prev => prev + positionSize);
-    
-    // Mark as executing initially
-    setExecutingTrades(prev => {
-      const newSet = new Set(Array.from(prev));
-      newSet.add(trade.id);
-      return newSet;
-    });
-    
-    // Stop executing after a few seconds
-    setTimeout(() => {
-      setExecutingTrades(prev => {
-        const newSet = new Set(Array.from(prev));
-        newSet.delete(trade.id);
-        return newSet;
-      });
-    }, 2000 + Math.random() * 3000);
-  }, [getAvailableCapital, totalLockedCapital]);
-
-  const closeEnhancedPosition = useCallback((positionId: string): void => {
-    const position = enhancedPositions.get(positionId);
-    if (!position) return;
-    
-    // Add final P&L to daily total (this ensures mathematical accuracy)
-    // The position has converged to its exact target, so we can close it
-    
-    setEnhancedPositions(prev => {
-      const newMap = new Map(prev);
-      newMap.delete(positionId);
-      return newMap;
-    });
-    
-    setTotalLockedCapital(prev => prev - position.positionSize);
-    
-    // Remove from any active states
-    setExecutingTrades(prev => {
-      const newSet = new Set(Array.from(prev));
-      newSet.delete(positionId);
-      return newSet;
-    });
-    
-    setPulsingTrades(prev => {
-      const newSet = new Set(Array.from(prev));
-      newSet.delete(positionId);
-      return newSet;
-    });
-  }, [enhancedPositions]);
-
-  const updateEnhancedPosition = (position: EnhancedPosition): EnhancedPosition => {
-    const now = new Date();
-    const elapsed = now.getTime() - position.openTime.getTime();
-    const duration = position.closeTime.getTime() - position.openTime.getTime();
-    const timeProgress = Math.min(elapsed / duration, 1);
-    
-    const phase = getPhase(timeProgress);
-    const newPL = calculateRealisticSwing({ ...position, timeProgress, phase });
-    
-    // Track peaks and valleys
-    const peakGain = Math.max(position.peakGain, newPL);
-    const lowestLoss = Math.min(position.lowestLoss, newPL);
-    
-    // Add pulsing effect for big swings
-    if (Math.abs(newPL - position.currentPL) > Math.abs(position.targetPL) * 0.1) {
-      setPulsingTrades(prev => {
-        const newSet = new Set(Array.from(prev));
-        newSet.add(position.id);
-        return newSet;
-      });
-      
-      setTimeout(() => {
-        setPulsingTrades(prev => {
-          const newSet = new Set(Array.from(prev));
-          newSet.delete(position.id);
-          return newSet;
-        });
-      }, 1500);
-    }
-    
-    return {
-      ...position,
-      timeProgress,
-      phase,
-      currentPL: newPL,
-      peakGain,
-      lowestLoss
-    };
-  };
+  // Enhanced position functions removed (openEnhanced, closeEnhanced, updateEnhanced) - were unused
 
   const getTradeIcon = (trade: Trade) => {
     return trade.isWinningTrade ? 
@@ -821,7 +675,7 @@ const LiveTradingFeed: React.FC = () => {
   
   // Revert to legacy system temporarily
   const liveTotalPL = visibleTrades.reduce((sum, trade) => sum + getLivePositionPL(trade), 0);
-  const progressPercentage = dailyTarget > 0 ? (liveTotalPL / dailyTarget) * 100 : 0;
+
   const lockedCapitalAmount = portfolioData?.lockedCapital || 224.30;
   
   // Update live trading context whenever P&L changes (with stability check)
@@ -842,7 +696,7 @@ const LiveTradingFeed: React.FC = () => {
     if (hasSignificantChange) {
       updateLiveTradingData(contextData);
     }
-  }, [liveTotalPL, unrealizedPL, dailyTarget]);
+  }, [liveTotalPL, unrealizedPL, dailyTarget, liveTradingData, updateLiveTradingData]);
   
   // Count open positions (now matches exactly what's displayed in the list)
   const openPositions = visibleTrades.length;
