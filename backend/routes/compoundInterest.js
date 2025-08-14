@@ -883,7 +883,6 @@ router.get('/admin/trading-stats', authenticateToken, async (req, res) => {
 router.get('/portfolio-state', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.id;
-    console.log(`📊 Getting portfolio state for user ${userId}`);
     
     // Get compound interest data
     const user = await database.getUserById(userId);
@@ -897,10 +896,18 @@ router.get('/portfolio-state', authenticateToken, async (req, res) => {
     const basePortfolioValue = totalDeposited + compoundInterestEarned;
     
     // Get position data (open/closed trading positions)
-    const positionData = await positionBalanceManager.getPortfolioSummary(userId);
+    let positionData = null;
+    let positionsPL = 0;
+    
+    try {
+      positionData = await positionBalanceManager.getPortfolioSummary(userId);
+      positionsPL = positionData ? (positionData.totalPortfolioValue - totalDeposited) : 0;
+    } catch (positionError) {
+      // Position manager error - continue with base portfolio value
+      positionsPL = 0;
+    }
     
     // Calculate comprehensive portfolio value (base + positions)
-    const positionsPL = positionData ? (positionData.totalPortfolioValue - totalDeposited) : 0;
     const totalPortfolioValue = basePortfolioValue + positionsPL; // Include compound interest + positions
     // Locked capital is always 80% of total portfolio value (simulation design)
     const lockedCapital = totalPortfolioValue * 0.8;
@@ -931,17 +938,7 @@ router.get('/portfolio-state', authenticateToken, async (req, res) => {
       totalInterestEarned: compoundInterestEarned
     };
     
-    console.log(`✅ Complete portfolio state for ${user.email}:`, {
-      baseValue: basePortfolioValue,
-      totalInterestEarned: compoundInterestEarned,
-      positionsPL,
-      totalValue: totalPortfolioValue,
-      positions: openPositionsCount,
-      locked: `$${lockedCapital.toFixed(2)} (80%)`,
-      available: `$${availableBalance.toFixed(2)} (20%)`,
-      todayCompoundInterest,
-      dailyPL
-    });
+
 
     res.json({
       success: true,
@@ -949,11 +946,37 @@ router.get('/portfolio-state', authenticateToken, async (req, res) => {
     });
   } catch (error) {
     console.error('Error getting portfolio state:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to get portfolio state',
-      error: error.message
+    
+    // Provide fallback data even if there's an error
+    try {
+      const user = await database.getUserById(req.user.id);
+      const fallbackPortfolioValue = user?.balance || 0;
+    
+      res.json({
+      success: true,
+      portfolioState: {
+        totalPortfolioValue: fallbackPortfolioValue,
+        availableBalance: fallbackPortfolioValue * 0.2,
+        lockedCapital: fallbackPortfolioValue * 0.8,
+        dailyPL: 0,
+        dailyPLPercent: 0,
+        compoundInterestEarned: user?.simulatedInterest || 0,
+        totalDeposited: user?.depositedAmount || user?.balance || 0,
+        portfolioGrowthPercent: 0,
+        utilizationPercent: 80,
+        openPositionsCount: 0,
+        totalInterestEarned: user?.simulatedInterest || 0
+      },
+      warning: 'Using fallback data due to calculation error'
     });
+    } catch (fallbackError) {
+      // If even fallback fails, return minimal safe data
+      res.status(500).json({
+        success: false,
+        message: 'Failed to get portfolio state',
+        error: error.message
+      });
+    }
   }
 });
 
