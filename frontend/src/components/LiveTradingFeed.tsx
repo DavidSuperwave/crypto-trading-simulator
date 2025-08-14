@@ -117,8 +117,14 @@ const LiveTradingFeed: React.FC = () => {
         'Content-Type': 'application/json'
       };
 
+      // Debug logging
+      console.log('🎯 LiveTradingFeed - fetching from:', buildApiUrl('/compound-interest/daily-trades'));
+      console.log('🔐 Auth headers:', headers);
+      
       // Fetch today's trades
       const tradesResponse = await fetch(buildApiUrl('/compound-interest/daily-trades'), { headers });
+      console.log('📊 Trades response status:', tradesResponse.status);
+      
       if (tradesResponse.ok) {
         const tradesData = await tradesResponse.json();
         if (tradesData.success && tradesData.dailyTrades) {

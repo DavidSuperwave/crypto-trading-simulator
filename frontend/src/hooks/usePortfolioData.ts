@@ -42,6 +42,10 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
         setLoading(false);
         return;
       }
+      
+      // Debug logging for production
+      console.log('🔐 Portfolio data fetch - token exists:', !!token);
+      console.log('🌐 API URL:', buildApiUrl('/compound-interest/portfolio-state'));
 
 
 
@@ -65,6 +69,7 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
 
         if (compoundResponse.ok) {
           const compoundData = await compoundResponse.json();
+          console.log('✅ Portfolio API success:', compoundData);
           
           if (compoundData.success && compoundData.portfolioState) {
             const state = compoundData.portfolioState;
