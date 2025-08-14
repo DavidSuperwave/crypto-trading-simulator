@@ -4,6 +4,9 @@
   "description": "AI-powered crypto trading simulator with admin dashboard",
   "scripts": {
     "start": "cd backend && npm start",
+    "build": "npm run install:all && npm run build:frontend",
+    "install:all": "cd frontend && npm install && cd ../backend && npm install",
+    "build:frontend": "cd frontend && npm run build",
     "backend": "cd backend && npm start",
     "frontend": "cd frontend && npm start",
     "dev": "node dev-server.js",
@@ -11,13 +14,8 @@
     "dev:backend": "node quick-restart.js backend",
     "dev:frontend": "node quick-restart.js frontend",
     "local:production": "node local-production.js",
-    "build:frontend": "cd frontend && npm run build",
-    "build:all": "npm install && cd frontend && npm install && npm run build && cd ../backend && npm install",
-    "railway:build": "npm install && cd frontend && npm install && npm run build && cd ../backend && npm install",
-    "railway:start": "cd backend && npm start",
     "serve:frontend": "cd frontend && npx serve -s build -l 3000",
     "test:production": "npm run build:frontend && npm run local:production",
-    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
     "clean": "cd frontend && rm -rf build && rm -rf node_modules/.cache",
     "reset": "npm run clean && npm run install:all"
   },
