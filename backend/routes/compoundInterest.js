@@ -917,6 +917,12 @@ router.get('/portfolio-state', authenticateToken, async (req, res) => {
     
     const basePortfolioValue = totalDeposited + compoundInterestEarned;
     
+    console.log(`📊 Portfolio calculation for ${user.email}:`, {
+      totalDeposited,
+      compoundInterestEarned,
+      basePortfolioValue
+    });
+    
     // Get position data (open/closed trading positions)
     let positionData = null;
     let positionsPL = 0;
@@ -924,13 +930,28 @@ router.get('/portfolio-state', authenticateToken, async (req, res) => {
     try {
       positionData = await positionBalanceManager.getPortfolioSummary(userId);
       positionsPL = positionData ? (positionData.totalPortfolioValue - totalDeposited) : 0;
+      
+      console.log(`📊 Position data:`, {
+        positionData: positionData ? {
+          totalPortfolioValue: positionData.totalPortfolioValue,
+          openPositionsCount: positionData.openPositionsCount
+        } : null,
+        positionsPL
+      });
     } catch (positionError) {
       // Position manager error - continue with base portfolio value
+      console.log(`⚠️ Position manager error:`, positionError.message);
       positionsPL = 0;
     }
     
     // Calculate comprehensive portfolio value (base + positions)
     const totalPortfolioValue = basePortfolioValue + positionsPL; // Include compound interest + positions
+    
+    console.log(`📊 Final calculation:`, {
+      basePortfolioValue,
+      positionsPL,
+      totalPortfolioValue
+    });
     // Locked capital is always 80% of total portfolio value (simulation design)
     const lockedCapital = totalPortfolioValue * 0.8;
     const availableBalance = totalPortfolioValue - lockedCapital; // 20% available
