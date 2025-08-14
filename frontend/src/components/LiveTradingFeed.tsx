@@ -874,7 +874,10 @@ const LiveTradingFeed: React.FC = () => {
     );
   }
 
+  console.log('📺 LiveTradingFeed render check:', { liveActivity, hasActivity: liveActivity?.hasActivity, loading });
+
   if (!liveActivity || liveActivity.hasActivity === false) {
+    console.log('❌ LiveTradingFeed: Showing no activity message', { liveActivity });
     return (
       <div style={{
         backgroundColor: 'white',
@@ -892,6 +895,8 @@ const LiveTradingFeed: React.FC = () => {
       </div>
     );
   }
+
+  console.log('✅ LiveTradingFeed: Rendering trading activity', { totalTrades: liveActivity.totalTrades });
 
   return (
     <div style={{
