@@ -740,12 +740,15 @@ router.get('/live-activity', authenticateToken, async (req, res) => {
     const userId = req.user.id;
     const today = new Date().toISOString().split('T')[0];
     
-    console.log(`📺 Getting live trading activity for user ${userId}`);
+    console.log(`📺 Getting live trading activity for user ${userId} on ${today}`);
     
     // Get today's trades
     const todaysTrades = await compoundSim.getDailyTrades(userId, today);
     
+    console.log(`📺 Live activity result:`, todaysTrades ? `Found ${todaysTrades.tradeCount} trades` : 'No trades found');
+    
     if (!todaysTrades) {
+      console.log(`❌ Live activity: Setting hasActivity = false because todaysTrades is null/undefined`);
       return res.json({
         success: true,
         liveActivity: {
