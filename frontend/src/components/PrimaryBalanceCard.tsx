@@ -121,8 +121,28 @@ const PrimaryBalanceCard: React.FC = () => {
   }
 
   if (!portfolioData) {
-    return null;
+    console.log('❌ PrimaryBalanceCard: portfolioData is null/undefined', { portfolioData, loading, error });
+    return (
+      <div style={{
+        background: 'linear-gradient(135deg, #6b7280 0%, #4b5563 100%)',
+        borderRadius: '20px',
+        padding: '2rem',
+        color: 'white',
+        marginBottom: '1.5rem',
+        minHeight: '200px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>⚡</div>
+          <div>No portfolio data available</div>
+        </div>
+      </div>
+    );
   }
+
+  console.log('✅ PrimaryBalanceCard: Rendering with portfolioData:', portfolioData);
 
   return (
     <div style={{
