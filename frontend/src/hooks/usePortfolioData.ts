@@ -199,23 +199,9 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
       setError(null);
 
     } catch (err) {
-      
-      // Only set fallback data if we don't already have data
-      if (!portfolioData) {
-        setPortfolioData({
-          totalPortfolioValue: 10224.30,
-          availableBalance: 10000.00,
-          lockedCapital: 224.30,
-          dailyPL: 56.37,
-          dailyPLPercent: 0.55,
-          compoundInterestEarned: 224.30,
-          totalDeposited: 10000.00,
-          portfolioGrowthPercent: 2.24,
-          utilizationPercent: 2.2,
-          openPositionsCount: 0
-        });
-        setError('Using demo data - connection issues');
-      }
+      console.log('❌ Error in portfolio data fetch:', err);
+      setError('Failed to load portfolio data');
+      // Don't set fake demo data anymore - let component handle empty state
     } finally {
       setLoading(false);
     }
