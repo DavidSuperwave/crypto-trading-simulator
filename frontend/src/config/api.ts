@@ -6,7 +6,11 @@ const getApiUrl = () => {
   }
   
   // Auto-detect production based on hostname
-  if (window.location.hostname.includes('vercel.app') || window.location.hostname.includes('crypto-trading-simulator')) {
+  if (window.location.hostname.includes('railway.app')) {
+    // Railway: same domain, just add /api path
+    return `${window.location.protocol}//${window.location.hostname}/api`;
+  } else if (window.location.hostname.includes('vercel.app') || window.location.hostname.includes('crypto-trading-simulator')) {
+    // Legacy Vercel + DigitalOcean setup
     return 'https://coral-app-bh2u4.ondigitalocean.app/api';
   }
   

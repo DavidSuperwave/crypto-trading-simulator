@@ -23,6 +23,13 @@ const enhancedTradingRoutes = require('./routes/enhanced-trading');
 const app = express();
 const PORT = process.env.PORT || (process.env.NODE_ENV === 'production' ? 8080 : 5001);
 
+// Serve static files from React build (Railway deployment)
+if (process.env.RAILWAY_ENVIRONMENT || process.env.NODE_ENV === 'production') {
+  const frontendBuildPath = path.join(__dirname, '..', 'frontend', 'build');
+  console.log('🌐 Serving static files from:', frontendBuildPath);
+  app.use(express.static(frontendBuildPath));
+}
+
 // Middleware
 const corsOptions = {
   origin: [
@@ -124,6 +131,13 @@ app.use('*', (req, res) => {
 });
 
 // Create HTTP server
+// Catch-all handler: send back React's index.html file for SPA routing
+if (process.env.RAILWAY_ENVIRONMENT || process.env.NODE_ENV === 'production') {
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'frontend', 'build', 'index.html'));
+  });
+}
+
 const server = http.createServer(app);
 
 // Initialize WebSocket service

@@ -12,6 +12,7 @@
     "dev:frontend": "node quick-restart.js frontend",
     "local:production": "node local-production.js",
     "build:frontend": "cd frontend && npm run build",
+    "build:all": "cd frontend && npm install && npm run build && cd ../backend && npm install",
     "serve:frontend": "cd frontend && npx serve -s build -l 3000",
     "test:production": "npm run build:frontend && npm run local:production",
     "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",

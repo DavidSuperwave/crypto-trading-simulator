@@ -22,7 +22,8 @@ const INTEREST_PAYMENTS_FILE = path.join(DATA_DIR, 'interest_payments.json');
 
 class DatabaseManager {
   constructor() {
-    this.usePostgreSQL = process.env.NODE_ENV === 'production' || process.env.DATABASE_URL || process.env.POSTGRES_URL;
+    // FORCE JSON FILES FOR ALL ENVIRONMENTS - simpler and works reliably
+    this.usePostgreSQL = false; // process.env.NODE_ENV === 'production' || process.env.DATABASE_URL || process.env.POSTGRES_URL;
     
     if (this.usePostgreSQL) {
       console.log('🐘 Using PostgreSQL database');
