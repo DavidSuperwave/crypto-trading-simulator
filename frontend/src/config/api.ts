@@ -11,8 +11,8 @@ const getApiUrl = () => {
     return `${window.location.protocol}//${window.location.hostname}/api`;
   } else if (window.location.hostname.includes('vercel.app') || window.location.hostname.includes('crypto-trading-simulator')) {
     // Vercel frontend + Railway backend setup
-    // TODO: Replace with your actual Railway URL
-    return 'https://your-railway-app.railway.app/api';
+    // Vercel frontend + Railway backend
+    return 'https://crypto-trading-simulator-production.up.railway.app/api';
   }
   
   // Default to localhost for development

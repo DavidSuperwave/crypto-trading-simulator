@@ -56,7 +56,7 @@ const WebSocketDebug: React.FC = () => {
     ? 'ws://localhost:5001/ws'
     : hostname.includes('railway.app')
       ? `wss://${hostname}/ws`
-      : 'wss://your-railway-app.railway.app/ws';
+      : 'wss://crypto-trading-simulator-production.up.railway.app/ws';
       addLog(`Auto-detected URL: ${autoWsUrl}?token=${token ? '[TOKEN_PRESENT]' : '[NO_TOKEN]'}`);
     }
   }, []);
