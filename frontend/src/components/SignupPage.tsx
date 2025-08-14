@@ -60,7 +60,9 @@ const SignupPage: React.FC = () => {
         return '';
       case 'confirmPassword':
         if (!value) return 'Please confirm your password';
-        if (value !== formData.password) return 'Passwords do not match';
+        // Access current password from formData to avoid stale closure
+        const currentPassword = formData.password;
+        if (value !== currentPassword) return 'Passwords do not match';
         return '';
       default:
         return '';
