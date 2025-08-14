@@ -960,14 +960,28 @@ router.get('/portfolio-state', authenticateToken, async (req, res) => {
     try {
       positionData = await positionBalanceManager.getPortfolioSummary(userId);
       
-      // TEMPORARY FIX: Skip position calculations if they seem wrong
-      if (positionData && positionData.totalPortfolioValue < totalDeposited * 0.5) {
-        console.log(`⚠️ Position data seems invalid (${positionData.totalPortfolioValue} < ${totalDeposited * 0.5}), using base portfolio only`);
-        positionsPL = 0;
-        // Also reset position data to prevent negative dailyPL
-        positionData = null;
+      // FIXED: Prevent position manager from overwriting portfolio value
+      if (positionData) {
+        // Check if position manager has correct base portfolio value
+        const expectedBaseValue = Number(basePortfolioValue);
+        const positionManagerValue = Number(positionData.totalPortfolioValue);
+        
+        console.log(`📊 Portfolio value comparison:`, {
+          expectedBaseValue: expectedBaseValue,
+          positionManagerValue: positionManagerValue,
+          difference: positionManagerValue - expectedBaseValue
+        });
+        
+        // If position manager's value is significantly different from our base calculation,
+        // only use the trading P&L component (dailyPL) instead of totalPortfolioValue
+        if (Math.abs(positionManagerValue - expectedBaseValue) > expectedBaseValue * 0.1) {
+          console.log(`⚠️ Position manager portfolio value mismatch, using dailyPL only`);
+          positionsPL = Number(positionData.dailyPL || 0); // Use only the trading P&L, not total value
+        } else {
+          positionsPL = positionManagerValue - expectedBaseValue; // Normal calculation
+        }
       } else {
-        positionsPL = positionData ? (Number(positionData.totalPortfolioValue) - Number(totalDeposited)) : 0;
+        positionsPL = 0;
       }
       
       console.log(`📊 Position data:`, {
