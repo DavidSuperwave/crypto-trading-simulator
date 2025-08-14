@@ -44,27 +44,28 @@ const PrimaryBalanceCard: React.FC = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
   
-  // Calculate live portfolio value including trading P&L (memoized to prevent loops)
+  // FIXED: Use backend's totalPortfolioValue as authoritative source (already includes trading P&L)
   // ALL HOOKS MUST BE CALLED BEFORE ANY EARLY RETURNS
   const livePnL = useMemo(() => {
-    const totalPL = Number(liveTradingData?.liveTotalPL) || 0;
+    // Only use live P&L for real-time fluctuations display, not for total calculation
     const unrealizedPL = Number(liveTradingData?.unrealizedPL) || 0;
-    return totalPL + unrealizedPL;
-  }, [liveTradingData?.liveTotalPL, liveTradingData?.unrealizedPL]);
+    return unrealizedPL;
+  }, [liveTradingData?.unrealizedPL]);
   
   const livePortfolioValue = useMemo(() => {
     if (!portfolioData) return 0;
+    // Backend's totalPortfolioValue already includes all trading P&L
+    // Don't add live P&L on top to prevent double counting
     const baseValue = Number(portfolioData.totalPortfolioValue) || 0;
-    const pnl = Number(livePnL) || 0;
-    return baseValue + pnl;
-  }, [portfolioData, livePnL]);
+    return baseValue;
+  }, [portfolioData]);
   
   const liveDailyPL = useMemo(() => {
     if (!portfolioData) return 0;
+    // Backend's dailyPL already includes trading P&L
     const basePL = Number(portfolioData.dailyPL) || 0;
-    const pnl = Number(livePnL) || 0;
-    return basePL + pnl;
-  }, [portfolioData, livePnL]);
+    return basePL;
+  }, [portfolioData]);
   
 
 
