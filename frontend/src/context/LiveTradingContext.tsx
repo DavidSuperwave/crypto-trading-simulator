@@ -13,6 +13,9 @@ interface LiveTradingContextType {
 
 const LiveTradingContext = createContext<LiveTradingContextType | undefined>(undefined);
 
+// Export the context for direct use
+export { LiveTradingContext };
+
 export const useLiveTradingData = () => {
   const context = useContext(LiveTradingContext);
   if (context === undefined) {
