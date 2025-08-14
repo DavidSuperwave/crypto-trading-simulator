@@ -521,9 +521,16 @@ class CompoundInterestSimulation {
         return { success: false, message: 'No active month found for date' };
       }
 
-      // Find the specific day in the volatility pattern
-      const dayOfMonth = tradeDate.getDate();
-      const dailyVolatilityData = currentMonth.dailyVolatility?.dailyPattern?.find(d => d.day === dayOfMonth);
+      // 🎯 CALCULATE SIMULATION DAY (not calendar day)
+      // Find how many days since simulation started
+      const simulationStartDate = new Date(currentMonth.startDate || '2025-08-13'); // Default to Aug 13 if not set
+      const daysSinceStart = Math.floor((tradeDate - simulationStartDate) / (24 * 60 * 60 * 1000));
+      const simulationDay = daysSinceStart + 1; // Day 1, 2, 3, etc.
+      
+      console.log(`📅 Date mapping: ${tradeDate.toISOString().split('T')[0]} = Simulation Day ${simulationDay}`);
+      
+      // Find the specific day in the volatility pattern by simulation day (not calendar day)
+      const dailyVolatilityData = currentMonth.dailyVolatility?.dailyPattern?.[simulationDay - 1]; // Array is 0-indexed
       
       if (!dailyVolatilityData) {
         return { success: false, message: 'No volatility data found for this day' };

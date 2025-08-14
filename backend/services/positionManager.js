@@ -155,9 +155,9 @@ class PositionManager {
         // Update status to reflect locking
         status: 'locked',
         
-        // Keep original amount as profit/loss, positionSize is the locked capital
-        profitLoss: trade.amount,
-        amount: trade.amount // P&L amount
+        // Keep original profit/loss, positionSize is the locked capital
+        profitLoss: trade.profitLoss, // Preserve the original P&L (can be negative)
+        amount: Math.abs(trade.profitLoss) // Absolute value for position sizing
       };
     });
   }

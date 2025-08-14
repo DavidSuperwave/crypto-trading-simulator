@@ -175,21 +175,37 @@ const LiveTradingFeed: React.FC = () => {
     }
 
     const now = new Date();
-    // First filter trades that should have appeared by now
-    const availableTrades = todaysTrades.filter(trade => {
+    
+    // 🎯 TIME-BASED FILTERING: Show only 5 most relevant trades for current time
+    const currentTrades = todaysTrades.filter(trade => {
       const tradeTime = new Date(trade.timestamp);
-      return tradeTime <= now;
+      const timeDiff = now.getTime() - tradeTime.getTime();
+      
+      // Show trades that:
+      // 1. Have started (trade time <= now)
+      // 2. Are still within their active duration OR just started in last 30 minutes
+      const durationMs = trade.duration * 1000; // Convert minutes to milliseconds
+      const recentWindow = 30 * 60 * 1000; // 30 minutes
+      
+      return tradeTime <= now && (timeDiff <= durationMs || timeDiff <= recentWindow);
     });
 
-    // Then filter to those not already visible
-    const newTrades = availableTrades.filter(trade => 
+    // Sort by most recent and take only top 5
+    const topActiveTrades = currentTrades
+      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+      .slice(0, 5);
+
+    // Find new trades to add (not already visible)
+    const newTrades = topActiveTrades.filter(trade => 
       !visibleTrades.some(vt => vt.id === trade.id)
     );
 
-    if (newTrades.length > 0 && visibleTrades.length < 8) {
+    console.log(`⏰ Time filter: ${currentTrades.length} active trades, showing top 5, ${newTrades.length} new`);
+
+    if (newTrades.length > 0 && visibleTrades.length < 5) {
       // Add one new trade at a time for smooth animation
       const nextTrade = newTrades[0];
-      console.log('🆕 Adding new trade:', nextTrade.cryptoSymbol, nextTrade.profitLoss);
+      console.log('🆕 Adding new trade:', nextTrade.cryptoSymbol, nextTrade.profitLoss, 'at', nextTrade.displayTime);
       
       setVisibleTrades(prev => [...prev, nextTrade]);
       setPositionOpenTimes(prev => new Map(prev).set(nextTrade.id, new Date()));
@@ -204,6 +220,32 @@ const LiveTradingFeed: React.FC = () => {
         });
       }, 2000);
     }
+
+    // Remove trades that are no longer in the top 5 active trades
+    setVisibleTrades(prev => {
+      return prev.filter(trade => {
+        const stillActive = topActiveTrades.some(activeTrade => activeTrade.id === trade.id);
+        
+        if (!stillActive) {
+          console.log('⏰ Removing trade outside time window:', trade.cryptoSymbol, trade.displayTime);
+          // Clean up related state
+          setTimeout(() => {
+            setPositionOpenTimes(prevTimes => {
+              const newMap = new Map(prevTimes);
+              newMap.delete(trade.id);
+              return newMap;
+            });
+            setPositionPLs(prevPLs => {
+              const newMap = new Map(prevPLs);
+              newMap.delete(trade.id);
+              return newMap;
+            });
+          }, 100);
+        }
+        
+        return stillActive;
+      });
+    });
 
     // Remove trades that have been visible for their full duration
     setVisibleTrades(prev => {
@@ -285,7 +327,7 @@ const LiveTradingFeed: React.FC = () => {
     });
     setPositionPLs(updatedPLs);
     setTradeProgresses(updatedProgresses);
-    if (visibleTrades.length < 8 && availableTrades.length > 0 && Math.random() > 0.7) {
+    if (visibleTrades.length < 5 && availableTrades.length > 0 && Math.random() > 0.7) {
       const unopenedTrades = availableTrades.filter(trade => !visibleTrades.some(vt => vt.id === trade.id));
       if (unopenedTrades.length > 0) {
         const newTrade = unopenedTrades[Math.floor(Math.random() * unopenedTrades.length)];

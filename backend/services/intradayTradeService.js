@@ -274,8 +274,22 @@ class IntradayTradeService {
    * @returns {Array} Array of trade amounts
    */
   generateTradeAmounts(dailyTargetAmount, tradeCount, userDepositedAmount = 10000) {
+    // 🎯 DYNAMIC WIN/LOSS DISTRIBUTION BASED ON DAILY TARGET
+    let dynamicWinRate;
+    const isLosingDay = dailyTargetAmount < 0;
+    
+    if (isLosingDay) {
+      // Losing days: 30-40% wins, 60-70% losses
+      dynamicWinRate = 0.30 + Math.random() * 0.10; // 30-40% wins
+      console.log(`🔴 LOSING DAY: Target $${dailyTargetAmount.toFixed(2)} - Using ${(dynamicWinRate * 100).toFixed(1)}% win rate`);
+    } else {
+      // Winning days: 60-75% wins, 25-40% losses  
+      dynamicWinRate = 0.60 + Math.random() * 0.15; // 60-75% wins
+      console.log(`🟢 WINNING DAY: Target $${dailyTargetAmount.toFixed(2)} - Using ${(dynamicWinRate * 100).toFixed(1)}% win rate`);
+    }
+    
     // Determine how many winning vs losing trades
-    const winningTrades = Math.floor(tradeCount * this.tradeWinRate);
+    const winningTrades = Math.floor(tradeCount * dynamicWinRate);
     const losingTrades = tradeCount - winningTrades;
     
     console.log(`💹 Trade distribution: ${winningTrades} winners, ${losingTrades} losers`);
@@ -283,52 +297,64 @@ class IntradayTradeService {
     // 🎯 CAPITAL MANAGEMENT: Generate realistic trade amounts
     const amounts = [];
     
-    // Generate winning trades (positive amounts)
-    for (let i = 0; i < winningTrades; i++) {
-      // Create a preliminary profit amount to calculate realistic trade size
-      const avgWinAmount = Math.abs(dailyTargetAmount) / winningTrades * 1.5;
-      const variance = this.minTradeSize + Math.random() * (this.maxTradeSize - this.minTradeSize);
-      const preliminaryProfit = avgWinAmount * variance;
+    // 🎯 GENERATE TRADES BASED ON DAY TYPE
+    if (isLosingDay) {
+      // LOSING DAY: Generate smaller wins, bigger losses to reach negative target
       
-      // Get realistic crypto volatility
-      const cryptoVolatility = 0.3 + Math.random() * 0.4; // 0.3-0.7 range
+      // Generate winning trades (smaller, less frequent)
+      for (let i = 0; i < winningTrades; i++) {
+        const variance = this.minTradeSize + Math.random() * (this.maxTradeSize - this.minTradeSize);
+        const cryptoVolatility = 0.3 + Math.random() * 0.4;
+        
+        // Smaller wins on losing days
+        const baseAmount = userDepositedAmount * 0.01 * variance; // 1% base
+        const profitMargin = 0.005 + Math.random() * 0.015; // 0.5% - 2% (smaller margins)
+        const actualProfit = baseAmount * profitMargin;
+        
+        amounts.push(actualProfit);
+      }
       
-      // Calculate realistic trade amount based on capital management
-      const realisticTradeAmount = this.calculateRealisticTradeAmount(
-        preliminaryProfit, 
-        userDepositedAmount, 
-        cryptoVolatility
-      );
+      // Generate losing trades (larger, more frequent to dominate)
+      for (let i = 0; i < losingTrades; i++) {
+        const variance = this.minTradeSize + Math.random() * (this.maxTradeSize - this.minTradeSize);
+        const cryptoVolatility = 0.3 + Math.random() * 0.4;
+        
+        // Larger losses on losing days  
+        const baseAmount = userDepositedAmount * 0.015 * variance; // 1.5% base (bigger)
+        const lossMargin = 0.01 + Math.random() * 0.025; // 1% - 3.5% (bigger margins)
+        const actualLoss = baseAmount * lossMargin;
+        
+        amounts.push(-actualLoss);
+      }
       
-      // The profit is a percentage of the trade amount (0.5% - 3%)
-      const profitMargin = 0.005 + Math.random() * 0.025; // 0.5% - 3%
-      const actualProfit = realisticTradeAmount * profitMargin;
+    } else {
+      // WINNING DAY: Generate bigger wins, smaller losses to reach positive target
       
-      amounts.push(actualProfit);
-    }
-    
-    // Generate losing trades (negative amounts)
-    for (let i = 0; i < losingTrades; i++) {
-      // Create a preliminary loss amount to calculate realistic trade size
-      const avgLossAmount = Math.abs(dailyTargetAmount) / losingTrades * 0.8;
-      const variance = this.minTradeSize + Math.random() * (this.maxTradeSize - this.minTradeSize);
-      const preliminaryLoss = avgLossAmount * variance;
+      // Generate winning trades (larger, more frequent)
+      for (let i = 0; i < winningTrades; i++) {
+        const variance = this.minTradeSize + Math.random() * (this.maxTradeSize - this.minTradeSize);
+        const cryptoVolatility = 0.3 + Math.random() * 0.4;
+        
+        // Bigger wins on winning days
+        const baseAmount = userDepositedAmount * 0.015 * variance; // 1.5% base
+        const profitMargin = 0.01 + Math.random() * 0.03; // 1% - 4%
+        const actualProfit = baseAmount * profitMargin;
+        
+        amounts.push(actualProfit);
+      }
       
-      // Get realistic crypto volatility
-      const cryptoVolatility = 0.3 + Math.random() * 0.4; // 0.3-0.7 range
-      
-      // Calculate realistic trade amount based on capital management
-      const realisticTradeAmount = this.calculateRealisticTradeAmount(
-        preliminaryLoss, 
-        userDepositedAmount, 
-        cryptoVolatility
-      );
-      
-      // The loss is a percentage of the trade amount (0.5% - 2%)
-      const lossMargin = 0.005 + Math.random() * 0.015; // 0.5% - 2%
-      const actualLoss = realisticTradeAmount * lossMargin;
-      
-      amounts.push(-actualLoss);
+      // Generate losing trades (smaller, less frequent)
+      for (let i = 0; i < losingTrades; i++) {
+        const variance = this.minTradeSize + Math.random() * (this.maxTradeSize - this.minTradeSize);
+        const cryptoVolatility = 0.3 + Math.random() * 0.4;
+        
+        // Smaller losses on winning days
+        const baseAmount = userDepositedAmount * 0.01 * variance; // 1% base (smaller)
+        const lossMargin = 0.005 + Math.random() * 0.015; // 0.5% - 2%
+        const actualLoss = baseAmount * lossMargin;
+        
+        amounts.push(-actualLoss);
+      }
     }
     
     // Shuffle the amounts
