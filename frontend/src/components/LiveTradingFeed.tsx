@@ -128,19 +128,35 @@ const LiveTradingFeed: React.FC = () => {
       
       if (tradesResponse.ok) {
         const tradesData = await tradesResponse.json();
+        console.log('📊 Trades data:', tradesData);
+        
         if (tradesData.success && tradesData.dailyTrades) {
+          console.log('📊 Setting trades:', tradesData.dailyTrades.trades?.length || 0, 'trades');
           setTodaysTrades(tradesData.dailyTrades.trades || []);
           setDailyTarget(tradesData.dailyTrades.dailyTargetAmount || 0);
+        } else {
+          console.log('❌ Trades API returned no daily trades:', tradesData);
         }
+      } else {
+        console.log('❌ Trades API failed:', tradesResponse.status);
       }
 
       // Fetch live activity
-              const activityResponse = await fetch(buildApiUrl('/compound-interest/live-activity'), { headers });
+      const activityResponse = await fetch(buildApiUrl('/compound-interest/live-activity'), { headers });
+      console.log('📺 Live activity response status:', activityResponse.status, activityResponse.statusText);
+      
       if (activityResponse.ok) {
         const activityData = await activityResponse.json();
+        console.log('📺 Live activity data:', activityData);
+        
         if (activityData.success) {
+          console.log('📺 Setting liveActivity:', activityData.liveActivity);
           setLiveActivity(activityData.liveActivity);
+        } else {
+          console.log('❌ Live activity API returned success=false:', activityData);
         }
+      } else {
+        console.log('❌ Live activity API failed:', activityResponse.status);
       }
       
       setLoading(false);
