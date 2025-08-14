@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Users, DollarSign, Download, BarChart3, Check, X, Eye, Upload, MessageCircle, ChevronDown, Info, Settings, Activity } from 'lucide-react';
+import { Users, DollarSign, Download, BarChart3, Check, X, Eye, Upload, MessageCircle } from 'lucide-react';
 import AdminSidebar from './AdminSidebar';
 import CompoundInterestAdmin from './CompoundInterestAdmin';
 import axios from 'axios';
 import { buildApiUrl, API_CONFIG } from '../config/api';
 import { useAuth } from '../context/AuthContext';
-import { useHybridNotifications } from '../hooks/useHybridNotifications';
+
 import { DepositNotification, WithdrawalNotification, ChatMessage } from '../hooks/useRealTimeNotifications';
-import ConnectionStatus from './ConnectionStatus';
+
 import NotificationBadge from './NotificationBadge';
 import WebSocketDebug from './WebSocketDebug';
 

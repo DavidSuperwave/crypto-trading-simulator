@@ -91,7 +91,7 @@ const LoadingScreen: React.FC = () => {
 };
 
 function AppContent() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isLoading } = useAuth();
 
   // Show loading screen while verifying authentication
   if (isLoading) {

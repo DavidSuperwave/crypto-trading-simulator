@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MessageCircle, X, User, Shield } from 'lucide-react';
+import { MessageCircle, X, Shield } from 'lucide-react';
 import ChatWidget from './ChatWidget';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
