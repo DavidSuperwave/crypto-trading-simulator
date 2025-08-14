@@ -10,8 +10,9 @@ const getApiUrl = () => {
     // Railway: same domain, just add /api path
     return `${window.location.protocol}//${window.location.hostname}/api`;
   } else if (window.location.hostname.includes('vercel.app') || window.location.hostname.includes('crypto-trading-simulator')) {
-    // Legacy Vercel + DigitalOcean setup
-    return 'https://coral-app-bh2u4.ondigitalocean.app/api';
+    // Vercel frontend + Railway backend setup
+    // TODO: Replace with your actual Railway URL
+    return 'https://your-railway-app.railway.app/api';
   }
   
   // Default to localhost for development

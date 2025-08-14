@@ -964,6 +964,8 @@ router.get('/portfolio-state', authenticateToken, async (req, res) => {
       if (positionData && positionData.totalPortfolioValue < totalDeposited * 0.5) {
         console.log(`⚠️ Position data seems invalid (${positionData.totalPortfolioValue} < ${totalDeposited * 0.5}), using base portfolio only`);
         positionsPL = 0;
+        // Also reset position data to prevent negative dailyPL
+        positionData = null;
       } else {
         positionsPL = positionData ? (Number(positionData.totalPortfolioValue) - Number(totalDeposited)) : 0;
       }
@@ -1000,8 +1002,15 @@ router.get('/portfolio-state', authenticateToken, async (req, res) => {
       .filter(t => t.type === 'interest' && t.createdAt.startsWith(todayDate))
       .reduce((sum, t) => sum + t.amount, 0);
     
-    const tradingDailyPL = positionData ? positionData.dailyPL : 0;
-    const dailyPL = tradingDailyPL + todayCompoundInterest; // Include both trading and compound interest
+    const tradingDailyPL = positionData ? Number(positionData.dailyPL || 0) : 0;
+    const dailyPL = Number(tradingDailyPL) + Number(todayCompoundInterest); // Include both trading and compound interest
+    
+    console.log(`📊 Daily P&L breakdown:`, {
+      tradingDailyPL: typeof tradingDailyPL + ' = ' + tradingDailyPL,
+      todayCompoundInterest: typeof todayCompoundInterest + ' = ' + todayCompoundInterest,
+      dailyPL: typeof dailyPL + ' = ' + dailyPL,
+      totalDeposited: typeof totalDeposited + ' = ' + totalDeposited
+    });
     const openPositionsCount = positionData ? positionData.openPositionsCount : 0;
     
     const portfolioState = {

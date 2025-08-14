@@ -58,8 +58,9 @@ export const useWebSocket = (options: UseWebSocketOptions = {}) => {
         // Railway: same domain, use wss for secure connection
         return `wss://${window.location.hostname}/ws?token=${token}`;
       } else if (isProduction) {
-        // Legacy production (DigitalOcean)
-        return `wss://coral-app-bh2u4.ondigitalocean.app/ws?token=${token}`;
+        // Production fallback - Railway backend
+        // TODO: Replace with your actual Railway URL
+        return `wss://your-railway-app.railway.app/ws?token=${token}`;
       } else {
         return `ws://localhost:5001/ws?token=${token}`;
       }
