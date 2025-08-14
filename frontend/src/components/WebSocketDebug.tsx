@@ -52,9 +52,11 @@ const WebSocketDebug: React.FC = () => {
     if (wsUrl) {
       addLog(`Connecting to: ${wsUrl}?token=${token ? '[TOKEN_PRESENT]' : '[NO_TOKEN]'}`);
     } else {
-      const autoWsUrl = hostname === 'localhost' 
-        ? 'ws://localhost:5001/ws' 
-        : 'wss://coral-app-bh2u4.ondigitalocean.app/ws';
+        const autoWsUrl = hostname === 'localhost'
+    ? 'ws://localhost:5001/ws'
+    : hostname.includes('railway.app')
+      ? `wss://${hostname}/ws`
+      : 'wss://coral-app-bh2u4.ondigitalocean.app/ws';
       addLog(`Auto-detected URL: ${autoWsUrl}?token=${token ? '[TOKEN_PRESENT]' : '[NO_TOKEN]'}`);
     }
   }, []);
