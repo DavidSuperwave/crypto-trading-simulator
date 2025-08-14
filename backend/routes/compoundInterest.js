@@ -933,9 +933,12 @@ router.get('/portfolio-state', authenticateToken, async (req, res) => {
     // Use actual accumulated interest from transactions (most accurate)
     const compoundInterestEarned = Number(user.simulatedInterest || 0);
     
-    const basePortfolioValue = Number(totalDeposited) + Number(compoundInterestEarned);
+    const basePortfolioValue = totalDeposited + compoundInterestEarned;
     
     console.log(`📊 Portfolio calculation for ${user.email}:`, {
+      'user.depositedAmount': user.depositedAmount,
+      'user.balance': user.balance,
+      'user.simulatedInterest': user.simulatedInterest,
       totalDeposited: typeof totalDeposited + ' = ' + totalDeposited,
       compoundInterestEarned: typeof compoundInterestEarned + ' = ' + compoundInterestEarned,
       basePortfolioValue: typeof basePortfolioValue + ' = ' + basePortfolioValue
