@@ -34,16 +34,28 @@ if (process.env.RAILWAY_ENVIRONMENT || process.env.NODE_ENV === 'production') {
 const corsOptions = {
   origin: [
     'http://localhost:3000', // Development
-    'https://crypto-trading-simulator-five.vercel.app', // Production
-    'https://crypto-trading-simulator-duk9upmqa.vercel.app', // Backup URL
+    'https://crypto-trading-simulator-five.vercel.app', // Production Vercel
+    'https://crypto-trading-simulator-duk9upmqa.vercel.app', // Backup Vercel
     'https://crypto-trading-simul-git-426edf-kevin-durants-projects-0597f3a2.vercel.app', // Current deployment
-    process.env.FRONTEND_URL // Environment variable
+    process.env.FRONTEND_URL, // Environment variable
+    // Railway domains (auto-detect)
+    ...(process.env.RAILWAY_ENVIRONMENT ? [
+      `https://${process.env.RAILWAY_STATIC_URL}`,
+      `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`,
+      // Add common Railway domain patterns
+      'https://*.railway.app',
+      'https://*.up.railway.app'
+    ].filter(Boolean) : [])
   ].filter(Boolean), // Remove undefined values
   credentials: true,
   // WebSocket specific headers
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH']
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  // Add more permissive CORS for Railway
+  optionsSuccessStatus: 200
 };
+// Debug CORS
+console.log('🌐 Allowed CORS origins:', corsOptions.origin);
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
