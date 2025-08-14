@@ -874,7 +874,7 @@ const LiveTradingFeed: React.FC = () => {
     );
   }
 
-  if (!liveActivity?.hasActivity) {
+  if (!liveActivity || liveActivity.hasActivity === false) {
     return (
       <div style={{
         backgroundColor: 'white',

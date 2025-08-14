@@ -107,6 +107,8 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
           }
         } else {
           console.log('❌ Portfolio API failed:', compoundResponse.status, compoundResponse.statusText);
+          // Force fallback data instead of leaving empty
+          hasValidData = false;
         }
       } catch (compoundError) {
         console.log('❌ Portfolio API error:', compoundError);
@@ -158,17 +160,21 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
         // Error fetching trading data (non-critical) - continue
       }
 
-      // Fallback to realistic data if no valid data found
+      // Force use of API data or reasonable defaults, don't override with fake data
       if (!hasValidData) {
-        totalPortfolioValue = 10224.30;
-        availableBalance = 10000.00;
-        lockedCapital = 224.30;
-        dailyPL = 56.37;
-        dailyPLPercent = 0.55;
-        compoundInterestEarned = 224.30; // ✅ Correct total interest earned
-        totalDeposited = 10000.00;
-        utilizationPercent = 2.2;
-        openPositionsCount = 0;
+        console.log('❌ No valid data from APIs, using fallback');
+        // Use minimal fallback, not fake high values
+        totalPortfolioValue = totalPortfolioValue || 0;
+        availableBalance = availableBalance || 0;
+        lockedCapital = lockedCapital || 0;
+        dailyPL = dailyPL || 0;
+        dailyPLPercent = dailyPLPercent || 0;
+        compoundInterestEarned = compoundInterestEarned || 0;
+        totalDeposited = totalDeposited || 0;
+        utilizationPercent = utilizationPercent || 0;
+        openPositionsCount = openPositionsCount || 0;
+      } else {
+        console.log('✅ Using valid API data');
       }
 
       // Calculate portfolio growth percentage
