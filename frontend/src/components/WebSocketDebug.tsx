@@ -72,8 +72,10 @@ const WebSocketDebug: React.FC = () => {
 
     const wsUrl = process.env.REACT_APP_WS_URL || 
       (window.location.hostname === 'localhost' 
-        ? 'ws://localhost:5001/ws' 
-        : 'wss://coral-app-bh2u4.ondigitalocean.app/ws');
+        ? 'ws://localhost:5001/ws'
+        : window.location.hostname.includes('railway.app')
+          ? `wss://${window.location.hostname}/ws`
+          : 'wss://coral-app-bh2u4.ondigitalocean.app/ws');
     
     const fullUrl = `${wsUrl}?token=${token}`;
     addLog(`Attempting connection to: ${fullUrl.replace(token, '[TOKEN]')}`);

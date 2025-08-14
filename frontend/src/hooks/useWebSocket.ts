@@ -54,8 +54,11 @@ export const useWebSocket = (options: UseWebSocketOptions = {}) => {
       const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
       const isProduction = window.location.hostname !== 'localhost';
       
-      if (isProduction) {
-        // Always use wss:// for production (App Platform runs over HTTPS with SSL)
+      if (window.location.hostname.includes('railway.app')) {
+        // Railway: same domain, use wss for secure connection
+        return `wss://${window.location.hostname}/ws?token=${token}`;
+      } else if (isProduction) {
+        // Legacy production (DigitalOcean)
         return `wss://coral-app-bh2u4.ondigitalocean.app/ws?token=${token}`;
       } else {
         return `ws://localhost:5001/ws?token=${token}`;
