@@ -1,14 +1,16 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface LiveTradingData {
-  liveTotalPL: number;
-  unrealizedPL: number;
-  dailyTarget: number;
+  liveTotalPL?: number;
+  unrealizedPL?: number;
+  dailyTarget?: number;
+  dailyPL?: number;
+  openPositions?: number;
 }
 
 interface LiveTradingContextType {
   liveTradingData: LiveTradingData;
-  updateLiveTradingData: (data: LiveTradingData) => void;
+  updateLiveTradingData: (data: Partial<LiveTradingData>) => void;
 }
 
 const LiveTradingContext = createContext<LiveTradingContextType | undefined>(undefined);
@@ -32,18 +34,23 @@ export const LiveTradingProvider: React.FC<LiveTradingProviderProps> = ({ childr
   const [liveTradingData, setLiveTradingData] = useState<LiveTradingData>({
     liveTotalPL: 0,
     unrealizedPL: 0,
-    dailyTarget: 0
+    dailyTarget: 0,
+    dailyPL: 0,
+    openPositions: 0
   });
 
-  const updateLiveTradingData = (data: LiveTradingData) => {
+  const updateLiveTradingData = (data: Partial<LiveTradingData>) => {
     // Prevent unnecessary updates that could cause loops
     setLiveTradingData(prevData => {
+      const newData = { ...prevData, ...data };
       const hasChanged = 
-        Math.abs(prevData.liveTotalPL - data.liveTotalPL) > 0.01 ||
-        Math.abs(prevData.unrealizedPL - data.unrealizedPL) > 0.01 ||
-        Math.abs(prevData.dailyTarget - data.dailyTarget) > 0.01;
+        Math.abs((prevData.liveTotalPL || 0) - (newData.liveTotalPL || 0)) > 0.01 ||
+        Math.abs((prevData.unrealizedPL || 0) - (newData.unrealizedPL || 0)) > 0.01 ||
+        Math.abs((prevData.dailyTarget || 0) - (newData.dailyTarget || 0)) > 0.01 ||
+        Math.abs((prevData.dailyPL || 0) - (newData.dailyPL || 0)) > 0.01 ||
+        (prevData.openPositions || 0) !== (newData.openPositions || 0);
       
-      return hasChanged ? data : prevData;
+      return hasChanged ? newData : prevData;
     });
   };
 
