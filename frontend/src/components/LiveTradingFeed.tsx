@@ -119,6 +119,7 @@ const LiveTradingFeed: React.FC = () => {
 
       // Debug logging
       console.log('🎯 LiveTradingFeed - fetching from:', buildApiUrl('/compound-interest/daily-trades'));
+      console.log('🔐 Auth token preview:', token ? token.substring(0, 20) + '...' : 'No token');
       console.log('🔐 Auth headers:', headers);
       
       // Fetch today's trades

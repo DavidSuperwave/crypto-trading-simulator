@@ -45,6 +45,7 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
       
       // Debug logging for production
       console.log('🔐 Portfolio data fetch - token exists:', !!token);
+      console.log('🔐 Token preview:', token ? token.substring(0, 20) + '...' : 'No token');
       console.log('🌐 API URL:', buildApiUrl('/compound-interest/portfolio-state'));
       console.log('🌐 Base URL detected:', buildApiUrl('').replace('/api', ''));
 
@@ -61,6 +62,23 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
       let compoundInterestEarned = 0;
       let totalDeposited = 0;
       let hasValidData = false;
+
+      // Test token validity first
+      try {
+        const tokenTestResponse = await fetch(buildApiUrl('/user/profile'), {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        console.log('🧪 Token test response:', tokenTestResponse.status, tokenTestResponse.statusText);
+        
+        if (tokenTestResponse.status === 401) {
+          console.log('❌ Token invalid - logging out user');
+          localStorage.removeItem('token');
+          window.location.href = '/login';
+          return;
+        }
+      } catch (tokenError) {
+        console.log('❌ Token test failed:', tokenError);
+      }
 
       // Try to fetch data from compound interest endpoint first (most reliable)
       try {
