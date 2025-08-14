@@ -123,7 +123,7 @@ const LiveTradingFeed: React.FC = () => {
       
       // Fetch today's trades
       const tradesResponse = await fetch(buildApiUrl('/compound-interest/daily-trades'), { headers });
-      console.log('📊 Trades response status:', tradesResponse.status);
+      console.log('📊 Trades response status:', tradesResponse.status, tradesResponse.statusText);
       
       if (tradesResponse.ok) {
         const tradesData = await tradesResponse.json();

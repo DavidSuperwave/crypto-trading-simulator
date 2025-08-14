@@ -67,6 +67,8 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
           headers: { 'Authorization': `Bearer ${token}` }
         });
 
+        console.log('🌐 Portfolio response status:', compoundResponse.status);
+        
         if (compoundResponse.ok) {
           const compoundData = await compoundResponse.json();
           console.log('✅ Portfolio API success:', compoundData);
@@ -84,8 +86,11 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
             openPositionsCount = Number(state.openPositionsCount) || 0;
             hasValidData = true;
           }
+        } else {
+          console.log('❌ Portfolio API failed:', compoundResponse.status, compoundResponse.statusText);
         }
       } catch (compoundError) {
+        console.log('❌ Portfolio API error:', compoundError);
         // Error fetching compound interest data - continue with fallback
       }
 
