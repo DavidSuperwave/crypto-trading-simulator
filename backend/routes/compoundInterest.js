@@ -911,11 +911,11 @@ router.get('/portfolio-state', authenticateToken, async (req, res) => {
     const simulation = await compoundSim.getUserSimulation(userId);
     
     // Calculate base portfolio from deposits + compound interest
-    const totalDeposited = user.depositedAmount || user.balance || 0;
+    const totalDeposited = Number(user.depositedAmount || user.balance || 0);
     // Use actual accumulated interest from transactions (most accurate)
-    const compoundInterestEarned = user.simulatedInterest || 0;
+    const compoundInterestEarned = Number(user.simulatedInterest || 0);
     
-    const basePortfolioValue = totalDeposited + compoundInterestEarned;
+    const basePortfolioValue = Number(totalDeposited) + Number(compoundInterestEarned);
     
     console.log(`📊 Portfolio calculation for ${user.email}:`, {
       totalDeposited: typeof totalDeposited + ' = ' + totalDeposited,
@@ -935,7 +935,7 @@ router.get('/portfolio-state', authenticateToken, async (req, res) => {
         console.log(`⚠️ Position data seems invalid (${positionData.totalPortfolioValue} < ${totalDeposited * 0.5}), using base portfolio only`);
         positionsPL = 0;
       } else {
-        positionsPL = positionData ? (positionData.totalPortfolioValue - totalDeposited) : 0;
+        positionsPL = positionData ? (Number(positionData.totalPortfolioValue) - Number(totalDeposited)) : 0;
       }
       
       console.log(`📊 Position data:`, {
@@ -952,7 +952,7 @@ router.get('/portfolio-state', authenticateToken, async (req, res) => {
     }
     
     // Calculate comprehensive portfolio value (base + positions)
-    const totalPortfolioValue = basePortfolioValue + positionsPL; // Include compound interest + positions
+    const totalPortfolioValue = Number(basePortfolioValue) + Number(positionsPL); // Include compound interest + positions
     
     console.log(`📊 Final calculation:`, {
       basePortfolioValue: typeof basePortfolioValue + ' = ' + basePortfolioValue,
@@ -960,8 +960,8 @@ router.get('/portfolio-state', authenticateToken, async (req, res) => {
       totalPortfolioValue: typeof totalPortfolioValue + ' = ' + totalPortfolioValue
     });
     // Locked capital is always 80% of total portfolio value (simulation design)
-    const lockedCapital = totalPortfolioValue * 0.8;
-    const availableBalance = totalPortfolioValue - lockedCapital; // 20% available
+    const lockedCapital = Number(totalPortfolioValue) * 0.8;
+    const availableBalance = Number(totalPortfolioValue) - Number(lockedCapital); // 20% available
     
     // Calculate today's compound interest earnings for daily P&L
     const todayDate = new Date().toISOString().split('T')[0];
