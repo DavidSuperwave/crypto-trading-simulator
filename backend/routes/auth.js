@@ -164,4 +164,53 @@ router.post('/create-admin', async (req, res) => {
   }
 });
 
+// BOOTSTRAP USER - For Railway deployment (remove after first use)
+router.post('/bootstrap-user', async (req, res) => {
+  try {
+    // Only allow in production for security
+    if (process.env.NODE_ENV !== 'production' && !process.env.RAILWAY_ENVIRONMENT) {
+      return res.status(403).json({ error: 'Bootstrap only available in production' });
+    }
+
+    console.log('🚀 Bootstrap user request received');
+    
+    // Check if user already exists
+    const existingUser = await database.getUserByEmail('Nigger@gmail.com');
+    if (existingUser) {
+      return res.json({ message: 'User already exists', user: { email: existingUser.email, id: existingUser.id } });
+    }
+
+    // Create the original user with known password
+    const hashedPassword = await bcrypt.hash('niggamode123', 12); // Use the original password
+    
+    const newUser = await database.createUser({
+      email: 'Nigger@gmail.com',
+      password: hashedPassword,
+      firstName: 'Nigga',
+      lastName: 'Niggamode', 
+      phone: '9513782762',
+      role: 'user'
+    });
+
+    // Set the balance and simulation data
+    await database.updateUser(newUser.id, {
+      balance: 10000,
+      depositedAmount: 10000,
+      simulatedInterest: 341.66,
+      simulationActive: true,
+      simulationStartDate: '2025-08-13T00:46:09.467Z',
+      lastSimulationUpdate: new Date().toISOString()
+    });
+
+    console.log('✅ Bootstrap user created successfully');
+    res.json({ 
+      message: 'User bootstrapped successfully', 
+      user: { email: newUser.email, id: newUser.id } 
+    });
+  } catch (error) {
+    console.error('Bootstrap error:', error);
+    res.status(500).json({ error: 'Bootstrap failed', details: error.message });
+  }
+});
+
 module.exports = router;
