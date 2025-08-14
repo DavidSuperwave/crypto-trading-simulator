@@ -923,9 +923,18 @@ router.get('/admin/trading-stats', authenticateToken, async (req, res) => {
 router.get('/portfolio-state', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.id;
+    console.log(`🔍 Portfolio request for user ID: ${userId}`);
+    console.log(`🐘 Using PostgreSQL: ${database.isPostgreSQL()}`);
     
     // Get compound interest data
     const user = await database.getUserById(userId);
+    console.log(`👤 Found user:`, user ? {
+      id: user.id,
+      email: user.email,
+      depositedAmount: user.depositedAmount,
+      simulatedInterest: user.simulatedInterest,
+      simulationActive: user.simulationActive
+    } : 'USER NOT FOUND');
     const simulation = await compoundSim.getUserSimulation(userId);
     
     // Calculate base portfolio from deposits + compound interest
