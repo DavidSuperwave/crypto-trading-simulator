@@ -29,7 +29,7 @@ const PendingRequestsWidget: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   // Real-time notifications for status updates
-  const { isConnected } = useRealTimeNotifications({
+  useRealTimeNotifications({
     onDepositStatusUpdate: (deposit) => {
 
       

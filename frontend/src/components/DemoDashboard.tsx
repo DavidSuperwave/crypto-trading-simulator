@@ -820,7 +820,7 @@ const DemoDashboard: React.FC = () => {
   const [demoState, setDemoState] = useState<'fresh' | 'depositing' | 'active' | 'completed'>('fresh');
   const [demoBalance, setDemoBalance] = useState(0);
   const [demoStartAmount, setDemoStartAmount] = useState(0);
-  const [demoTargetAmount, setDemoTargetAmount] = useState(0);
+  const [, setDemoTargetAmount] = useState(0); // demoTargetAmount not used currently
   const [demoProgress, setDemoProgress] = useState(0);
   const [demoTrades, setDemoTrades] = useState<any[]>([]);
   const [showDemoDeposit, setShowDemoDeposit] = useState(false);

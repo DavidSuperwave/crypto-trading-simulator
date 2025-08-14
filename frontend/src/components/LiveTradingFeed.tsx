@@ -70,12 +70,12 @@ const LiveTradingFeed: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [newTradeAnimation, setNewTradeAnimation] = useState<string[]>([]);
   const [dailyTarget, setDailyTarget] = useState<number>(0);
-  const [currentProgress, setCurrentProgress] = useState<number>(0);
+  const [, setCurrentProgress] = useState<number>(0); // currentProgress not used
   
   // Real-time animation states
   const [animatedProgress, setAnimatedProgress] = useState<number>(0);
-  const [animatedTarget, setAnimatedTarget] = useState<number>(0);
-  const [liveBalance, setLiveBalance] = useState<number>(0);
+  useState<number>(0); // animatedTarget not used
+  const [, setLiveBalance] = useState<number>(0); // liveBalance not used
   const [executingTrades, setExecutingTrades] = useState<Set<string>>(new Set());
   const [unrealizedPL, setUnrealizedPL] = useState<number>(0);
   const [pulsingTrades, setPulsingTrades] = useState<Set<string>>(new Set());

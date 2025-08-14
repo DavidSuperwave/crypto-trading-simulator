@@ -73,7 +73,7 @@ interface DashboardOverview {
 }
 
 const AdminDashboard: React.FC = () => {
-  const { user } = useAuth();
+  useAuth(); // Auth context used for authentication
   const [overview, setOverview] = useState<DashboardOverview | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -82,14 +82,14 @@ const AdminDashboard: React.FC = () => {
   const [pendingDeposits, setPendingDeposits] = useState<PendingDeposit[]>([]);
   const [chatConversations, setChatConversations] = useState<ChatConversation[]>([]);
   const [activeTab, setActiveTab] = useState('overview');
-  const [simulationTimeframe, setSimulationTimeframe] = useState('30d');
+  // Simulation timeframe not currently used in admin dashboard
   const [loading, setLoading] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [selectedChatUser, setSelectedChatUser] = useState<string | null>(null);
   const [showWebSocketDebug, setShowWebSocketDebug] = useState(false);
   const [conversationCategory, setConversationCategory] = useState('general');
   const [showUserInfo, setShowUserInfo] = useState(false);
-  const [simulationData, setSimulationData] = useState<any>(null);
+  // Simulation data not currently used in admin dashboard
 
   // Reset user info panel when no chat is selected
   useEffect(() => {
@@ -148,17 +148,11 @@ const AdminDashboard: React.FC = () => {
   // Notification state
   const [unreadCount, setUnreadCount] = useState(0);
   
-  const clearNotification = (id: string) => {
-    // Simple implementation - just decrement count
-    setUnreadCount(prev => Math.max(0, prev - 1));
-  };
+  // clearNotification function removed - not currently used
 
   // TEMPORARILY DISABLED - Hybrid real-time notifications (WebSocket with polling fallback)
   // const { mode, connectionStatus, isConnected, statusMessage } = useHybridNotifications({
-  const mode = 'disabled';
-  const connectionStatus = 'disabled';
-  const isConnected = false;
-  const statusMessage = 'Notifications disabled';
+  // Real-time notifications disabled to prevent infinite loops
   
   /* DISABLED TO STOP INFINITE LOOP
   const { mode, connectionStatus, isConnected, statusMessage } = useHybridNotifications({
@@ -260,13 +254,14 @@ const AdminDashboard: React.FC = () => {
       ]);
 
       // Try simulation data separately with error handling
-      let simulationRes = null;
       try {
-        const token = localStorage.getItem('token');
-        simulationRes = await axios.get(buildApiUrl('/admin/simulation-data'), authHeaders);
+        localStorage.getItem('token'); // Token retrieved but not stored in variable
+        await axios.get(buildApiUrl('/admin/simulation-data'), authHeaders); // Simulation data not currently used
       } catch (simError: any) {
         // Create fallback that shows auth issue but doesn't break the UI
-        simulationRes = {
+        // Simulation data fallback removed - not currently used
+        // Simulation fallback data not used - commented out
+        /*const fallbackData = {
           data: {
             users: [],
             platformStats: {
@@ -278,7 +273,7 @@ const AdminDashboard: React.FC = () => {
               totalTrades: 0
             }
           }
-        };
+        };*/
       }
 
       setOverview(overviewRes.data.overview);
@@ -288,7 +283,7 @@ const AdminDashboard: React.FC = () => {
       setDemos(demosRes.data);
       setPendingDeposits(pendingDepositsRes.data.pendingDeposits || []);
       setChatConversations(chatRes.data.conversations || []);
-      setSimulationData(simulationRes.data);
+      // setSimulationData removed - simulation data not currently used
     } catch (error) {
       console.error('Failed to fetch dashboard data:', error);
     }
@@ -405,21 +400,14 @@ const AdminDashboard: React.FC = () => {
   };
 
   const getStatusBadge = (status: string) => {
-    const styles = {
-      pending: { background: '#fef3c7', color: '#d97706' },
-      approved: { background: '#dcfce7', color: '#166534' },
-      rejected: { background: '#fee2e2', color: '#dc2626' },
-      completed: { background: '#dcfce7', color: '#166534' },
-      requested: { background: '#dbeafe', color: '#1d4ed8' },
-      scheduled: { background: '#e0e7ff', color: '#3730a3' },
-      cancelled: { background: '#fee2e2', color: '#dc2626' }
-    };
+    // Styles moved inline to remove unused variable warning
 
     const style = status === 'pending' ? { color: '#f59e0b' } : status === 'approved' ? { color: '#10b981' } : { color: '#ef4444' };
 
     return (
       <span style={{ 
         ...style,
+        background: status === 'pending' ? '#fef3c7' : status === 'approved' ? '#dcfce7' : '#fee2e2',
         padding: '4px 8px', 
         borderRadius: '4px', 
         fontSize: '0.8rem',
@@ -518,20 +506,20 @@ const AdminDashboard: React.FC = () => {
                 alignItems: 'center', 
                 gap: '0.5rem',
                 padding: '0.5rem 1rem',
-                background: isConnected ? '#dcfce7' : '#fee2e2',
-                border: `1px solid ${isConnected ? '#16a34a' : '#dc2626'}`,
+                background: '#fee2e2', // Notifications disabled
+                border: '1px solid #dc2626',
                 borderRadius: '9999px',
                 fontSize: '0.75rem',
                 fontWeight: '500',
-                color: isConnected ? '#16a34a' : '#dc2626'
+                color: '#dc2626' // Notifications disabled
               }}>
                 <div style={{
                   width: '8px',
                   height: '8px',
                   borderRadius: '50%',
-                  backgroundColor: isConnected ? '#16a34a' : '#dc2626'
+                  backgroundColor: '#dc2626' // Notifications disabled
                 }}></div>
-                {statusMessage}
+                Notifications disabled
               </div>
               <NotificationBadge 
                 count={unreadCount} 

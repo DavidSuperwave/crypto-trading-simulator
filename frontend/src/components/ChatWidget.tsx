@@ -29,7 +29,7 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ isInPopup = false }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Hybrid real-time notifications for new chat messages (WebSocket with polling fallback)
-  const { isConnected, mode, statusMessage } = useHybridNotifications({
+  const { isConnected, statusMessage } = useHybridNotifications({
     onNewChatMessage: (message) => {
 
       // Convert timestamp to Date object to match interface
