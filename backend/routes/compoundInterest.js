@@ -641,8 +641,9 @@ router.get('/daily-trades', authenticateToken, async (req, res) => {
     
     const dailyTrades = await compoundSim.getDailyTrades(userId, targetDate);
     
-    if (!dailyTrades) {
+    if (!dailyTrades || !dailyTrades.trades) {
       // Provide fallback demo trades for users without trading data
+      console.log(`❌ No daily trades found for user ${userId} on ${targetDate}`);
       return res.json({
         success: true,
         dailyTrades: {
@@ -657,6 +658,8 @@ router.get('/daily-trades', authenticateToken, async (req, res) => {
         }
       });
     }
+
+    console.log(`✅ Found daily trades for user ${userId}: ${dailyTrades.tradeCount} trades`)
 
     res.json({
       success: true,
@@ -747,12 +750,15 @@ router.get('/live-activity', authenticateToken, async (req, res) => {
     
     console.log(`📺 Live activity result:`, todaysTrades ? `Found ${todaysTrades.tradeCount} trades` : 'No trades found');
     
-    if (!todaysTrades) {
-      console.log(`❌ Live activity: Setting hasActivity = false because todaysTrades is null/undefined`);
+    if (!todaysTrades || !todaysTrades.trades || todaysTrades.trades.length === 0) {
+      console.log(`❌ Live activity: Setting hasActivity = false because no trades found`);
       return res.json({
         success: true,
         liveActivity: {
           hasActivity: false,
+          date: today,
+          totalTrades: 0,
+          marketStatus: 'closed',
           message: 'No trading activity for today'
         }
       });
