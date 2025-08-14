@@ -209,7 +209,7 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
 
   useEffect(() => {
     fetchPortfolioData();
-    const interval = setInterval(fetchPortfolioData, 10000); // Update every 10 seconds (reduced from 3s)
+    const interval = setInterval(fetchPortfolioData, 20000); // Update every 20 seconds (reduced from 10s to help Railway)
     return () => clearInterval(interval);
   }, [fetchPortfolioData]);
 

@@ -483,12 +483,12 @@ const LiveTradingFeed: React.FC = () => {
   }, [visibleTrades, positionPLs, tradeProgresses, todaysTrades, updateVisibleTrades, calculateFluctuatingPL, calculatePositionProgress, unrealizedPL]); // Include all dependencies
 
   const startPolling = useCallback(() => {
-    // Poll every 8 seconds to prevent infinite loops
+    // Poll every 15 seconds to reduce Railway resource usage
     pollIntervalRef.current = setInterval(() => {
       updateVisibleTrades();
       fetchLiveActivity();
       simulateRealtimeUpdates();
-    }, 8000);
+    }, 15000); // Increased from 8s to 15s
   }, [updateVisibleTrades, fetchLiveActivity, simulateRealtimeUpdates]); // Include all dependencies
 
   useEffect(() => {
