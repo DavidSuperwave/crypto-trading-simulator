@@ -72,10 +72,13 @@ const SignupPage: React.FC = () => {
     // Batch state updates to reduce re-renders
     setFormData(prev => ({ ...prev, [field]: value }));
     // Only clear error if it exists to avoid unnecessary state updates
-    if (fieldErrors[field]) {
-      setFieldErrors(prev => ({ ...prev, [field]: '' }));
-    }
-  }, [fieldErrors]);
+    setFieldErrors(prev => {
+      if (prev[field]) {
+        return { ...prev, [field]: '' };
+      }
+      return prev;
+    });
+  }, []); // Remove fieldErrors dependency to prevent stale closures
 
   const handleInputBlur = useCallback((field: string, value: string) => {
     const error = validateField(field, value);
