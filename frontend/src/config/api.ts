@@ -1,6 +1,21 @@
 // API Configuration for development and production
+const getApiUrl = () => {
+  // If environment variable is set, use it
+  if (process.env.REACT_APP_API_URL) {
+    return process.env.REACT_APP_API_URL;
+  }
+  
+  // Auto-detect production based on hostname
+  if (window.location.hostname.includes('vercel.app') || window.location.hostname.includes('crypto-trading-simulator')) {
+    return 'https://coral-app-bh2u4.ondigitalocean.app/api';
+  }
+  
+  // Default to localhost for development
+  return 'http://localhost:5001/api';
+};
+
 export const API_CONFIG = {
-  BASE_URL: process.env.REACT_APP_API_URL || 'http://localhost:5001/api',
+  BASE_URL: getApiUrl(),
   ENDPOINTS: {
     // Auth endpoints
     AUTH: '/auth',
