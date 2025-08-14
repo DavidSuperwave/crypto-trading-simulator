@@ -83,9 +83,27 @@ const SignupPage: React.FC = () => {
   }, []); // Remove fieldErrors dependency to prevent stale closures
 
   const handleInputBlur = useCallback((field: string, value: string) => {
-    const error = validateField(field, value);
-    if (error) {
-      setFieldErrors(prev => ({ ...prev, [field]: error }));
+    // For confirmPassword, we need to validate against the current password value
+    // Use a slight delay to ensure state is updated
+    if (field === 'confirmPassword') {
+      setTimeout(() => {
+        setFormData(currentFormData => {
+          const error = currentFormData.password !== value ? 'Passwords do not match' : '';
+          if (error) {
+            setFieldErrors(prev => ({ ...prev, [field]: error }));
+          } else {
+            setFieldErrors(prev => ({ ...prev, [field]: '' }));
+          }
+          return currentFormData; // Don't change formData, just use it for validation
+        });
+      }, 0);
+    } else {
+      const error = validateField(field, value);
+      if (error) {
+        setFieldErrors(prev => ({ ...prev, [field]: error }));
+      } else {
+        setFieldErrors(prev => ({ ...prev, [field]: '' }));
+      }
     }
   }, []);
 
@@ -127,9 +145,16 @@ const SignupPage: React.FC = () => {
       if (error) newFieldErrors[field] = error;
     });
 
-    // Additional validation for password confirmation
+    // Additional validation for password confirmation with debug logging
+    console.log('🔐 Password validation:', {
+      password: formData.password,
+      confirmPassword: formData.confirmPassword,
+      match: formData.password === formData.confirmPassword
+    });
+    
     if (formData.password !== formData.confirmPassword) {
       newFieldErrors.confirmPassword = 'Passwords do not match';
+      console.log('❌ Passwords do not match during form submit');
     }
 
     if (Object.keys(newFieldErrors).length > 0) {
