@@ -3,12 +3,10 @@ import {
   TrendingUp, 
   TrendingDown, 
   Clock, 
-  DollarSign, 
-  Target,
   Activity,
   Zap
 } from 'lucide-react';
-import { buildApiUrl, API_CONFIG } from '../config/api';
+import { buildApiUrl } from '../config/api';
 import { usePortfolioData } from '../hooks/usePortfolioData';
 import { useLiveTradingData } from '../context/LiveTradingContext';
 

@@ -2,17 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { buildApiUrl } from '../config/api';
 import { 
   DollarSign, 
-  Users, 
   TrendingUp, 
-  Calendar,
   Search,
   Edit,
   Download,
-  AlertCircle,
   CheckCircle,
   Clock,
-  Pause,
-  Play
+  Pause
 } from 'lucide-react';
 
 interface UserBreakdown {
