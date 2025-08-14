@@ -42,7 +42,7 @@ interface CryptoPrice {
 }
 
 const MAX_SIMULATIONS = 50;
-const ENABLE_TRADING_SIMULATOR = false; // Set to true to re-enable
+const ENABLE_TRADING_SIMULATOR = true; // Enable trading simulator
 
 const UserDashboard: React.FC = () => {
   const { user, updateUser } = useAuth();
