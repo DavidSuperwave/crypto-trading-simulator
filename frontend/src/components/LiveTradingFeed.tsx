@@ -4,10 +4,9 @@ import { buildApiUrl, API_CONFIG } from '../config/api';
 import { useAuth } from '../context/AuthContext';
 import { LiveTradingContext } from '../context/LiveTradingContext';
 
-// Global request deduplication system to prevent Railway flooding
-const activeRequests = new Map<string, Promise<any>>();
+// Simplified request throttling for better performance
 const lastRequestTime = new Map<string, number>();
-const MIN_REQUEST_INTERVAL = 10000; // Minimum 10 seconds between identical requests
+const MIN_REQUEST_INTERVAL = 15000; // Minimum 15 seconds between identical requests
 
 // Interfaces
 interface Trade {
@@ -79,52 +78,35 @@ const LiveTradingFeed: React.FC = () => {
   const priceMovementRef = useRef<NodeJS.Timeout | null>(null);
   const initializedRef = useRef<boolean>(false);
 
-  // DEDUPLICATION: Wrapper for all API requests
+  // Simplified throttled request function
   const makeRequest = async (url: string, requestKey: string): Promise<any> => {
     const now = Date.now();
     const lastRequest = lastRequestTime.get(requestKey) || 0;
     
     // Throttle: Don't make request if one was made recently
     if (now - lastRequest < MIN_REQUEST_INTERVAL) {
-      console.log(`🚫 Throttling ${requestKey} request (${Math.round((MIN_REQUEST_INTERVAL - (now - lastRequest)) / 1000)}s remaining)`);
       return null;
     }
     
-    // Deduplicate: If request is already in progress, wait for it
-    if (activeRequests.has(requestKey)) {
-      console.log(`🔄 ${requestKey} request already in progress, waiting...`);
-      return await activeRequests.get(requestKey);
-    }
-    
-    // Make the request
-    console.log(`🌐 Making ${requestKey} request to ${url}`);
     lastRequestTime.set(requestKey, now);
     
     const token = localStorage.getItem('token');
     if (!token) return null;
     
-    const requestPromise = fetch(url, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
-    });
-    
-    activeRequests.set(requestKey, requestPromise);
-    
     try {
-      const response = await requestPromise;
-      activeRequests.delete(requestKey);
+      const response = await fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
       
       if (response.ok) {
         return await response.json();
       } else {
-        console.error(`❌ ${requestKey} request failed:`, response.status);
         return null;
       }
     } catch (error) {
-      activeRequests.delete(requestKey);
-      console.error(`❌ ${requestKey} request error:`, error);
       return null;
     }
   };
@@ -140,14 +122,12 @@ const LiveTradingFeed: React.FC = () => {
       );
       
       if (tradesData?.success && tradesData.dailyTrades) {
-        console.log('📊 Setting trades:', tradesData.dailyTrades.trades?.length || 0, 'trades');
         setTodaysTrades(tradesData.dailyTrades.trades || []);
         setDailyTarget(tradesData.dailyTrades.dailyTargetAmount || 0);
       }
       
       setLoading(false);
     } catch (error) {
-      console.error('Error fetching trading data:', error);
       setLoading(false);
     }
   };
@@ -161,11 +141,11 @@ const LiveTradingFeed: React.FC = () => {
       );
       
       if (activityData?.success) {
-        console.log('📺 Setting liveActivity:', activityData.liveActivity);
+
         setLiveActivity(activityData.liveActivity);
       }
     } catch (error) {
-      console.error('Error fetching live activity:', error);
+      // Error fetching live activity
     }
   }, []);
 
@@ -180,7 +160,7 @@ const LiveTradingFeed: React.FC = () => {
       const shuffledTrades = [...todaysTrades].sort(() => Math.random() - 0.5);
       const randomTrades = shuffledTrades.slice(0, 5);
       
-      console.log(`🎲 Randomly selected ${randomTrades.length} trades from ${todaysTrades.length} available`);
+      
       
       setVisibleTrades(randomTrades);
       
@@ -261,12 +241,12 @@ const LiveTradingFeed: React.FC = () => {
   }, [visibleTrades, positionPLs, tradeProgresses, todaysTrades, updateVisibleTrades, calculateFluctuatingPL, calculatePositionProgress, unrealizedPL]);
 
   const startPolling = useCallback(() => {
-    // Poll every 20 seconds to reduce Railway load (increased from 15s)
+    // Poll every 30 seconds for optimal performance
     pollIntervalRef.current = setInterval(() => {
       updateVisibleTrades();
       fetchLiveActivity(); // Only fetch live activity, not both
       simulateRealtimeUpdates();
-    }, 20000); // Reduced frequency
+    }, 30000); // Optimized frequency
   }, [updateVisibleTrades, fetchLiveActivity, simulateRealtimeUpdates]);
 
   // useEffects

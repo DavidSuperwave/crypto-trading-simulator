@@ -43,11 +43,7 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
         return;
       }
       
-      // Debug logging for production
-      console.log('🔐 Portfolio data fetch - token exists:', !!token);
-      console.log('🔐 Token preview:', token ? token.substring(0, 20) + '...' : 'No token');
-      console.log('🌐 API URL:', buildApiUrl('/compound-interest/portfolio-state'));
-      console.log('🌐 Base URL detected:', buildApiUrl('').replace('/api', ''));
+      // Production: minimal logging only for critical errors
 
 
 
@@ -68,16 +64,13 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
         const tokenTestResponse = await fetch(buildApiUrl('/user/profile'), {
           headers: { 'Authorization': `Bearer ${token}` }
         });
-        console.log('🧪 Token test response:', tokenTestResponse.status, tokenTestResponse.statusText);
-        
         if (tokenTestResponse.status === 401) {
-          console.log('❌ Token invalid - logging out user');
           localStorage.removeItem('token');
           window.location.href = '/login';
           return;
         }
       } catch (tokenError) {
-        console.log('❌ Token test failed:', tokenError);
+        // Token test failed, continue with main request
       }
 
       // Try to fetch data from compound interest endpoint first (most reliable)
@@ -86,11 +79,8 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
           headers: { 'Authorization': `Bearer ${token}` }
         });
 
-        console.log('🌐 Portfolio response status:', compoundResponse.status);
-        
         if (compoundResponse.ok) {
           const compoundData = await compoundResponse.json();
-          console.log('✅ Portfolio API success:', compoundData);
           
           if (compoundData.success && compoundData.portfolioState) {
             const state = compoundData.portfolioState;
@@ -106,12 +96,10 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
             hasValidData = true;
           }
         } else {
-          console.log('❌ Portfolio API failed:', compoundResponse.status, compoundResponse.statusText);
-          // Force fallback data instead of leaving empty
+          // Portfolio API failed, continue with fallback
           hasValidData = false;
         }
       } catch (compoundError) {
-        console.log('❌ Portfolio API error:', compoundError);
         // Error fetching compound interest data - continue with fallback
       }
 
@@ -160,9 +148,8 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
         // Error fetching trading data (non-critical) - continue
       }
 
-      // Force use of API data or reasonable defaults, don't override with fake data
+      // Use API data or reasonable defaults
       if (!hasValidData) {
-        console.log('❌ No valid data from APIs, using fallback');
         // Use minimal fallback, not fake high values
         totalPortfolioValue = totalPortfolioValue || 0;
         availableBalance = availableBalance || 0;
@@ -173,8 +160,6 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
         totalDeposited = totalDeposited || 0;
         utilizationPercent = utilizationPercent || 0;
         openPositionsCount = openPositionsCount || 0;
-      } else {
-        console.log('✅ Using valid API data');
       }
 
       // Calculate portfolio growth percentage
@@ -199,9 +184,8 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
       setError(null);
 
     } catch (err) {
-      console.log('❌ Error in portfolio data fetch:', err);
       setError('Failed to load portfolio data');
-      // Don't set fake demo data anymore - let component handle empty state
+      // Let component handle empty state
     } finally {
       setLoading(false);
     }
@@ -209,7 +193,7 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
 
   useEffect(() => {
     fetchPortfolioData();
-    const interval = setInterval(fetchPortfolioData, 20000); // Update every 20 seconds (reduced from 10s to help Railway)
+    const interval = setInterval(fetchPortfolioData, 30000); // Update every 30 seconds for better performance
     return () => clearInterval(interval);
   }, [fetchPortfolioData]);
 

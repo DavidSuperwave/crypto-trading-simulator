@@ -122,7 +122,6 @@ const PrimaryBalanceCard: React.FC = () => {
   }
 
   if (!portfolioData) {
-    console.log('❌ PrimaryBalanceCard: portfolioData is null/undefined', { portfolioData, loading, error });
     return (
       <div style={{
         background: 'linear-gradient(135deg, #6b7280 0%, #4b5563 100%)',
@@ -142,8 +141,6 @@ const PrimaryBalanceCard: React.FC = () => {
       </div>
     );
   }
-
-  console.log('✅ PrimaryBalanceCard: Rendering with portfolioData:', portfolioData);
 
   return (
     <div style={{
