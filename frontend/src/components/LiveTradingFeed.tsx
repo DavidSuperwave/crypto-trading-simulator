@@ -301,41 +301,161 @@ const LiveTradingFeed: React.FC = () => {
 
   if (!liveActivity?.hasActivity) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <div className="flex items-center justify-center py-8">
-          <Activity className="h-12 w-12 text-gray-400 mr-4" />
-          <div className="text-center">
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No trading activity today</h3>
-            <p className="text-gray-500">Market: Closed</p>
-          </div>
-        </div>
+      <div style={{
+        background: 'rgba(0, 0, 0, 0.3)',
+        backdropFilter: 'blur(15px)',
+        borderRadius: '20px',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        padding: '40px',
+        boxShadow: '0 12px 40px rgba(0, 0, 0, 0.4)',
+        textAlign: 'center'
+      }}>
+        <Activity style={{ 
+          fontSize: '48px', 
+          color: 'rgba(255, 255, 255, 0.4)', 
+          marginBottom: '16px' 
+        }} />
+        <h3 style={{ 
+          color: '#ffffff', 
+          fontSize: '20px', 
+          fontWeight: '600', 
+          margin: '0 0 8px 0' 
+        }}>
+          No trading activity today
+        </h3>
+        <p style={{ 
+          color: 'rgba(255, 255, 255, 0.6)', 
+          fontSize: '16px', 
+          margin: 0 
+        }}>
+          Market: Closed
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md">
-      <div className="p-6 border-b border-gray-200">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            <Activity className="h-5 w-5 text-green-500 mr-2" />
-            <h3 className="text-lg font-medium text-gray-900">Live Trading Activity</h3>
-          </div>
-          <div className="flex items-center text-sm text-gray-500">
-            <Clock className="h-4 w-4 mr-1" />
-            <span>Real-time updates</span>
+    <>
+      {/* Beautiful Glass Styling */}
+      <style>
+        {`
+          @keyframes slideDown {
+            0% {
+              opacity: 0;
+              transform: translateY(-50px) scale(0.9);
+            }
+            50% {
+              opacity: 0.7;
+              transform: translateY(-10px) scale(0.95);
+            }
+            100% {
+              opacity: 1;
+              transform: translateY(0) scale(1);
+            }
+          }
+
+          @keyframes glowPulse {
+            0%, 100% {
+              box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+            }
+            50% {
+              box-shadow: 0 6px 30px rgba(16, 185, 129, 0.5);
+            }
+          }
+          
+          .trade-card-beautiful {
+            background: rgba(0, 0, 0, 0.3) !important;
+            backdrop-filter: blur(12px) !important;
+            border-radius: 12px !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            padding: 16px !important;
+            margin-bottom: 12px !important;
+            transition: all 0.8s ease !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important;
+            position: relative;
+            overflow: hidden;
+          }
+          
+          .trade-card-beautiful:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3) !important;
+          }
+          
+          .trade-card-beautiful.profit-card {
+            border: 1px solid rgba(16, 185, 129, 0.3) !important;
+            animation: glowPulse 3s ease-in-out infinite;
+          }
+          
+          .trade-card-beautiful.loss-card {
+            border: 1px solid rgba(239, 68, 68, 0.3) !important;
+          }
+
+          .live-trading-header {
+            background: rgba(0, 0, 0, 0.4) !important;
+            backdrop-filter: blur(20px) !important;
+            border-radius: 16px !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            padding: 20px !important;
+            margin-bottom: 20px !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+          }
+
+          .live-indicator {
+            background: rgba(16, 185, 129, 0.2) !important;
+            border: 1px solid rgba(16, 185, 129, 0.4) !important;
+            backdrop-filter: blur(8px) !important;
+            border-radius: 20px !important;
+            padding: 8px 16px !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+          }
+
+          .live-dot {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+          }
+
+          .trading-container {
+            background: rgba(0, 0, 0, 0.2) !important;
+            backdrop-filter: blur(15px) !important;
+            border-radius: 20px !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            padding: 24px !important;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4) !important;
+          }
+        `}
+      </style>
+
+      <div className="trading-container">
+        <div className="live-trading-header">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <Activity style={{ color: '#10b981', fontSize: '24px' }} />
+              <h3 style={{ color: '#ffffff', fontSize: '20px', fontWeight: '600', margin: 0 }}>
+                Live Trading Activity
+              </h3>
+            </div>
+            <div className="live-indicator">
+              <div className="live-dot" />
+              <span style={{ color: '#ffffff', fontSize: '14px', fontWeight: '600' }}>
+                LIVE
+              </span>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div ref={feedRef} className="p-6 space-y-4 max-h-96 overflow-y-auto">
+        <div ref={feedRef} style={{ maxHeight: '500px', overflowY: 'auto', paddingRight: '8px' }}>
         {visibleTrades.length === 0 ? (
-          <div className="text-center py-8">
-            <Activity className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-500">Waiting for trading opportunities...</p>
+          <div style={{ textAlign: 'center', padding: '40px 0', color: 'rgba(255, 255, 255, 0.6)' }}>
+            <Activity style={{ fontSize: '48px', marginBottom: '16px', opacity: 0.5 }} />
+            <p style={{ fontSize: '16px', margin: 0 }}>Waiting for trading opportunities...</p>
           </div>
         ) : (
-          visibleTrades.map((trade) => {
+          visibleTrades.map((trade, index) => {
             const currentPL = positionPLs.get(trade.id) || trade.profitLoss;
             const progress = tradeProgresses.get(trade.id) || 0;
             const isExecuting = executingTrades.has(trade.id);
@@ -345,60 +465,125 @@ const LiveTradingFeed: React.FC = () => {
             return (
               <div
                 key={trade.id}
-                className={`
-                  relative p-4 border rounded-lg transition-all duration-500
-                  ${isExecuting ? 'bg-yellow-50 border-yellow-200 animate-pulse' : 
-                    isPulsing ? 'bg-blue-50 border-blue-200 animate-pulse' :
-                    isProfit ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}
-                `}
+                className={`trade-card-beautiful ${isProfit ? 'profit-card' : 'loss-card'}`}
+                style={{
+                  animation: isPulsing ? 'slideDown 1.2s ease-out both' : 'none',
+                }}
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <div className={`w-3 h-3 rounded-full mr-3 ${isProfit ? 'bg-green-500' : 'bg-red-500'}`} />
-                    <div>
-                      <div className="font-medium text-gray-900">
-                        {trade.cryptoSymbol} {trade.tradeType.toUpperCase()}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        {trade.cryptoName || trade.cryptoSymbol}
-                      </div>
+                {/* Top Row - Symbol and Type */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{
+                      background: trade.tradeType === 'long' ? '#10b981' : '#ef4444',
+                      color: 'white',
+                      padding: '4px 8px',
+                      borderRadius: '6px',
+                      fontSize: '12px',
+                      fontWeight: '600',
+                      textTransform: 'uppercase'
+                    }}>
+                      {trade.tradeType}
+                    </span>
+                    <span style={{
+                      color: '#ffffff',
+                      fontWeight: '600',
+                      fontSize: '16px'
+                    }}>
+                      {trade.cryptoSymbol}
+                    </span>
+                  </div>
+                  
+                  {/* Status Indicator */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <div style={{
+                      width: '8px',
+                      height: '8px',
+                      borderRadius: '50%',
+                      background: isProfit ? '#10b981' : '#ef4444',
+                      animation: isExecuting ? 'pulse 2s ease-in-out infinite' : 'none'
+                    }} />
+                    {isExecuting && (
+                      <span style={{ color: '#f59e0b', fontSize: '12px', fontWeight: '600' }}>
+                        EXECUTING
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Main Content */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                  <div>
+                    <div style={{ color: '#ffffff', fontSize: '14px', marginBottom: '4px' }}>
+                      {trade.cryptoName || trade.cryptoSymbol}
+                    </div>
+                    <div style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '13px' }}>
+                      ${Math.abs(trade.amount).toFixed(2)} Position
                     </div>
                   </div>
                   
-                  <div className="text-right">
-                    <div className={`font-bold ${isProfit ? 'text-green-600' : 'text-red-600'}`}>
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{
+                      color: isProfit ? '#10b981' : '#ef4444',
+                      fontSize: '18px',
+                      fontWeight: '700'
+                    }}>
                       {isProfit ? '+' : ''}${currentPL.toFixed(2)}
                     </div>
-                    <div className="text-sm text-gray-500">
-                      ${Math.abs(trade.amount).toFixed(2)}
+                    <div style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '12px' }}>
+                      {new Date(trade.timestamp).toLocaleTimeString()}
                     </div>
                   </div>
                 </div>
 
-                {/* Progress bar */}
-                <div className="mt-3">
-                  <div className="flex justify-between text-sm text-gray-500 mb-1">
+                {/* Progress Bar */}
+                <div style={{ marginTop: '12px' }}>
+                  <div style={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    marginBottom: '6px',
+                    color: 'rgba(255, 255, 255, 0.7)',
+                    fontSize: '12px'
+                  }}>
                     <span>Position Progress</span>
                     <span>{Math.round(progress * 100)}%</span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className={`h-2 rounded-full transition-all duration-300 ${
-                        isProfit ? 'bg-green-500' : 'bg-red-500'
-                      }`}
-                      style={{ width: `${progress * 100}%` }}
-                    />
+                  <div style={{
+                    width: '100%',
+                    height: '6px',
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    borderRadius: '3px',
+                    overflow: 'hidden'
+                  }}>
+                    <div style={{
+                      height: '100%',
+                      width: `${progress * 100}%`,
+                      background: isProfit 
+                        ? 'linear-gradient(90deg, #10b981, #34d399)' 
+                        : 'linear-gradient(90deg, #ef4444, #f87171)',
+                      borderRadius: '3px',
+                      transition: 'width 0.5s ease',
+                      boxShadow: isProfit 
+                        ? '0 0 10px rgba(16, 185, 129, 0.5)' 
+                        : '0 0 10px rgba(239, 68, 68, 0.5)'
+                    }} />
                   </div>
                 </div>
 
-                {/* Status indicators */}
-                {isExecuting && (
-                  <div className="absolute top-2 right-2">
-                    <div className="flex items-center text-xs text-yellow-600">
-                      <div className="w-2 h-2 bg-yellow-500 rounded-full mr-1 animate-pulse" />
-                      Executing
-                    </div>
-                  </div>
+                {/* Glow effect for new trades */}
+                {isPulsing && (
+                  <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    borderRadius: '12px',
+                    background: `linear-gradient(45deg, 
+                      rgba(16, 185, 129, 0.1), 
+                      rgba(16, 185, 129, 0.05), 
+                      transparent)`,
+                    pointerEvents: 'none'
+                  }} />
                 )}
               </div>
             );
@@ -406,20 +591,34 @@ const LiveTradingFeed: React.FC = () => {
         )}
       </div>
 
-      {/* Summary footer */}
-      {visibleTrades.length > 0 && (
-        <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
-          <div className="flex justify-between items-center text-sm">
-            <span className="text-gray-600">
-              {visibleTrades.length} active position{visibleTrades.length !== 1 ? 's' : ''}
-            </span>
-            <span className={`font-medium ${totalUnrealizedPL >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-              Total P&L: {totalUnrealizedPL >= 0 ? '+' : ''}${totalUnrealizedPL.toFixed(2)}
-            </span>
+        {/* Beautiful Summary Footer */}
+        {visibleTrades.length > 0 && (
+          <div style={{
+            marginTop: '20px',
+            padding: '16px',
+            background: 'rgba(0, 0, 0, 0.5)',
+            backdropFilter: 'blur(15px)',
+            borderRadius: '12px',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '14px' }}>
+                {visibleTrades.length} active position{visibleTrades.length !== 1 ? 's' : ''}
+              </span>
+              <span style={{
+                color: totalUnrealizedPL >= 0 ? '#10b981' : '#ef4444',
+                fontSize: '16px',
+                fontWeight: '700'
+              }}>
+                Total P&L: {totalUnrealizedPL >= 0 ? '+' : ''}${totalUnrealizedPL.toFixed(2)}
+              </span>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
+    </>
   );
 };
 
