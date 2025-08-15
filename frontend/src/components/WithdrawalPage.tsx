@@ -4,6 +4,7 @@ import { ArrowLeft, CreditCard, Building, Bitcoin, Smartphone, CheckCircle, Cloc
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { buildApiUrl, API_CONFIG } from '../config/api';
+import { usePortfolioData } from '../hooks/usePortfolioData';
 
 interface WithdrawalMethod {
   id: string;
@@ -23,8 +24,8 @@ const WithdrawalPage: React.FC = () => {
   const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const [portfolioData, setPortfolioData] = useState<any>(null);
-  const [portfolioLoading, setPortfolioLoading] = useState(true);
+  // Use centralized portfolio data hook
+  const { portfolioData, loading: portfolioLoading } = usePortfolioData();
   const [showRiskWarning, setShowRiskWarning] = useState(false);
   const [confirmationText, setConfirmationText] = useState('');
   const [riskCalculations, setRiskCalculations] = useState<any>(null);
@@ -83,37 +84,7 @@ const WithdrawalPage: React.FC = () => {
     }
   ];
 
-  // Fetch portfolio data to get actual available balance (20%)
-  useEffect(() => {
-    const fetchPortfolioData = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token) return;
-
-        const response = await axios.get(buildApiUrl('/compound-interest/portfolio-state'), {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-
-        if (response.data.success) {
-          setPortfolioData(response.data.portfolioState);
-        }
-      } catch (error) {
-        console.error('Error fetching portfolio data:', error);
-        // Fallback to user balance if API fails
-        setPortfolioData({
-          availableBalance: (user?.balance || 0) * 0.2, // Assume 20% is available
-          lockedCapital: (user?.balance || 0) * 0.8,
-          totalPortfolioValue: user?.balance || 0
-        });
-      } finally {
-        setPortfolioLoading(false);
-      }
-    };
-
-    if (user) {
-      fetchPortfolioData();
-    }
-  }, [user]);
+  // Portfolio data now managed by centralized usePortfolioData hook
 
   // Get available balance (20% of portfolio) and daily withdrawal limit
   const availableBalance = portfolioData?.availableBalance || 0;

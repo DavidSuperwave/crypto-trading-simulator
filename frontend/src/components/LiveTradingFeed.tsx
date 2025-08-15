@@ -154,21 +154,32 @@ const LiveTradingFeed: React.FC = () => {
       return;
     }
 
-    // 🎯 SIMPLE RANDOM SELECTION: Pick 5 random trades from today
-    if (visibleTrades.length === 0) {
-      // First time: randomly select 5 trades from all available trades
-      const shuffledTrades = [...todaysTrades].sort(() => Math.random() - 0.5);
-      const randomTrades = shuffledTrades.slice(0, 5);
+    // 🕒 PROGRESSIVE TIMESTAMP-BASED DISPLAY: Show trades as their scheduled time arrives
+    const now = new Date();
+    
+    // Filter trades that should be visible based on their timestamp
+    const tradesToShow = todaysTrades.filter(trade => {
+      const tradeTime = new Date(trade.timestamp);
+      return tradeTime <= now; // Only show trades whose time has come
+    });
+
+    // Sort by timestamp to show most recent first
+    const sortedTrades = tradesToShow
+      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+      .slice(0, 10); // Show up to 10 recent trades
+
+    // Check if we have new trades to add
+    const currentTradeIds = new Set(visibleTrades.map(t => t.id));
+    const newTrades = sortedTrades.filter(trade => !currentTradeIds.has(trade.id));
+
+    if (newTrades.length > 0 || visibleTrades.length !== sortedTrades.length) {
+      setVisibleTrades(sortedTrades);
       
-      
-      
-      setVisibleTrades(randomTrades);
-      
-      // Set up position times for all trades
-      randomTrades.forEach(trade => {
-        setPositionOpenTimes(prev => new Map(prev).set(trade.id, new Date()));
+      // Set up position times and animations for new trades only
+      newTrades.forEach(trade => {
+        setPositionOpenTimes(prev => new Map(prev).set(trade.id, new Date(trade.timestamp)));
         
-        // Add pulse animation for each trade
+        // Add pulse animation for new trades
         setPulsingTrades(prev => new Set(prev).add(trade.id));
         setTimeout(() => {
           setPulsingTrades(prev => {
@@ -179,9 +190,6 @@ const LiveTradingFeed: React.FC = () => {
         }, 2000);
       });
     }
-
-    // Keep trades visible - no auto-removal, just keep the 5 random trades for the session
-    
   }, [todaysTrades, visibleTrades]);
 
   const calculatePositionProgress = useCallback((trade: Trade): number => {
@@ -272,6 +280,15 @@ const LiveTradingFeed: React.FC = () => {
   useEffect(() => {
     updateVisibleTrades();
   }, [todaysTrades, executingTrades, pulsingTrades, positionOpenTimes, updateVisibleTrades]);
+
+  // Progressive trade reveal: Check every minute for new trades that should be visible
+  useEffect(() => {
+    const progressiveRevealInterval = setInterval(() => {
+      updateVisibleTrades(); // Check for trades whose timestamp has arrived
+    }, 60000); // Check every minute
+
+    return () => clearInterval(progressiveRevealInterval);
+  }, [updateVisibleTrades]);
 
   useEffect(() => {
     const totalPL = Array.from(positionPLs.values()).reduce((sum, pl) => sum + pl, 0);
@@ -617,7 +634,6 @@ const LiveTradingFeed: React.FC = () => {
           </div>
         )}
       </div>
-    </div>
     </>
   );
 };

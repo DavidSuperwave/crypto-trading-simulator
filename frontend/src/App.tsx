@@ -15,6 +15,7 @@ import WithdrawalPage from './components/WithdrawalPage';
 import SignupPage from './components/SignupPage';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
+import ErrorBoundary from './components/ErrorBoundary';
 
 // Public route component - accessible to everyone (no authentication required)
 const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -100,60 +101,90 @@ function AppContent() {
 
   return (
     <div className="App">
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/trading-demo" element={<DemoPage />} />
-        <Route 
-          path="/demo" 
-          element={
-            <PublicRoute>
-              <DemoDashboard />
-            </PublicRoute>
-          } 
-        />
-        <Route 
-          path="/user" 
-          element={
-            <ProtectedRoute>
-              <UserDashboard />
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/deposit" 
-          element={
-            <ProtectedRoute>
-              <DepositPage />
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/payment-method" 
-          element={
-            <ProtectedRoute>
-              <PaymentMethodPage />
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/withdrawal" 
-          element={
-            <ProtectedRoute>
-              <WithdrawalPage />
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/admin" 
-          element={
-            <ProtectedRoute requireAdmin>
-              <AdminDashboard />
-            </ProtectedRoute>
-          } 
-        />
-        <Route path="/" element={<Homepage />} />
-      </Routes>
+      <ErrorBoundary fallbackTitle="Application Error" showHome={true}>
+        <Routes>
+          <Route path="/login" element={
+            <ErrorBoundary fallbackTitle="Login Error" showHome={true} showRefresh={false}>
+              <Login />
+            </ErrorBoundary>
+          } />
+          <Route path="/signup" element={
+            <ErrorBoundary fallbackTitle="Signup Error" showHome={true} showRefresh={false}>
+              <SignupPage />
+            </ErrorBoundary>
+          } />
+          <Route path="/trading-demo" element={
+            <ErrorBoundary fallbackTitle="Demo Error" showHome={true}>
+              <DemoPage />
+            </ErrorBoundary>
+          } />
+          <Route 
+            path="/demo" 
+            element={
+              <PublicRoute>
+                <ErrorBoundary fallbackTitle="Demo Dashboard Error" showHome={true}>
+                  <DemoDashboard />
+                </ErrorBoundary>
+              </PublicRoute>
+            } 
+          />
+          <Route 
+            path="/user" 
+            element={
+              <ProtectedRoute>
+                <ErrorBoundary fallbackTitle="User Dashboard Error" showHome={true}>
+                  <UserDashboard />
+                </ErrorBoundary>
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/deposit" 
+            element={
+              <ProtectedRoute>
+                <ErrorBoundary fallbackTitle="Deposit Page Error" showHome={true}>
+                  <DepositPage />
+                </ErrorBoundary>
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/payment-method" 
+            element={
+              <ProtectedRoute>
+                <ErrorBoundary fallbackTitle="Payment Method Error" showHome={true}>
+                  <PaymentMethodPage />
+                </ErrorBoundary>
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/withdrawal" 
+            element={
+              <ProtectedRoute>
+                <ErrorBoundary fallbackTitle="Withdrawal Page Error" showHome={true}>
+                  <WithdrawalPage />
+                </ErrorBoundary>
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin" 
+            element={
+              <ProtectedRoute requireAdmin>
+                <ErrorBoundary fallbackTitle="Admin Dashboard Error" showHome={true}>
+                  <AdminDashboard />
+                </ErrorBoundary>
+              </ProtectedRoute>
+            } 
+          />
+          <Route path="/" element={
+            <ErrorBoundary fallbackTitle="Homepage Error" showHome={false} showRefresh={true}>
+              <Homepage />
+            </ErrorBoundary>
+          } />
+        </Routes>
+      </ErrorBoundary>
     </div>
   );
 }

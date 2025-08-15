@@ -63,8 +63,9 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ isInPopup = false }) => {
   const fetchChatMessages = async () => {
     try {
       const token = localStorage.getItem('token');
-      if (!token) {
-  
+      if (!token || token.length < 10 || !token.includes('.')) {
+        console.warn('🚫 Chat: Invalid or missing token');
+        setMessages([]);
         return;
       }
       
@@ -120,8 +121,9 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ isInPopup = false }) => {
     try {
       // Send message to backend
       const token = localStorage.getItem('token');
-      if (!token) {
-        alert('Authentication required. Please log in again.');
+      if (!token || token.length < 10 || !token.includes('.')) {
+        alert('Session expired. Please log in again.');
+        window.location.href = '/login';
         return;
       }
       

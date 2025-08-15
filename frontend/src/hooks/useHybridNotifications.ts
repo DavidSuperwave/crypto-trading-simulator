@@ -37,15 +37,15 @@ export const useHybridNotifications = (options: HybridNotificationsOptions = {})
       setMode('websocket');
       pollingNotifications.stopPolling();
       console.log('🔌 Using WebSocket for real-time notifications');
-    } else if (wsStatus === 'error' || wsStatus === 'disconnected') {
+    } else if (wsStatus === 'error' || wsStatus === 'disconnected' || wsStatus === 'failed') {
       // WebSocket failed, fallback to polling
       if (mode !== 'polling') {
-        // console.log('📊 WebSocket failed, falling back to polling notifications');
+        console.log('📊 WebSocket failed/disconnected, falling back to polling notifications');
         setMode('polling');
         pollingNotifications.startPolling();
       }
     }
-  }, [websocketNotifications.isConnected, websocketNotifications.connectionStatus, websocketNotifications, mode, pollingNotifications]);
+  }, [websocketNotifications.isConnected, websocketNotifications.connectionStatus, mode]); // Fixed: removed unstable pollingNotifications object reference
 
   // Automatic fallback timer
   useEffect(() => {
@@ -58,26 +58,29 @@ export const useHybridNotifications = (options: HybridNotificationsOptions = {})
     }, fallbackDelay);
 
     return () => clearTimeout(fallbackTimer);
-  }, [websocketNotifications.isConnected, fallbackDelay, pollingNotifications]);
+  }, [websocketNotifications.isConnected, fallbackDelay]); // Fixed: removed unstable pollingNotifications object reference
 
   const getStatusMessage = useCallback(() => {
     switch (mode) {
       case 'websocket':
         return 'Real-time (WebSocket)';
       case 'polling':
-        return 'Real-time (Polling)';
+        return connectionStatus === 'failed' ? 'Real-time (Polling - WebSocket Failed)' : 'Real-time (Polling)';
       case 'attempting':
         return 'Connecting...';
       default:
         return 'Offline';
     }
-  }, [mode]);
+  }, [mode, connectionStatus]);
 
   return {
     mode,
     connectionStatus,
     isConnected: mode === 'websocket' ? websocketNotifications.isConnected : pollingNotifications.isPolling,
     statusMessage: getStatusMessage(),
+    // Manual recovery for failed WebSocket connections
+    forceReconnect: websocketNotifications.forceReconnect,
+    canReconnect: websocketNotifications.canReconnect,
     // Expose both services for advanced usage
     websocket: websocketNotifications,
     polling: pollingNotifications

@@ -59,18 +59,33 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
       let totalDeposited = 0;
       let hasValidData = false;
 
+      // Enhanced token validation
+      if (!token || token.length < 10 || !token.includes('.')) {
+        console.warn('🚫 Portfolio: Invalid token format');
+        localStorage.removeItem('token');
+        setError('Invalid authentication token');
+        setLoading(false);
+        window.location.href = '/login';
+        return;
+      }
+
       // Test token validity first
       try {
         const tokenTestResponse = await fetch(buildApiUrl('/user/profile'), {
-          headers: { 'Authorization': `Bearer ${token}` }
+          headers: { 'Authorization': `Bearer ${token}` },
+          signal: AbortSignal.timeout(8000) // 8 second timeout
         });
         if (tokenTestResponse.status === 401) {
+          console.warn('🚫 Portfolio: Token expired or invalid');
           localStorage.removeItem('token');
+          setError('Session expired. Please login again.');
+          setLoading(false);
           window.location.href = '/login';
           return;
         }
       } catch (tokenError) {
-        // Token test failed, continue with main request
+        console.warn('🚫 Portfolio: Token validation failed:', tokenError);
+        // Continue with main request, but token might be invalid
       }
 
       // Try to fetch data from compound interest endpoint first (most reliable)
@@ -96,70 +111,20 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
             hasValidData = true;
           }
         } else {
-          // Portfolio API failed, continue with fallback
+          console.warn('🚫 Portfolio: Compound interest API failed');
+          setError('Failed to load portfolio data');
           hasValidData = false;
         }
       } catch (compoundError) {
         // Error fetching compound interest data - continue with fallback
       }
 
-      // Try to fetch enhanced trading data for additional info
-      try {
-        const [tradingResponse, positionsResponse] = await Promise.all([
-          fetch(buildApiUrl('/enhanced-trading/status'), {
-            headers: { 'Authorization': `Bearer ${token}` }
-          }),
-          fetch(buildApiUrl('/enhanced-trading/positions'), {
-            headers: { 'Authorization': `Bearer ${token}` }
-          })
-        ]);
+      // Removed enhanced trading API calls - using only compound interest as single source of truth
 
-        if (tradingResponse.ok) {
-          const tradingData = await tradingResponse.json();
-          
-          if (tradingData.success && tradingData.data) {
-            // Use trading data to supplement compound data (don't override totalPortfolioValue)
-            const portfolio = tradingData.data.portfolio;
-            if (portfolio && !hasValidData) {
-              // Only use trading data if we don't have compound interest data
-              totalPortfolioValue = portfolio.totalValue || totalPortfolioValue;
-              availableBalance = portfolio.availableBalance || availableBalance;
-              lockedCapital = portfolio.lockedCapital || lockedCapital;
-              dailyPL = portfolio.dailyPL || dailyPL;
-              dailyPLPercent = portfolio.dailyPLPercent || dailyPLPercent;
-              utilizationPercent = portfolio.utilizationPercent || utilizationPercent;
-              hasValidData = true;
-            } else if (portfolio) {
-              // Supplement with trading-specific data only (preserve compound interest portfolio value)
-              lockedCapital = portfolio.lockedCapital || lockedCapital;
-              utilizationPercent = portfolio.utilizationPercent || utilizationPercent;
-            }
-          }
-        }
-
-        if (positionsResponse.ok) {
-          const positionsData = await positionsResponse.json();
-          
-          if (positionsData.success && positionsData.data) {
-            openPositionsCount = positionsData.data.openPositions?.length || openPositionsCount;
-          }
-        }
-      } catch (tradingError) {
-        // Error fetching trading data (non-critical) - continue
-      }
-
-      // Use API data or reasonable defaults
+      // If compound interest API failed, use minimal fallback values
       if (!hasValidData) {
-        // Use minimal fallback, not fake high values
-        totalPortfolioValue = totalPortfolioValue || 0;
-        availableBalance = availableBalance || 0;
-        lockedCapital = lockedCapital || 0;
-        dailyPL = dailyPL || 0;
-        dailyPLPercent = dailyPLPercent || 0;
-        compoundInterestEarned = compoundInterestEarned || 0;
-        totalDeposited = totalDeposited || 0;
-        utilizationPercent = utilizationPercent || 0;
-        openPositionsCount = openPositionsCount || 0;
+        console.warn('🚫 Portfolio: Using fallback values - compound interest API unavailable');
+        // All values already initialized to 0 above
       }
 
       // Calculate portfolio growth percentage

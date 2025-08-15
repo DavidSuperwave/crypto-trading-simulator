@@ -7,6 +7,7 @@ import { buildApiUrl, API_CONFIG } from '../config/api';
 import { useAuth } from '../context/AuthContext';
 
 import { DepositNotification, WithdrawalNotification, ChatMessage } from '../hooks/useRealTimeNotifications';
+import { useHybridNotifications } from '../hooks/useHybridNotifications';
 
 import NotificationBadge from './NotificationBadge';
 import WebSocketDebug from './WebSocketDebug';
@@ -150,11 +151,7 @@ const AdminDashboard: React.FC = () => {
   
   // clearNotification function removed - not currently used
 
-  // TEMPORARILY DISABLED - Hybrid real-time notifications (WebSocket with polling fallback)
-  // const { mode, connectionStatus, isConnected, statusMessage } = useHybridNotifications({
-  // Real-time notifications disabled to prevent infinite loops
-  
-  /* DISABLED TO STOP INFINITE LOOP
+  // Hybrid real-time notifications (WebSocket with polling fallback) - FIXED for Railway
   const { mode, connectionStatus, isConnected, statusMessage } = useHybridNotifications({
     onNewDeposit: (deposit) => {
       setPendingDeposits(prev => [deposit, ...prev]);
@@ -213,7 +210,6 @@ const AdminDashboard: React.FC = () => {
       }
     }
   });
-  */
 
   // Request notification permission on component mount
   useEffect(() => {

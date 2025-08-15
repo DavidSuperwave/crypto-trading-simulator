@@ -150,7 +150,20 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const getAuthHeaders = () => {
     const token = localStorage.getItem('token');
-    return token ? { Authorization: `Bearer ${token}` } : {};
+    if (!token) {
+      return {};
+    }
+
+    // Basic token validation
+    if (token.length < 10 || !token.includes('.')) {
+      console.warn('🚫 Invalid token format detected');
+      localStorage.removeItem('token');
+      setUser(null);
+      setIsAuthenticated(false);
+      return {};
+    }
+
+    return { Authorization: `Bearer ${token}` };
   };
 
   return (
