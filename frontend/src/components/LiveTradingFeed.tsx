@@ -249,23 +249,38 @@ const LiveTradingFeed: React.FC = () => {
   }, [visibleTrades, positionPLs, tradeProgresses, todaysTrades, updateVisibleTrades, calculateFluctuatingPL, calculatePositionProgress, unrealizedPL]);
 
   const startPolling = useCallback(() => {
-    // Poll every 30 seconds for optimal performance
+    // Poll every 30 seconds for live activity and visual updates
     pollIntervalRef.current = setInterval(() => {
       updateVisibleTrades();
       fetchLiveActivity(); // Only fetch live activity, not both
       simulateRealtimeUpdates();
-    }, 30000); // Optimized frequency
+    }, 30000); // Optimized frequency for visual updates
   }, [updateVisibleTrades, fetchLiveActivity, simulateRealtimeUpdates]);
+
+  const startBackendPolling = useCallback(() => {
+    // Poll backend every 5 minutes for new trades
+    const backendPollInterval = setInterval(() => {
+      console.log('🔄 Polling backend for new trades...');
+      fetchTodaysData(); // Fetch fresh trades from backend
+    }, 5 * 60 * 1000); // 5 minutes
+
+    return () => clearInterval(backendPollInterval);
+  }, []);
 
   // useEffects
   useEffect(() => {
     fetchTodaysData(); // Initial fetch of today's data
     startPolling();
     
+    // Start 5-minute backend polling
+    const cleanupBackendPolling = startBackendPolling();
+    
     return () => {
       if (pollIntervalRef.current) {
         clearInterval(pollIntervalRef.current);
       }
+      // Clean up backend polling
+      cleanupBackendPolling();
       // eslint-disable-next-line react-hooks/exhaustive-deps
       const currentAnimation = animationRef.current;
       if (currentAnimation) {
@@ -275,7 +290,7 @@ const LiveTradingFeed: React.FC = () => {
         clearInterval(priceMovementRef.current);
       }
     };
-  }, [startPolling]);
+  }, [startPolling, startBackendPolling]);
 
   useEffect(() => {
     updateVisibleTrades();

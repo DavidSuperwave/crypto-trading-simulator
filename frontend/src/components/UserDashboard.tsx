@@ -10,7 +10,7 @@ import FloatingChatBubble from './FloatingChatBubble';
 import PrimaryBalanceCard from './PrimaryBalanceCard';
 
 import { Menu, X } from 'lucide-react';
-import { useRealTimeNotifications } from '../hooks/useRealTimeNotifications';
+import { useUserPolling } from '../hooks/useUserPolling';
 import { LiveTradingProvider } from '../context/LiveTradingContext';
 
 // Removed unused Transaction interface
@@ -45,52 +45,17 @@ const UserDashboard: React.FC = () => {
     setIsMobileMenuOpen(false);
   }, [activeView]);
 
-  // Real-time notifications for user updates
-  useRealTimeNotifications({
-    onDepositStatusUpdate: (deposit) => {
-
-      
-      if (deposit.status === 'approved' && user) {
-        // No manual balance update - backend handles compound interest simulation
-        // Portfolio data will be refreshed automatically
-        
-        // Show notification
-        if (Notification.permission === 'granted') {
-          new Notification('Deposit Approved! 🎉', {
-            body: `Your deposit of $${deposit.amount} has been approved and added to your balance.`,
-            icon: '/favicon.ico'
-          });
-        }
-      } else if (deposit.status === 'rejected') {
-        // Show rejection notification
-        if (Notification.permission === 'granted') {
-          new Notification('Deposit Rejected', {
-            body: `Your deposit of $${deposit.amount} has been rejected. Please contact support for details.`,
-            icon: '/favicon.ico'
-          });
-        }
-      }
-    },
-    onWithdrawalStatusUpdate: (withdrawal) => {
-      console.log('🔔 Withdrawal status update:', withdrawal);
-      
-      if (withdrawal.status === 'approved') {
-        // Show approval notification (balance already deducted during approval)
-        if (Notification.permission === 'granted') {
-          new Notification('Withdrawal Approved! ✅', {
-            body: `Your withdrawal of $${withdrawal.amount} has been approved and is being processed.`,
-            icon: '/favicon.ico'
-          });
-        }
-      } else if (withdrawal.status === 'rejected') {
-        // Show rejection notification
-        if (Notification.permission === 'granted') {
-          new Notification('Withdrawal Rejected', {
-            body: `Your withdrawal of $${withdrawal.amount} has been rejected. Please contact support for details.`,
-            icon: '/favicon.ico'
-          });
-        }
-      }
+  // Simple polling for user notifications (2-minute intervals)
+  const { notifications, unreadCount, markAsRead, clearNotification } = useUserPolling((deposit) => {
+    // Handle deposit status updates via polling
+    console.log('🔔 Deposit status update via polling:', deposit);
+    
+    if (deposit.status === 'approved' && user) {
+      // No manual balance update - backend handles compound interest simulation
+      // Portfolio data will be refreshed automatically
+      console.log('✅ Deposit approved - portfolio will refresh automatically');
+    } else if (deposit.status === 'rejected') {
+      console.log('❌ Deposit rejected');
     }
   });
 

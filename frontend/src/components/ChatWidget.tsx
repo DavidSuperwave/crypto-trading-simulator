@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { Send, User, Shield, Phone } from 'lucide-react';
 import axios from 'axios';
 import { buildApiUrl, API_CONFIG } from '../config/api';
-import { useHybridNotifications } from '../hooks/useHybridNotifications';
+// Simple polling for chat messages (removed WebSocket)
 
 interface ChatMessage {
   id: string;
@@ -28,30 +28,20 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ isInPopup = false }) => {
   const [unreadCount, setUnreadCount] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Hybrid real-time notifications for new chat messages (WebSocket with polling fallback)
-  const { isConnected, statusMessage } = useHybridNotifications({
-    onNewChatMessage: (message) => {
+  // Simple polling for new chat messages (30-second intervals)
+  useEffect(() => {
+    if (!user) return;
 
-      // Convert timestamp to Date object to match interface
-      const chatMessage: ChatMessage = {
-        ...message,
-        timestamp: new Date(message.timestamp)
-      };
-      
-      setMessages(prev => {
-        // Check if message already exists to avoid duplicates
-        const messageExists = prev.some(m => m.id === chatMessage.id);
-        if (messageExists) return prev;
-        
-        return [...prev, chatMessage];
-      });
-      
-      // Scroll to bottom when new message arrives
-      setTimeout(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
-    }
-  });
+    const chatPollingInterval = setInterval(() => {
+      fetchChatMessages(); // Refresh messages every 30 seconds
+    }, 30 * 1000);
+
+    return () => clearInterval(chatPollingInterval);
+  }, [user]);
+
+  // Connection status simulation for UI compatibility
+  const isConnected = true;
+  const statusMessage = 'Chat Polling (30s intervals)';
 
   // Fetch chat messages when user is authenticated
   useEffect(() => {

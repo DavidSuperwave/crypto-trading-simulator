@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 import axios from 'axios';
 import { buildApiUrl, API_CONFIG } from '../config/api';
-import { useRealTimeNotifications } from '../hooks/useRealTimeNotifications';
+// Simple polling implementation - removed real-time notifications
 
 interface PendingDeposit {
   id: string;
@@ -28,33 +28,14 @@ const PendingRequestsWidget: React.FC = () => {
   const [withdrawalRequests, setWithdrawalRequests] = useState<WithdrawalRequest[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Real-time notifications for status updates
-  useRealTimeNotifications({
-    onDepositStatusUpdate: (deposit) => {
+  // Simple data refresh every 3 minutes for status updates
+  useEffect(() => {
+    const refreshInterval = setInterval(() => {
+      fetchPendingRequests(); // Refresh data every 3 minutes
+    }, 3 * 60 * 1000);
 
-      
-      // Update the deposit status in real-time
-      setPendingDeposits(prev => 
-        prev.map(d => 
-          d.id === deposit.id 
-            ? { ...d, status: deposit.status, updatedAt: new Date().toISOString() }
-            : d
-        )
-      );
-    },
-    onWithdrawalStatusUpdate: (withdrawal) => {
-
-      
-      // Update the withdrawal status in real-time
-      setWithdrawalRequests(prev => 
-        prev.map(w => 
-          w.id === withdrawal.id 
-            ? { ...w, status: withdrawal.status, updatedAt: new Date().toISOString() }
-            : w
-        )
-      );
-    }
-  });
+    return () => clearInterval(refreshInterval);
+  }, []);
 
   const formatCurrency = (amount: number) => 
     `$${amount.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN`;

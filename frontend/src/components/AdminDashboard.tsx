@@ -6,11 +6,10 @@ import axios from 'axios';
 import { buildApiUrl, API_CONFIG } from '../config/api';
 import { useAuth } from '../context/AuthContext';
 
-import { DepositNotification, WithdrawalNotification, ChatMessage } from '../hooks/useRealTimeNotifications';
-import { useHybridNotifications } from '../hooks/useHybridNotifications';
+import { useAdminPolling } from '../hooks/useAdminPolling';
 
 import NotificationBadge from './NotificationBadge';
-import WebSocketDebug from './WebSocketDebug';
+// WebSocketDebug component removed
 
 
 interface User {
@@ -32,7 +31,15 @@ interface Transaction {
   description?: string;
 }
 
-// Use shared type from useRealTimeNotifications hook  
+// Local interface definitions (previously from useRealTimeNotifications)
+interface WithdrawalNotification {
+  id: string;
+  amount: number;
+  userId: string;
+  userEmail?: string;
+  status: string;
+  createdAt: string;
+}
 type Withdrawal = WithdrawalNotification;
 
 interface Demo {
@@ -46,8 +53,28 @@ interface Demo {
   createdAt: string;
 }
 
-// Use shared type from useRealTimeNotifications hook
+// Local interface definitions (previously from useRealTimeNotifications)
+interface DepositNotification {
+  id: string;
+  amount: number;
+  user_id: string;
+  user_email?: string;
+  status: string;
+  created_at: string;
+  plan?: string;
+  method?: string;
+}
 type PendingDeposit = DepositNotification;
+
+interface ChatMessage {
+  id: string;
+  senderId: string;
+  senderType: 'user' | 'admin';
+  message: string;
+  timestamp: string;
+  isRead?: boolean;
+  senderName?: string;
+}
 
 interface ChatConversation {
   userId: string;
@@ -87,7 +114,7 @@ const AdminDashboard: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [selectedChatUser, setSelectedChatUser] = useState<string | null>(null);
-  const [showWebSocketDebug, setShowWebSocketDebug] = useState(false);
+  // WebSocket debug functionality removed
   const [conversationCategory, setConversationCategory] = useState('general');
   const [showUserInfo, setShowUserInfo] = useState(false);
   // Simulation data not currently used in admin dashboard
@@ -151,65 +178,42 @@ const AdminDashboard: React.FC = () => {
   
   // clearNotification function removed - not currently used
 
-  // Hybrid real-time notifications (WebSocket with polling fallback) - FIXED for Railway
-  const { mode, connectionStatus, isConnected, statusMessage } = useHybridNotifications({
-    onNewDeposit: (deposit) => {
-      setPendingDeposits(prev => [deposit, ...prev]);
-      setUnreadCount(prev => prev + 1);
+  // Simple polling for admin deposit management (2-minute intervals)
+  const { 
+    pendingDeposits: polledDeposits, 
+    loading: depositsLoading, 
+    approveDeposit, 
+    rejectDeposit,
+    lastUpdated 
+  } = useAdminPolling();
+
+  // Update local pending deposits when polling data changes
+  useEffect(() => {
+    if (polledDeposits && polledDeposits.length > 0) {
+      // Check for new deposits and show notifications
+      const currentDepositIds = new Set(pendingDeposits.map(d => d.id));
+      const newDeposits = polledDeposits.filter(d => !currentDepositIds.has(d.id));
       
-      // Show browser notification if permission granted
-      if (Notification.permission === 'granted') {
-        new Notification('New Deposit Request', {
-          body: `$${deposit.amount} from ${deposit.userEmail || 'User'}`,
-          icon: '/favicon.ico'
-        });
-      }
-    },
-    onNewWithdrawal: (withdrawal) => {
-      setWithdrawals(prev => [withdrawal, ...prev]);
-      setUnreadCount(prev => prev + 1);
-      
-      // Show browser notification if permission granted
-      if (Notification.permission === 'granted') {
-        new Notification('New Withdrawal Request', {
-          body: `$${withdrawal.amount} from ${withdrawal.userEmail || 'User'}`,
-          icon: '/favicon.ico'
-        });
-      }
-    },
-    onNewChatMessage: (message) => {
-      
-      // Update chat conversations with new message
-      setChatConversations(prev => {
-        const updated = prev.map(conv => {
-          if (conv.userId === message.senderId) {
-            return {
-              ...conv,
-              lastMessage: message,
-              // Only increment unread count for messages from users (not admin messages)
-              unreadCount: message.senderType === 'user' ? conv.unreadCount + 1 : conv.unreadCount
-            };
+      if (newDeposits.length > 0 && pendingDeposits.length > 0) { // Only show notifications after initial load
+        newDeposits.forEach(deposit => {
+          if (Notification.permission === 'granted') {
+            new Notification('New Deposit Request', {
+              body: `$${deposit.amount} from ${deposit.user_email || 'User'}`,
+              icon: '/favicon.ico'
+            });
           }
-          return conv;
         });
-        
-        // If conversation doesn't exist, it will be handled by next dashboard refresh
-        return updated;
-      });
-      // Only increment notification count and show notifications for user messages
-      if (message.senderType === 'user') {
-        setUnreadCount(prev => prev + 1);
-        
-        // Show browser notification if permission granted
-        if (Notification.permission === 'granted') {
-          new Notification('New Chat Message', {
-            body: `${message.senderName}: ${message.message}`,
-            icon: '/favicon.ico'
-          });
-        }
       }
+      
+      setPendingDeposits(polledDeposits);
     }
-  });
+  }, [polledDeposits, pendingDeposits]);
+
+  // Connection status simulation for UI compatibility
+  const mode = 'polling';
+  const connectionStatus = 'connected';
+  const isConnected = true;
+  const statusMessage = 'Admin Polling (2-min intervals)';
 
   // Request notification permission on component mount
   useEffect(() => {
@@ -906,7 +910,7 @@ const AdminDashboard: React.FC = () => {
                     {pendingDeposits.map((deposit) => (
                       <tr key={deposit.id} style={{ borderBottom: '1px solid #eee' }}>
                         <td style={{ padding: '12px', fontWeight: '600', color: '#000' }}>
-                          {deposit.userEmail}
+                          {deposit.user_email}
                         </td>
                         <td style={{ padding: '12px', fontWeight: '600', color: '#10b981' }}>
                           ${deposit.amount.toLocaleString()}
@@ -921,7 +925,7 @@ const AdminDashboard: React.FC = () => {
                           {getStatusBadge(deposit.status)}
                         </td>
                         <td style={{ padding: '12px', color: '#000' }}>
-                          {formatDate(deposit.createdAt)}
+                          {formatDate(deposit.created_at)}
                         </td>
                         <td style={{ padding: '12px' }}>
                           {deposit.status === 'pending' && (
@@ -1404,7 +1408,7 @@ const AdminDashboard: React.FC = () => {
                       }}>
                         {(() => {
                           const selectedUser = users.find(u => u.id === selectedChatUser);
-                          const userDeposits = pendingDeposits.filter(d => d.userId === selectedChatUser);
+                          const userDeposits = pendingDeposits.filter(d => d.user_id === selectedChatUser);
                           const userWithdrawals = withdrawals.filter(w => w.userId === selectedChatUser);
                           
                           if (!selectedUser) {
@@ -1494,7 +1498,7 @@ const AdminDashboard: React.FC = () => {
                                           </span>
                                         </div>
                                         <div style={{ color: '#000', fontSize: '0.8rem' }}>
-                                          {deposit.plan} • {formatDate(deposit.createdAt)}
+                                          {deposit.plan} • {formatDate(deposit.created_at)}
                                         </div>
                                       </div>
                                     ))}
@@ -1839,54 +1843,7 @@ const AdminDashboard: React.FC = () => {
         </div>
       )}
       
-      {/* WebSocket Debug Toggle - Only show in development or for debugging */}
-              {(process.env.NODE_ENV === 'development' || window.location.search.includes('debug=ws')) && (
-        <>
-          {/* Floating toggle button */}
-          <button
-            onClick={() => setShowWebSocketDebug(!showWebSocketDebug)}
-            style={{
-              position: 'fixed',
-              bottom: '20px',
-              right: '20px',
-              background: showWebSocketDebug ? '#ef4444' : '#10b981',
-              color: 'white',
-              border: 'none',
-              borderRadius: '50%',
-              width: '50px',
-              height: '50px',
-              cursor: 'pointer',
-              zIndex: 9999,
-              fontSize: '12px',
-              fontWeight: '600',
-              boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
-              transition: 'all 0.2s ease'
-            }}
-            title={showWebSocketDebug ? 'Hide WebSocket Debug' : 'Show WebSocket Debug'}
-          >
-            {showWebSocketDebug ? '✕' : 'WS'}
-          </button>
-          
-          {/* WebSocket Debug Component */}
-          {showWebSocketDebug && (
-            <div style={{
-              position: 'fixed',
-              bottom: '80px',
-              right: '20px',
-              zIndex: 9998,
-              background: 'white',
-              border: '2px solid #e5e7eb',
-              borderRadius: '8px',
-              boxShadow: '0 8px 16px rgba(0,0,0,0.1)',
-              maxWidth: '400px',
-              maxHeight: '300px',
-              overflow: 'auto'
-            }}>
-              <WebSocketDebug />
-            </div>
-          )}
-        </>
-      )}
+      {/* WebSocket debug functionality removed */}
       </div>
     </div>
   );
