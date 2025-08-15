@@ -745,13 +745,26 @@ router.get('/live-activity', authenticateToken, async (req, res) => {
     
     console.log(`📺 Getting live trading activity for user ${userId} on ${today}`);
     
-    // Get today's trades
-    const todaysTrades = await compoundSim.getDailyTrades(userId, today);
+    // Get today's trades - if they don't exist, generate them
+    let todaysTrades = await compoundSim.getDailyTrades(userId, today);
+    
+    if (!todaysTrades || !todaysTrades.trades || todaysTrades.trades.length === 0) {
+      console.log(`📺 No trades found for ${today}, generating them now...`);
+      try {
+        const generateResult = await compoundSim.generateDailyTrades(userId, today);
+        if (generateResult.success) {
+          todaysTrades = generateResult.dailyTrades;
+          console.log(`✅ Generated ${todaysTrades.tradeCount} trades for ${today}`);
+        }
+      } catch (error) {
+        console.error('Error generating daily trades:', error);
+      }
+    }
     
     console.log(`📺 Live activity result:`, todaysTrades ? `Found ${todaysTrades.tradeCount} trades` : 'No trades found');
     
     if (!todaysTrades || !todaysTrades.trades || todaysTrades.trades.length === 0) {
-      console.log(`❌ Live activity: Setting hasActivity = false because no trades found`);
+      console.log(`❌ Live activity: Setting hasActivity = false - no trades exist and couldn't generate`);
       return res.json({
         success: true,
         liveActivity: {

@@ -7,15 +7,15 @@
     "balance": 10000,
     "totalInterest": 0,
     "createdAt": "2025-08-08T05:55:36.579Z",
-    "updatedAt": "2025-08-14T03:15:00.122Z",
+    "updatedAt": "2025-08-15T00:00:00.079Z",
     "firstName": "Nigga",
     "lastName": "Niggamode",
     "phone": "9513782762",
     "simulationActive": true,
     "simulationStartDate": "2025-08-13T00:46:09.467Z",
     "depositedAmount": 10000,
-    "simulatedInterest": 341.66,
-    "lastSimulationUpdate": "2025-08-14T03:15:00.122Z"
+    "simulatedInterest": 251.82382528868612,
+    "lastSimulationUpdate": "2025-08-15T00:00:00.079Z"
   },
   {
     "id": "9eee85eb-43df-45c1-8424-45ccf66791ca",
@@ -25,7 +25,7 @@
     "balance": 2000,
     "totalInterest": 0,
     "depositedAmount": 2000,
-    "simulatedInterest": 2552.70,
+    "simulatedInterest": 2552.7,
     "currentMonthlyTarget": 0,
     "simulationStartDate": "2025-08-08T04:51:26.606Z",
     "lastSimulationUpdate": "2025-08-13T00:00:00.028Z",

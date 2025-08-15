@@ -174,116 +174,35 @@ const LiveTradingFeed: React.FC = () => {
       return;
     }
 
-    const now = new Date();
-    
-    // 🎯 TIME-BASED FILTERING: Show only 5 most relevant trades for current time
-    const currentTrades = todaysTrades.filter(trade => {
-      const tradeTime = new Date(trade.timestamp);
-      const timeDiff = now.getTime() - tradeTime.getTime();
+    // 🎯 SIMPLE RANDOM SELECTION: Pick 5 random trades from today
+    if (visibleTrades.length === 0) {
+      // First time: randomly select 5 trades from all available trades
+      const shuffledTrades = [...todaysTrades].sort(() => Math.random() - 0.5);
+      const randomTrades = shuffledTrades.slice(0, 5);
       
-      // Show trades that:
-      // 1. Have started (trade time <= now)
-      // 2. Are still within their active duration OR just started in last 30 minutes
-      const durationMs = trade.duration * 1000; // Convert minutes to milliseconds
-      const recentWindow = 30 * 60 * 1000; // 30 minutes
+      console.log(`🎲 Randomly selected ${randomTrades.length} trades from ${todaysTrades.length} available`);
       
-      return tradeTime <= now && (timeDiff <= durationMs || timeDiff <= recentWindow);
-    });
-
-    // Sort by most recent and take only top 5
-    const topActiveTrades = currentTrades
-      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-      .slice(0, 5);
-
-    // Find new trades to add (not already visible)
-    const newTrades = topActiveTrades.filter(trade => 
-      !visibleTrades.some(vt => vt.id === trade.id)
-    );
-
-    console.log(`⏰ Time filter: ${currentTrades.length} active trades, showing top 5, ${newTrades.length} new`);
-
-    if (newTrades.length > 0 && visibleTrades.length < 5) {
-      // Add one new trade at a time for smooth animation
-      const nextTrade = newTrades[0];
-      console.log('🆕 Adding new trade:', nextTrade.cryptoSymbol, nextTrade.profitLoss, 'at', nextTrade.displayTime);
+      setVisibleTrades(randomTrades);
       
-      setVisibleTrades(prev => [...prev, nextTrade]);
-      setPositionOpenTimes(prev => new Map(prev).set(nextTrade.id, new Date()));
-      
-      // Add pulse animation
-      setPulsingTrades(prev => new Set(prev).add(nextTrade.id));
-      setTimeout(() => {
-        setPulsingTrades(prev => {
-          const newSet = new Set(prev);
-          newSet.delete(nextTrade.id);
-          return newSet;
-        });
-      }, 2000);
+      // Set up position times for all trades
+      randomTrades.forEach(trade => {
+        setPositionOpenTimes(prev => new Map(prev).set(trade.id, new Date()));
+        
+        // Add pulse animation for each trade
+        setPulsingTrades(prev => new Set(prev).add(trade.id));
+        setTimeout(() => {
+          setPulsingTrades(prev => {
+            const newSet = new Set(prev);
+            newSet.delete(trade.id);
+            return newSet;
+          });
+        }, 2000);
+      });
     }
 
-    // Remove trades that are no longer in the top 5 active trades
-    setVisibleTrades(prev => {
-      return prev.filter(trade => {
-        const stillActive = topActiveTrades.some(activeTrade => activeTrade.id === trade.id);
-        
-        if (!stillActive) {
-          console.log('⏰ Removing trade outside time window:', trade.cryptoSymbol, trade.displayTime);
-          // Clean up related state
-          setTimeout(() => {
-            setPositionOpenTimes(prevTimes => {
-              const newMap = new Map(prevTimes);
-              newMap.delete(trade.id);
-              return newMap;
-            });
-            setPositionPLs(prevPLs => {
-              const newMap = new Map(prevPLs);
-              newMap.delete(trade.id);
-              return newMap;
-            });
-          }, 100);
-        }
-        
-        return stillActive;
-      });
-    });
-
-    // Remove trades that have been visible for their full duration
-    setVisibleTrades(prev => {
-      return prev.filter(trade => {
-        const openTime = positionOpenTimes.get(trade.id);
-        if (!openTime) return true;
-        
-        const elapsed = now.getTime() - openTime.getTime();
-        const duration = trade.duration * 1000;
-        
-        if (elapsed >= duration) {
-          // Mark as executing before removal
-          setExecutingTrades(prev => new Set(prev).add(trade.id));
-          
-          setTimeout(() => {
-            setExecutingTrades(prev => {
-              const newSet = new Set(prev);
-              newSet.delete(trade.id);
-              return newSet;
-            });
-            setPositionOpenTimes(prev => {
-              const newMap = new Map(prev);
-              newMap.delete(trade.id);
-              return newMap;
-            });
-            setPositionPLs(prev => {
-              const newMap = new Map(prev);
-              newMap.delete(trade.id);
-              return newMap;
-            });
-          }, 1000);
-          
-          return false;
-        }
-        return true;
-      });
-    });
-  }, [todaysTrades, visibleTrades, positionOpenTimes]);
+    // Keep trades visible - no auto-removal, just keep the 5 random trades for the session
+    
+  }, [todaysTrades, visibleTrades]);
 
   const calculatePositionProgress = useCallback((trade: Trade): number => {
     const now = new Date();
