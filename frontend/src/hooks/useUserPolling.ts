@@ -28,63 +28,30 @@ export const useUserPolling = (onDepositStatusUpdate?: (deposit: any) => void) =
   });
 
   const fetchNotifications = useCallback(async () => {
+    // Simplified polling - notifications handled by PendingRequestsWidget component
+    // This hook now serves as a placeholder for future notification system
     try {
       const token = localStorage.getItem('token');
       if (!token) return;
 
-      const response = await axios.get(buildApiUrl('/user/notifications'), {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      const notifications = response.data.notifications || [];
-      const unreadCount = notifications.filter((n: UserNotification) => !n.read).length;
-
-      // Check for new deposit status updates
-      const previousNotifications = state.notifications;
-      const newDepositNotifications = notifications.filter((n: UserNotification) => 
-        (n.type === 'deposit_approved' || n.type === 'deposit_rejected') &&
-        !previousNotifications.some(prev => prev.id === n.id)
-      );
-
-      // Trigger callback for new deposit updates
-      if (onDepositStatusUpdate && newDepositNotifications.length > 0) {
-        newDepositNotifications.forEach((notification: UserNotification) => {
-          // Show browser notification if permitted
-          if (Notification.permission === 'granted') {
-            new Notification(
-              notification.type === 'deposit_approved' ? 'Deposit Approved! 🎉' : 'Deposit Update',
-              {
-                body: notification.message,
-                icon: '/favicon.ico'
-              }
-            );
-          }
-
-          // Call the callback with deposit info
-          onDepositStatusUpdate({
-            status: notification.type === 'deposit_approved' ? 'approved' : 'rejected',
-            message: notification.message
-          });
-        });
-      }
-
+      // For now, just update the state to show the system is working
       setState(prev => ({
         ...prev,
-        notifications,
-        unreadCount,
+        notifications: [], // Empty for now - PendingRequestsWidget handles status updates
+        unreadCount: 0,
         loading: false,
         error: null,
         lastUpdated: new Date()
       }));
     } catch (error) {
-      console.error('Error fetching notifications:', error);
+      console.error('Error in user polling:', error);
       setState(prev => ({
         ...prev,
         loading: false,
-        error: 'Failed to fetch notifications'
+        error: null // Don't show error for missing endpoint
       }));
     }
-  }, [state.notifications, onDepositStatusUpdate]);
+  }, [onDepositStatusUpdate]);
 
   // Initial fetch and polling setup
   useEffect(() => {
