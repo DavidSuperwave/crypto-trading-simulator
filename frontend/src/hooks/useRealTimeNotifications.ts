@@ -168,7 +168,7 @@ export const useRealTimeNotifications = (callbacks: NotificationCallbacks = {}) 
     }
   }, [onNewChatMessage, onNewDeposit, onNewWithdrawal, onDepositStatusUpdate, onWithdrawalStatusUpdate, onUserTyping]);
 
-  const { isConnected, connectionStatus, sendMessage } = useWebSocket({
+  const { isConnected, connectionStatus, sendMessage, forceReconnect, canReconnect } = useWebSocket({
     onMessage: handleMessage,
     onConnect: () => console.log('🟢 Real-time notifications connected'),
     onDisconnect: () => console.log('🔴 Real-time notifications disconnected'),
@@ -218,6 +218,8 @@ export const useRealTimeNotifications = (callbacks: NotificationCallbacks = {}) 
     sendTypingIndicator,
     
     // WebSocket utilities
-    sendMessage
+    sendMessage,
+    forceReconnect,
+    canReconnect
   };
 };
