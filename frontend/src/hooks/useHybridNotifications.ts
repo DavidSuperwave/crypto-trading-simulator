@@ -15,7 +15,7 @@ interface HybridNotificationsOptions {
 export const useHybridNotifications = (options: HybridNotificationsOptions = {}) => {
   const { fallbackDelay = 5000, ...callbackOptions } = options;
   const [mode, setMode] = useState<'websocket' | 'polling' | 'attempting'>('attempting');
-  const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'disconnected' | 'error'>('connecting');
+  const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'disconnected' | 'error' | 'failed'>('connecting');
 
   // Try WebSocket first
   const websocketNotifications = useRealTimeNotifications(callbackOptions);
