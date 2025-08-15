@@ -302,15 +302,7 @@ const UserDashboard: React.FC = () => {
               </div>
               
               {/* Right Sidebar - Live Trading Feed - Only show on home view */}
-              {activeView === 'home' && (
-                <div style={{ 
-                  width: isMobile ? '100%' : '400px'
-                  // Remove order property - trading feed will show after main content on mobile
-                }}>
-                  {/* Live Trading Feed */}
-                  <LiveTradingFeed />
-                </div>
-              )}
+              {/* Live Trading Feed removed - now shown in main content area only */}
             </div>
           </LiveTradingProvider>
         </div>
