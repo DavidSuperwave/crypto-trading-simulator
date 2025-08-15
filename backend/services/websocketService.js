@@ -23,12 +23,17 @@ class WebSocketService {
           'http://localhost:3000',
           'https://crypto-trading-simulator-five.vercel.app',
           'https://crypto-trading-simulator-duk9upmqa.vercel.app',
-          process.env.FRONTEND_URL
+          'https://crypto-trading-simulator-production.up.railway.app',
+          process.env.FRONTEND_URL,
+          process.env.RAILWAY_STATIC_URL,
+          process.env.RAILWAY_PUBLIC_DOMAIN
         ].filter(Boolean);
         
         const origin = info.origin;
         const isValidOrigin = allowedOrigins.includes(origin) || 
-                             (process.env.NODE_ENV === 'development' && origin?.includes('localhost'));
+                             (process.env.NODE_ENV === 'development' && origin?.includes('localhost')) ||
+                             origin?.includes('railway.app') ||
+                             origin?.includes('crypto-trading-simulator');
         
         // Log all connection attempts for debugging
         console.log(`🔍 WebSocket connection attempt - Origin: ${origin}`);
@@ -56,7 +61,10 @@ class WebSocketService {
       'http://localhost:3000',
       'https://crypto-trading-simulator-five.vercel.app', 
       'https://crypto-trading-simulator-duk9upmqa.vercel.app',
-      process.env.FRONTEND_URL
+      'https://crypto-trading-simulator-production.up.railway.app',
+      process.env.FRONTEND_URL,
+      process.env.RAILWAY_STATIC_URL,
+      process.env.RAILWAY_PUBLIC_DOMAIN
     ].filter(Boolean))}`);
 
     this.wss.on('connection', (ws, request) => {
