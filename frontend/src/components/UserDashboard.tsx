@@ -85,18 +85,41 @@ const UserDashboard: React.FC = () => {
       case 'home':
       default:
         return (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            {/* Primary Balance Card */}
-            <PrimaryBalanceCard />
+          <div style={{ 
+            display: 'flex', 
+            flexDirection: isMobile ? 'column' : 'row',
+            gap: isMobile ? '1.5rem' : '2rem',
+            height: isMobile ? 'auto' : 'calc(100vh - 4rem)' // Full height minus padding
+          }}>
+            {/* Left Column - User Info & Controls */}
+            <div style={{ 
+              flex: isMobile ? '1' : '0 0 60%', // 60% width on desktop, full on mobile
+              display: 'flex', 
+              flexDirection: 'column', 
+              gap: '1.5rem',
+              minWidth: 0 // Prevent overflow
+            }}>
+              {/* Primary Balance Card */}
+              <PrimaryBalanceCard />
 
+              {/* Pending Requests */}
+              <PendingRequestsWidget />
+            </div>
 
+            {/* Right Column - Live Trading Feed (Full Height) */}
+            {!isMobile && (
+              <div style={{ 
+                flex: '1', // Take remaining space (40%)
+                minHeight: '100%',
+                display: 'flex',
+                flexDirection: 'column'
+              }}>
+                <LiveTradingFeed />
+              </div>
+            )}
 
-            {/* Pending Requests */}
-            <PendingRequestsWidget />
-
-            {/* Live Trading Feed - Backend Generated */}
-            <LiveTradingFeed />
-
+            {/* Mobile: Show trading feed below other content */}
+            {isMobile && <LiveTradingFeed />}
           </div>
         );
     }

@@ -458,16 +458,39 @@ const LiveTradingFeed: React.FC = () => {
             border: 1px solid rgba(255, 255, 255, 0.1) !important;
             padding: 24px !important;
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4) !important;
+            position: relative;
+            overflow: hidden;
+          }
+
+          .trading-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #10b981, transparent);
+            animation: shimmer 3s ease-in-out infinite;
+          }
+
+          @keyframes shimmer {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
           }
         `}
       </style>
 
-      <div className="trading-container">
+      <div className="trading-container" style={{ 
+        height: '100%', 
+        display: 'flex', 
+        flexDirection: 'column',
+        minHeight: 'calc(100vh - 8rem)' // Full viewport height minus padding
+      }}>
         <div className="live-trading-header">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <Activity style={{ color: '#10b981', fontSize: '24px' }} />
-              <h3 style={{ color: '#ffffff', fontSize: '20px', fontWeight: '600', margin: 0 }}>
+              <Activity style={{ color: '#10b981', fontSize: '28px' }} />
+              <h3 style={{ color: '#ffffff', fontSize: '24px', fontWeight: '600', margin: 0 }}>
                 Live Trading Activity
               </h3>
             </div>
@@ -478,9 +501,55 @@ const LiveTradingFeed: React.FC = () => {
               </span>
             </div>
           </div>
+          
+          {/* Trading Stats Summary */}
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            marginTop: '16px',
+            padding: '12px 0',
+            borderTop: '1px solid rgba(255, 255, 255, 0.1)'
+          }}>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '12px', marginBottom: '4px' }}>
+                Active Trades
+              </div>
+              <div style={{ color: '#ffffff', fontSize: '18px', fontWeight: '600' }}>
+                {visibleTrades.length}
+              </div>
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '12px', marginBottom: '4px' }}>
+                Unrealized P&L
+              </div>
+              <div style={{ 
+                color: totalUnrealizedPL >= 0 ? '#10b981' : '#ef4444', 
+                fontSize: '18px', 
+                fontWeight: '600' 
+              }}>
+                {totalUnrealizedPL >= 0 ? '+' : ''}${totalUnrealizedPL.toFixed(2)}
+              </div>
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '12px', marginBottom: '4px' }}>
+                Portfolio
+              </div>
+              <div style={{ color: '#ffffff', fontSize: '18px', fontWeight: '600' }}>
+                ${liveBalance.toFixed(0)}
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div ref={feedRef} style={{ maxHeight: '500px', overflowY: 'auto', paddingRight: '8px' }}>
+        <div 
+          ref={feedRef} 
+          style={{ 
+            flex: 1, // Take all remaining space
+            overflowY: 'auto', 
+            paddingRight: '8px',
+            minHeight: 0 // Allow flex child to shrink
+          }}
+        >
         {visibleTrades.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '40px 0', color: 'rgba(255, 255, 255, 0.6)' }}>
             <Activity style={{ fontSize: '48px', marginBottom: '16px', opacity: 0.5 }} />
