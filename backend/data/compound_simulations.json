@@ -7070,7 +7070,7 @@
           "totalCalculated": 2026.7839744372666,
           "generatedAt": "2025-08-13T00:46:09.469Z"
         },
-        "tradeCount": 61,
+        "tradeCount": 360,
         "actualDeposits": [
           {
             "amount": 10000,
@@ -7353,7 +7353,7 @@
           "totalCalculated": 1858.1274577328063,
           "generatedAt": "2025-08-13T00:46:09.479Z"
         },
-        "tradeCount": 75,
+        "tradeCount": 350,
         "actualDeposits": [],
         "actualInterestPaid": 0,
         "lastPayoutDate": null,
@@ -7639,7 +7639,7 @@
           "totalCalculated": 2229.931146579843,
           "generatedAt": "2025-08-13T00:46:09.480Z"
         },
-        "tradeCount": 67,
+        "tradeCount": 342,
         "actualDeposits": [],
         "actualInterestPaid": 0,
         "lastPayoutDate": null,
@@ -7917,7 +7917,7 @@
           "totalCalculated": 2439.9181718659324,
           "generatedAt": "2025-08-13T00:46:09.480Z"
         },
-        "tradeCount": 89,
+        "tradeCount": 336,
         "actualDeposits": [],
         "actualInterestPaid": 0,
         "lastPayoutDate": null,
@@ -8203,7 +8203,7 @@
           "totalCalculated": 2822.172399141687,
           "generatedAt": "2025-08-13T00:46:09.480Z"
         },
-        "tradeCount": 112,
+        "tradeCount": 304,
         "actualDeposits": [],
         "actualInterestPaid": 0,
         "lastPayoutDate": null,
@@ -8489,7 +8489,7 @@
           "totalCalculated": 3581.2770531821134,
           "generatedAt": "2025-08-13T00:46:09.480Z"
         },
-        "tradeCount": 88,
+        "tradeCount": 305,
         "actualDeposits": [],
         "actualInterestPaid": 0,
         "lastPayoutDate": null,
@@ -8751,7 +8751,7 @@
           "totalCalculated": 3933.6045214358496,
           "generatedAt": "2025-08-13T00:46:09.480Z"
         },
-        "tradeCount": 98,
+        "tradeCount": 391,
         "actualDeposits": [],
         "actualInterestPaid": 0,
         "lastPayoutDate": null,
@@ -9037,7 +9037,7 @@
           "totalCalculated": 4866.10990110626,
           "generatedAt": "2025-08-13T00:46:09.480Z"
         },
-        "tradeCount": 97,
+        "tradeCount": 328,
         "actualDeposits": [],
         "actualInterestPaid": 0,
         "lastPayoutDate": null,
@@ -9315,7 +9315,7 @@
           "totalCalculated": 5494.072433801735,
           "generatedAt": "2025-08-13T00:46:09.480Z"
         },
-        "tradeCount": 90,
+        "tradeCount": 360,
         "actualDeposits": [],
         "actualInterestPaid": 0,
         "lastPayoutDate": null,
@@ -9601,7 +9601,7 @@
           "totalCalculated": 6378.826551113634,
           "generatedAt": "2025-08-13T00:46:09.480Z"
         },
-        "tradeCount": 104,
+        "tradeCount": 345,
         "actualDeposits": [],
         "actualInterestPaid": 0,
         "lastPayoutDate": null,
@@ -9879,7 +9879,7 @@
           "totalCalculated": 6947.295888229441,
           "generatedAt": "2025-08-13T00:46:09.480Z"
         },
-        "tradeCount": 104,
+        "tradeCount": 339,
         "actualDeposits": [],
         "actualInterestPaid": 0,
         "lastPayoutDate": null,
@@ -10165,7 +10165,7 @@
           "totalCalculated": 8410.699407176964,
           "generatedAt": "2025-08-13T00:46:09.481Z"
         },
-        "tradeCount": 132,
+        "tradeCount": 305,
         "actualDeposits": [],
         "actualInterestPaid": 0,
         "lastPayoutDate": null,
@@ -10173,6 +10173,6 @@
       }
     ],
     "totalProjectedReturn": 50988.818905803535,
-    "updatedAt": "2025-08-16T00:00:00.097Z"
+    "updatedAt": "2025-08-16T01:14:41.674Z"
   }
 ]
