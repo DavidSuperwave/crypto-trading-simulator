@@ -424,7 +424,8 @@ const LiveTradingFeed: React.FC = () => {
     );
   }
 
-  if (!liveActivity?.hasActivity) {
+  // Skip liveActivity check - our Recent Activity Engine handles everything
+  if (todaysTrades.length === 0 && !loading) {
     return (
       <div style={{
         background: 'rgba(0, 0, 0, 0.3)',
