@@ -111,6 +111,36 @@ const LiveTradingFeed: React.FC = () => {
     }
   };
 
+  const initializeImmediateTrades = useCallback((trades: Trade[]) => {
+    if (trades.length === 0) return;
+    
+    // Show 2-3 trades immediately for instant engagement
+    const initialCount = Math.min(3, trades.length);
+    const initialTrades = [];
+    
+    for (let i = 0; i < initialCount; i++) {
+      const trade = trades[i];
+      const recentTrade = {
+        ...trade,
+        timestamp: generateRecentTimestamp().toISOString(),
+        displayTime: generateRecentTimestamp().toLocaleTimeString('en-US', { 
+          hour: '2-digit', 
+          minute: '2-digit' 
+        })
+      };
+      initialTrades.push(recentTrade);
+      
+      // Mark as viewed
+      setViewedTradeIds(prev => new Set(prev).add(trade.id));
+      setPositionOpenTimes(prev => new Map(prev).set(recentTrade.id, new Date(recentTrade.timestamp)));
+    }
+    
+    setVisibleTrades(initialTrades);
+    setLastTradeShownTime(Date.now());
+    
+    console.log(`🚀 Initialized ${initialCount} trades for immediate display`);
+  }, []);
+
   const fetchTodaysData = async () => {
     try {
       setLoading(true);
@@ -122,8 +152,14 @@ const LiveTradingFeed: React.FC = () => {
       );
       
       if (tradesData?.success && tradesData.dailyTrades) {
-        setTodaysTrades(tradesData.dailyTrades.trades || []);
+        const trades = tradesData.dailyTrades.trades || [];
+        setTodaysTrades(trades);
         setDailyTarget(tradesData.dailyTrades.dailyTargetAmount || 0);
+        
+        // Initialize immediate trades for instant engagement
+        if (trades.length > 0) {
+          initializeImmediateTrades(trades);
+        }
       }
       
       setLoading(false);
@@ -149,48 +185,99 @@ const LiveTradingFeed: React.FC = () => {
     }
   }, []);
 
+  // Recent Activity Engine - No more waiting for timestamps!
+  const [viewedTradeIds, setViewedTradeIds] = useState<Set<string>>(new Set());
+  const [sessionStartTime] = useState(Date.now());
+  const [lastTradeShownTime, setLastTradeShownTime] = useState(0);
+
+  const generateRecentTimestamp = useCallback(() => {
+    // Generate timestamp 2-6 minutes ago for "recent activity" feel
+    const minutesAgo = 2 + Math.random() * 4;
+    return new Date(Date.now() - minutesAgo * 60 * 1000);
+  }, []);
+
   const updateVisibleTrades = useCallback(() => {
     if (!todaysTrades.length) {
       return;
     }
 
-    // 🕒 PROGRESSIVE TIMESTAMP-BASED DISPLAY: Show trades as their scheduled time arrives
-    const now = new Date();
+    // 🚀 RECENT ACTIVITY ENGINE: Show trades immediately with recent timestamps
+    const now = Date.now();
+    const timeSinceLastTrade = now - lastTradeShownTime;
+    const minInterval = 45000; // Minimum 45 seconds between trades
+    const maxInterval = 90000; // Maximum 90 seconds between trades
     
-    // Filter trades that should be visible based on their timestamp
-    const tradesToShow = todaysTrades.filter(trade => {
-      const tradeTime = new Date(trade.timestamp);
-      return tradeTime <= now; // Only show trades whose time has come
-    });
+    // Check if it's time for a new trade
+    const shouldShowNewTrade = timeSinceLastTrade >= minInterval && 
+                               (timeSinceLastTrade >= maxInterval || Math.random() > 0.7);
 
-    // Sort by timestamp to show most recent first
-    const sortedTrades = tradesToShow
-      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-      .slice(0, 10); // Show up to 10 recent trades
-
-    // Check if we have new trades to add
-    const currentTradeIds = new Set(visibleTrades.map(t => t.id));
-    const newTrades = sortedTrades.filter(trade => !currentTradeIds.has(trade.id));
-
-    if (newTrades.length > 0 || visibleTrades.length !== sortedTrades.length) {
-      setVisibleTrades(sortedTrades);
+    if (shouldShowNewTrade || visibleTrades.length === 0) {
+      // Find unviewed trades
+      const unviewedTrades = todaysTrades.filter(trade => !viewedTradeIds.has(trade.id));
       
-      // Set up position times and animations for new trades only
-      newTrades.forEach(trade => {
-        setPositionOpenTimes(prev => new Map(prev).set(trade.id, new Date(trade.timestamp)));
+      // If no unviewed trades, reset the viewed set (start over)
+      if (unviewedTrades.length === 0 && todaysTrades.length > 0) {
+        console.log('🔄 All trades viewed, starting new cycle');
+        setViewedTradeIds(new Set());
+        setLastTradeShownTime(now);
+        return;
+      }
+
+      if (unviewedTrades.length > 0) {
+        // Select next trade (prioritize profitable trades early for good first impression)
+        let nextTrade: Trade;
+        const profitableTrades = unviewedTrades.filter(t => t.profitLoss > 0);
+        const unprofitableTrades = unviewedTrades.filter(t => t.profitLoss <= 0);
         
-        // Add pulse animation for new trades
-        setPulsingTrades(prev => new Set(prev).add(trade.id));
+        // 70% chance to show profitable trade if available, especially early in session
+        const sessionAge = now - sessionStartTime;
+        const preferProfitable = sessionAge < 300000 || Math.random() < 0.7; // First 5 min or 70% chance
+        
+        if (profitableTrades.length > 0 && preferProfitable) {
+          nextTrade = profitableTrades[Math.floor(Math.random() * profitableTrades.length)];
+        } else if (unprofitableTrades.length > 0) {
+          nextTrade = unprofitableTrades[Math.floor(Math.random() * unprofitableTrades.length)];
+        } else {
+          nextTrade = unviewedTrades[Math.floor(Math.random() * unviewedTrades.length)];
+        }
+
+        // Make trade "recent" by updating timestamp
+        const recentTrade = {
+          ...nextTrade,
+          timestamp: generateRecentTimestamp().toISOString(),
+          displayTime: generateRecentTimestamp().toLocaleTimeString('en-US', { 
+            hour: '2-digit', 
+            minute: '2-digit' 
+          })
+        };
+
+        // Add to visible trades (keep last 8 trades)
+        setVisibleTrades(prev => {
+          const updated = [recentTrade, ...prev].slice(0, 8);
+          return updated;
+        });
+
+        // Mark as viewed and update timing
+        setViewedTradeIds(prev => new Set(prev).add(nextTrade.id));
+        setLastTradeShownTime(now);
+
+        // Set up position timing and animations
+        setPositionOpenTimes(prev => new Map(prev).set(recentTrade.id, new Date(recentTrade.timestamp)));
+        
+        // Add pulse animation for new trade
+        setPulsingTrades(prev => new Set(prev).add(recentTrade.id));
         setTimeout(() => {
           setPulsingTrades(prev => {
             const newSet = new Set(prev);
-            newSet.delete(trade.id);
+            newSet.delete(recentTrade.id);
             return newSet;
           });
         }, 2000);
-      });
+
+        console.log(`🎯 New trade shown: ${recentTrade.cryptoSymbol} ${recentTrade.tradeType} - $${recentTrade.profitLoss.toFixed(2)}`);
+      }
     }
-  }, [todaysTrades, visibleTrades]);
+  }, [todaysTrades, visibleTrades, viewedTradeIds, lastTradeShownTime, sessionStartTime, generateRecentTimestamp]);
 
   const calculatePositionProgress = useCallback((trade: Trade): number => {
     const now = new Date();
@@ -296,14 +383,20 @@ const LiveTradingFeed: React.FC = () => {
     updateVisibleTrades();
   }, [todaysTrades, executingTrades, pulsingTrades, positionOpenTimes, updateVisibleTrades]);
 
-  // Progressive trade reveal: Check every minute for new trades that should be visible
+  // Recent Activity Engine: Show new trades every 15-30 seconds
   useEffect(() => {
-    const progressiveRevealInterval = setInterval(() => {
-      updateVisibleTrades(); // Check for trades whose timestamp has arrived
-    }, 60000); // Check every minute
+    // Show initial trades immediately
+    if (todaysTrades.length > 0 && visibleTrades.length === 0) {
+      updateVisibleTrades();
+    }
 
-    return () => clearInterval(progressiveRevealInterval);
-  }, [updateVisibleTrades]);
+    // Check for new trades to show every 15 seconds
+    const recentActivityInterval = setInterval(() => {
+      updateVisibleTrades();
+    }, 15000); // Check every 15 seconds for new trades to reveal
+
+    return () => clearInterval(recentActivityInterval);
+  }, [updateVisibleTrades, todaysTrades.length, visibleTrades.length]);
 
   useEffect(() => {
     const totalPL = Array.from(positionPLs.values()).reduce((sum, pl) => sum + pl, 0);

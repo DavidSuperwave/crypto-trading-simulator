@@ -131,23 +131,30 @@ class IntradayTradeService {
   getTradeCount(accountBalance) {
     let minTrades, maxTrades;
 
-    // 🔄 Enhanced trade counts for 80% rolling lock system
-    // Higher volume supports smaller individual positions
+    // 🎯 ENHANCED TRADE COUNTS for 6+ hours content + precise percentage targeting
+    // Higher volume = better mathematical precision for daily targets
     if (accountBalance >= 100000) {
-      minTrades = 150;  // 2x increase for high-volume simulation
-      maxTrades = 200;
+      minTrades = 450;  // 7-8 hours of content (60s intervals)
+      maxTrades = 500;
     } else if (accountBalance >= 50000) {
-      minTrades = 120;
-      maxTrades = 160;
+      minTrades = 380;  // 6-7 hours of content
+      maxTrades = 450;
     } else if (accountBalance >= 15000) {
-      minTrades = 80;   // For $10K accounts (user's range)
-      maxTrades = 120;
+      minTrades = 300;  // 5-6 hours of content (target range)
+      maxTrades = 400;
+    } else if (accountBalance >= 5000) {
+      minTrades = 250;  // 4-5 hours of content
+      maxTrades = 350;
     } else {
-      minTrades = 60;
-      maxTrades = 80;
+      minTrades = 200;  // 3-4 hours minimum
+      maxTrades = 300;
     }
 
-    return minTrades + Math.floor(Math.random() * (maxTrades - minTrades + 1));
+    const tradeCount = minTrades + Math.floor(Math.random() * (maxTrades - minTrades + 1));
+    
+    console.log(`🎯 Trade Count for $${accountBalance} account: ${tradeCount} trades (${Math.floor(tradeCount/60)}+ hours of content)`);
+    
+    return tradeCount;
   }
 
   /**
