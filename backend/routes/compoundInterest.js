@@ -859,6 +859,133 @@ router.post('/admin/generate-trades', authenticateToken, async (req, res) => {
 });
 
 /**
+ * Regenerate monthly plans for all users (admin only)
+ * POST /api/compound-interest/admin/regenerate-monthly-plans
+ */
+router.post('/admin/regenerate-monthly-plans', authenticateToken, async (req, res) => {
+  try {
+    // Check if user is admin
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({
+        success: false,
+        message: 'Admin access required'
+      });
+    }
+
+    console.log('🚀 Starting bulk monthly plan regeneration...');
+    
+    // Get all users from database
+    const users = await database.getAllUsers();
+    const regularUsers = users.filter(u => u && u.role === 'user' && u.simulationActive);
+    
+    console.log(`📊 Found ${regularUsers.length} users with active simulations`);
+    
+    if (regularUsers.length === 0) {
+      return res.json({
+        success: true,
+        message: 'No users with active simulations found',
+        results: { success: [], errors: [], totalProcessed: 0 }
+      });
+    }
+
+    const results = {
+      success: [],
+      errors: [],
+      totalProcessed: 0
+    };
+
+    // Process each user's simulation
+    for (let i = 0; i < regularUsers.length; i++) {
+      const user = regularUsers[i];
+      results.totalProcessed++;
+      
+      console.log(`🔄 [${i + 1}/${regularUsers.length}] Regenerating monthly plan for ${user.email}...`);
+      
+      try {
+        // Get existing simulation
+        const existingSimulation = await compoundSim.getUserSimulation(user.id);
+        
+        if (!existingSimulation) {
+          results.errors.push({
+            userId: user.id,
+            email: user.email,
+            error: 'No existing simulation found'
+          });
+          continue;
+        }
+
+        // Update trade counts in all months using new portfolio-based logic
+        let updatedMonths = 0;
+        let totalOldTrades = 0;
+        let totalNewTrades = 0;
+
+        for (let monthData of existingSimulation.months) {
+          const oldTradeCount = monthData.tradeCount || 0;
+          
+          // Use new portfolio-based trade count (300-400 for all users)
+          const newTradeCount = compoundSim.tradeService.getTradeCount(monthData.startingBalance);
+          
+          if (oldTradeCount !== newTradeCount) {
+            monthData.tradeCount = newTradeCount;
+            updatedMonths++;
+            totalOldTrades += oldTradeCount;
+            totalNewTrades += newTradeCount;
+          }
+        }
+
+        // Save updated simulation plan
+        await compoundSim.saveSimulationPlan(existingSimulation);
+
+        results.success.push({
+          userId: user.id,
+          email: user.email,
+          monthsUpdated: updatedMonths,
+          oldTradeCount: Math.round(totalOldTrades / 12), // Average
+          newTradeCount: Math.round(totalNewTrades / 12), // Average
+          balance: user.balance || 0
+        });
+
+        console.log(`✅ ${user.email}: Updated ${updatedMonths} months (${Math.round(totalOldTrades/12)} → ${Math.round(totalNewTrades/12)} avg trades/month)`);
+
+      } catch (error) {
+        results.errors.push({
+          userId: user.id,
+          email: user.email,
+          error: error.message
+        });
+        console.log(`❌ ${user.email}: ${error.message}`);
+      }
+    }
+
+    // Calculate improvement metrics
+    let improvementMessage = '';
+    if (results.success.length > 0) {
+      const avgOldTrades = results.success.reduce((sum, s) => sum + s.oldTradeCount, 0) / results.success.length;
+      const avgNewTrades = results.success.reduce((sum, s) => sum + s.newTradeCount, 0) / results.success.length;
+      const improvement = ((avgNewTrades - avgOldTrades) / avgOldTrades * 100);
+      improvementMessage = `Average improvement: ${Math.round(avgOldTrades)} → ${Math.round(avgNewTrades)} trades/month (+${improvement.toFixed(1)}%)`;
+    }
+
+    console.log('🚀 Monthly plan regeneration complete!');
+    
+    res.json({
+      success: true,
+      message: `Monthly plan regeneration completed. ${results.success.length} users updated, ${results.errors.length} errors.`,
+      results,
+      improvement: improvementMessage
+    });
+
+  } catch (error) {
+    console.error('Error in monthly plan regeneration:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to regenerate monthly plans',
+      error: error.message
+    });
+  }
+});
+
+/**
  * Get trading statistics overview (admin only)
  * GET /api/compound-interest/admin/trading-stats
  */
