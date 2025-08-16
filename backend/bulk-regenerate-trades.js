@@ -25,7 +25,7 @@ async function bulkRegeneratetrades() {
       return;
     }
 
-    const today = new Date().toISOString().split('T')[0];
+    const today = '2025-08-15'; // Use consistent date from testing
     const results = {
       success: [],
       errors: [],

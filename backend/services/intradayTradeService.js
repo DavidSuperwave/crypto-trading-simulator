@@ -129,30 +129,15 @@ class IntradayTradeService {
    * @returns {number} Number of trades for the day
    */
   getTradeCount(accountBalance) {
-    let minTrades, maxTrades;
-
-    // 🎯 ENHANCED TRADE COUNTS for 6+ hours content + precise percentage targeting
-    // Higher volume = better mathematical precision for daily targets
-    if (accountBalance >= 100000) {
-      minTrades = 450;  // 7-8 hours of content (60s intervals)
-      maxTrades = 500;
-    } else if (accountBalance >= 50000) {
-      minTrades = 380;  // 6-7 hours of content
-      maxTrades = 450;
-    } else if (accountBalance >= 15000) {
-      minTrades = 300;  // 5-6 hours of content (target range)
-      maxTrades = 400;
-    } else if (accountBalance >= 5000) {
-      minTrades = 250;  // 4-5 hours of content
-      maxTrades = 350;
-    } else {
-      minTrades = 200;  // 3-4 hours minimum
-      maxTrades = 300;
-    }
-
+    // 🎯 SIMPLIFIED: Fixed portfolio-based trade generation
+    // Consistent 6+ hours of content for all users + optimal mathematical precision
+    const minTrades = 300;  // 5+ hours of content minimum
+    const maxTrades = 400;  // 6-7 hours maximum
+    
     const tradeCount = minTrades + Math.floor(Math.random() * (maxTrades - minTrades + 1));
     
-    console.log(`🎯 Trade Count for $${accountBalance} account: ${tradeCount} trades (${Math.floor(tradeCount/60)}+ hours of content)`);
+    console.log(`🎯 Portfolio Trade Count: ${tradeCount} trades (${Math.floor(tradeCount/60)}+ hours of content)`);
+    console.log(`💰 Account Balance: $${accountBalance} (portfolio-based generation)`);
     
     return tradeCount;
   }

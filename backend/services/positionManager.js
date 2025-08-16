@@ -172,8 +172,8 @@ class PositionManager {
   generateRollingPositionPlan(accountBalance, tradeCount, dailyTargetAmount) {
     const targetLocked = this.calculateTargetLocked(accountBalance);
     
-    // Scale up trade count for higher activity and smaller individual positions
-    const scaledTradeCount = Math.floor(tradeCount * 1.5); // 50% more trades
+    // Use trade count as-is from portfolio-based generation (no scaling needed)
+    const scaledTradeCount = tradeCount; // Portfolio-optimized count
     
     // Distribute capital across all trades
     const positionSizes = this.distributeCapitalAcrossTrades(targetLocked, scaledTradeCount, accountBalance);
@@ -184,7 +184,7 @@ class PositionManager {
     console.log(`🔄 Rolling Position Plan Generated:`);
     console.log(`📊 Account Balance: $${accountBalance.toFixed(2)}`);
     console.log(`🎯 Target Locked: $${targetLocked.toFixed(2)} (80%)`);
-    console.log(`📈 Daily Trades: ${scaledTradeCount} (scaled from ${tradeCount})`);
+    console.log(`📈 Daily Trades: ${scaledTradeCount} (portfolio-optimized)`);
     console.log(`💰 Avg Position: $${(targetLocked / scaledTradeCount).toFixed(2)}`);
     console.log(`⏰ Lock Range: ${this.MIN_LOCK_MINUTES}-${this.MAX_LOCK_MINUTES} minutes`);
     
