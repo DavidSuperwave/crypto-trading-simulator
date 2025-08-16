@@ -8371,5 +8371,21 @@
       "isFirstMonth": true,
       "tradingDataFound": true
     }
+  },
+  {
+    "id": "4867f6dd-1532-457c-b84e-9123265c379c",
+    "type": "interest",
+    "amount": -29.62133358348696,
+    "userId": "d78a65f6-56b0-47a7-b5f2-3531f8bbd1a8",
+    "status": "completed",
+    "description": "Daily trading payout: 2025-08-16",
+    "createdAt": "2025-08-16T00:00:00.089Z",
+    "metadata": {
+      "simulationType": "trading_based",
+      "date": "2025-08-16",
+      "monthlyRate": 0.20267839744372676,
+      "isFirstMonth": true,
+      "tradingDataFound": true
+    }
   }
 ]

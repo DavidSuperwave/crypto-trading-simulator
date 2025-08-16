@@ -67,7 +67,7 @@ const LiveTradingFeed: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [unrealizedPL, setUnrealizedPL] = useState(0);
   const [, setAnimatedTarget] = useState(0);
-  const [, setLiveBalance] = useState(10000);
+  const [liveBalance, setLiveBalance] = useState(10000);
 
   // Live trading context for sharing P&L data
   const { liveTradingData, updateLiveTradingData } = useLiveTradingData();
