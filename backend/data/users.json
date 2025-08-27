@@ -1,5 +1,24 @@
 [
   {
+    "id": "cfe-demo-user-2025",
+    "email": "demo@cfe.com",
+    "password": "$2a$12$m3kLBDzzfRw3jFeDqWzWZ.LrF91D3xonVagFRcTQdLZ/0PEV43z4y",
+    "role": "user",
+    "balance": 15000,
+    "totalInterest": 0,
+    "depositedAmount": 15000,
+    "simulatedInterest": 750.50,
+    "currentMonthlyTarget": 0,
+    "simulationStartDate": "2025-08-26T20:10:00.000Z",
+    "lastSimulationUpdate": "2025-08-26T20:10:00.000Z",
+    "simulationActive": true,
+    "createdAt": "2025-08-26T20:10:00.000Z",
+    "updatedAt": "2025-08-26T20:10:00.000Z",
+    "firstName": "CFE",
+    "lastName": "Demo",
+    "phone": "5551234567"
+  },
+  {
     "id": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
     "email": "user@cryptosim.com",
     "password": "$2a$12$JIm8aeVphHoHWiUZbtZS3.unD0aynzm/B/7ajYS./Cry/3ilu//hW",
