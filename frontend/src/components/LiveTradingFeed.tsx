@@ -425,40 +425,6 @@ const LiveTradingFeed: React.FC = () => {
   }
 
   // Skip liveActivity check - our Recent Activity Engine handles everything
-  if (todaysTrades.length === 0 && !loading) {
-    return (
-      <div style={{
-        background: 'rgba(0, 0, 0, 0.3)',
-        backdropFilter: 'blur(15px)',
-        borderRadius: '20px',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
-        padding: '40px',
-        boxShadow: '0 12px 40px rgba(0, 0, 0, 0.4)',
-        textAlign: 'center'
-      }}>
-        <Activity style={{ 
-          fontSize: '48px', 
-          color: 'rgba(255, 255, 255, 0.4)', 
-          marginBottom: '16px' 
-        }} />
-        <h3 style={{ 
-          color: '#ffffff', 
-          fontSize: '20px', 
-          fontWeight: '600', 
-          margin: '0 0 8px 0' 
-        }}>
-          No trading activity today
-        </h3>
-        <p style={{ 
-          color: 'rgba(255, 255, 255, 0.6)', 
-          fontSize: '16px', 
-          margin: 0 
-        }}>
-          Market: Closed
-        </p>
-      </div>
-    );
-  }
 
   return (
     <>
