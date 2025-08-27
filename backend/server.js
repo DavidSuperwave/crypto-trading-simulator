@@ -125,6 +125,13 @@ app.get('/ws', (req, res) => {
 
 
 
+// Catch-all handler: send back React's index.html file for SPA routing
+if (process.env.RAILWAY_ENVIRONMENT || process.env.NODE_ENV === 'production') {
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'frontend', 'build', 'index.html'));
+  });
+}
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Error:', err);
@@ -134,21 +141,13 @@ app.use((err, req, res, next) => {
   });
 });
 
-// 404 handler
-app.use('*', (req, res) => {
+// 404 handler for API routes only (this should rarely be reached due to React catch-all)
+app.use('/api/*', (req, res) => {
   res.status(404).json({ 
-    error: 'Route not found',
+    error: 'API route not found',
     path: req.originalUrl 
   });
 });
-
-// Create HTTP server
-// Catch-all handler: send back React's index.html file for SPA routing
-if (process.env.RAILWAY_ENVIRONMENT || process.env.NODE_ENV === 'production') {
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'frontend', 'build', 'index.html'));
-  });
-}
 
 const server = http.createServer(app);
 
