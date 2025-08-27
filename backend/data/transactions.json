@@ -8387,5 +8387,37 @@
       "isFirstMonth": true,
       "tradingDataFound": true
     }
+  },
+  {
+    "id": "e3c5d370-dde5-475e-a06e-94ce89098bb2",
+    "type": "interest",
+    "amount": 122.89307509659695,
+    "userId": "d78a65f6-56b0-47a7-b5f2-3531f8bbd1a8",
+    "status": "completed",
+    "description": "Daily trading payout: 2025-08-26",
+    "createdAt": "2025-08-26T00:20:00.119Z",
+    "metadata": {
+      "simulationType": "trading_based",
+      "date": "2025-08-26",
+      "monthlyRate": 0.20267839744372676,
+      "isFirstMonth": true,
+      "tradingDataFound": true
+    }
+  },
+  {
+    "id": "26e14ecc-7ae1-4cd5-9c80-de0ba8f5e25b",
+    "type": "interest",
+    "amount": -46.44307266774521,
+    "userId": "d78a65f6-56b0-47a7-b5f2-3531f8bbd1a8",
+    "status": "completed",
+    "description": "Daily trading payout: 2025-08-27",
+    "createdAt": "2025-08-27T00:05:00.111Z",
+    "metadata": {
+      "simulationType": "trading_based",
+      "date": "2025-08-27",
+      "monthlyRate": 0.20267839744372676,
+      "isFirstMonth": true,
+      "tradingDataFound": true
+    }
   }
 ]

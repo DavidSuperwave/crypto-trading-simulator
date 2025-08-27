@@ -4,7 +4,6 @@ import './App.css';
 
 // Import components
 import Homepage from './components/Homepage';
-import Login from './components/Login';
 import UserDashboard from './components/UserDashboard';
 import AdminDashboard from './components/AdminDashboard';
 import DemoDashboard from './components/DemoDashboard';
@@ -12,7 +11,8 @@ import DemoPage from './components/DemoPage';
 import DepositPage from './components/DepositPage';
 import PaymentMethodPage from './components/PaymentMethodPage';
 import WithdrawalPage from './components/WithdrawalPage';
-import SignupPage from './components/SignupPage';
+import CFELoginPage from './components/CFELoginPage';
+import CFESignupPage from './components/CFESignupPage';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -105,12 +105,17 @@ function AppContent() {
         <Routes>
           <Route path="/login" element={
             <ErrorBoundary fallbackTitle="Login Error" showHome={true} showRefresh={false}>
-              <Login />
+              <CFELoginPage />
             </ErrorBoundary>
           } />
           <Route path="/signup" element={
             <ErrorBoundary fallbackTitle="Signup Error" showHome={true} showRefresh={false}>
-              <SignupPage />
+              <CFESignupPage />
+            </ErrorBoundary>
+          } />
+          <Route path="/cfe-login" element={
+            <ErrorBoundary fallbackTitle="CFE Login Error" showHome={true} showRefresh={false}>
+              <CFELoginPage />
             </ErrorBoundary>
           } />
           <Route path="/trading-demo" element={
@@ -179,6 +184,11 @@ function AppContent() {
             } 
           />
           <Route path="/" element={
+            <ErrorBoundary fallbackTitle="Login Error" showHome={false} showRefresh={false}>
+              <CFELoginPage />
+            </ErrorBoundary>
+          } />
+          <Route path="/home" element={
             <ErrorBoundary fallbackTitle="Homepage Error" showHome={false} showRefresh={true}>
               <Homepage />
             </ErrorBoundary>

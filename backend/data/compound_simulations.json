@@ -6806,9 +6806,9 @@
           "totalMonthlyTarget": 2026.7839744372675,
           "dailyPayout": 65.38012820765378,
           "daysInMonth": 31,
-          "alreadyPaid": 261.52051283061513,
-          "remainingDays": 27,
-          "remainingAmount": 1765.2634616066523,
+          "alreadyPaid": 392.2807692459227,
+          "remainingDays": 25,
+          "remainingAmount": 1634.5032051913447,
           "lastUpdated": "2025-08-13T00:46:09.479Z"
         },
         "dailyVolatility": {
@@ -7077,8 +7077,8 @@
             "date": "2025-08-13"
           }
         ],
-        "actualInterestPaid": -2.1006275511579737,
-        "lastPayoutDate": "2025-08-16",
+        "actualInterestPaid": 74.34937487769376,
+        "lastPayoutDate": "2025-08-27",
         "status": "active"
       },
       {
@@ -10173,6 +10173,6 @@
       }
     ],
     "totalProjectedReturn": 50988.818905803535,
-    "updatedAt": "2025-08-16T01:14:41.674Z"
+    "updatedAt": "2025-08-27T00:05:00.113Z"
   }
 ]
