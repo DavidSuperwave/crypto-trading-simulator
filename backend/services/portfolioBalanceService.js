@@ -1,253 +1,114 @@
+const database = require('../database');
+
 /**
- * Portfolio Balance Service
- * Calculates real-time portfolio balance including cash, open positions, and P/L
- * Handles position sizing where trades deduct cash when opened and return investment + P/L when closed
+ * Simplified Portfolio Balance Service for Daily Payout System
+ * Calculates portfolio value based on deposits + daily payouts - withdrawals
  */
 class PortfolioBalanceService {
   constructor() {
+    this.cache = new Map();
+    this.cacheTimeout = 60000; // 1 minute cache
     this.CompoundInterestSimulation = require('./compoundInterestSimulation');
     this.compoundSim = new this.CompoundInterestSimulation();
   }
 
   /**
-   * Calculate current portfolio state with position sizing
+   * Get simplified portfolio summary for user
    * @param {string} userId - User ID
-   * @param {string} timestamp - Current timestamp (ISO string)
+   * @returns {Promise<Object>} Portfolio summary
+   */
+  async getPortfolioSummary(userId) {
+    try {
+      const cacheKey = `portfolio_${userId}`;
+      const cached = this.cache.get(cacheKey);
+      
+      if (cached && Date.now() - cached.timestamp < this.cacheTimeout) {
+        return cached.data;
+      }
+
+      // Get user data
+      const user = await database.getUserById(userId);
+      if (!user) {
+        throw new Error('User not found');
+      }
+
+      // Get compound interest simulation
+      const simulation = await this.compoundSim.getUserSimulation(userId);
+      
+      if (!simulation) {
+        return {
+          totalPortfolioValue: user.depositedAmount || 0,
+          cashBalance: user.depositedAmount || 0,
+          totalDeposits: user.depositedAmount || 0,
+          totalPayouts: 0,
+          totalWithdrawals: 0,
+          monthlyProgress: null
+        };
+      }
+
+      // Get current active month
+      const currentMonth = simulation.months.find(m => m.status === 'active');
+      const totalDeposits = user.depositedAmount || 0;
+      const totalPayouts = currentMonth ? (currentMonth.totalPaid || 0) : 0;
+      const totalWithdrawals = 0; // TODO: Add withdrawal tracking
+      const totalPortfolioValue = totalDeposits + totalPayouts - totalWithdrawals;
+
+      const portfolioSummary = {
+        totalPortfolioValue,
+        cashBalance: totalPortfolioValue,
+        totalDeposits,
+        totalPayouts,
+        totalWithdrawals,
+        monthlyProgress: currentMonth ? {
+          currentMonth: currentMonth.monthNumber,
+          monthName: currentMonth.monthName,
+          totalTarget: currentMonth.projectedInterest,
+          totalPaid: currentMonth.totalPaid || 0,
+          remainingTarget: currentMonth.remainingTarget || currentMonth.projectedInterest
+        } : null
+      };
+
+      // Cache result
+      this.cache.set(cacheKey, { timestamp: Date.now(), data: portfolioSummary });
+
+      return portfolioSummary;
+    } catch (error) {
+      console.error('Error getting portfolio summary:', error);
+      return {
+        totalPortfolioValue: 0,
+        cashBalance: 0,
+        totalDeposits: 0,
+        totalPayouts: 0,
+        totalWithdrawals: 0,
+        monthlyProgress: null
+      };
+    }
+  }
+
+  /**
+   * Calculate current portfolio state (simplified)
+   * @param {string} userId - User ID
    * @returns {Object} Portfolio state
    */
-  async calculatePortfolioState(userId, timestamp = null) {
+  async calculatePortfolioState(userId) {
     try {
-      if (!timestamp) {
-        timestamp = new Date().toISOString();
-      }
-
-      const currentTime = new Date(timestamp);
-      const today = currentTime.toISOString().split('T')[0];
-
-      // Get user's compound interest simulation
-      const simulation = await this.compoundSim.getUserSimulation(userId);
-      if (!simulation) {
-        return this.getEmptyPortfolioState();
-      }
-
-      // Get current month data
-      const currentMonth = simulation.months.find(m => m.status === 'active');
-      if (!currentMonth) {
-        return this.getEmptyPortfolioState();
-      }
-
-      // Get today's trades
-      const dailyTrades = await this.compoundSim.getDailyTrades(userId, today);
-      if (!dailyTrades || !dailyTrades.trades) {
-        return this.getStartOfDayState(currentMonth.startingBalance);
-      }
-
-      // Calculate portfolio state based on trade timing
-      return this.calculateRealTimeState(
-        currentMonth.startingBalance,
-        dailyTrades.trades,
-        currentTime
-      );
-
+      const summary = await this.getPortfolioSummary(userId);
+      
+      return {
+        totalPortfolioValue: summary.totalPortfolioValue,
+        cashBalance: summary.cashBalance,
+        investedAmount: summary.totalDeposits,
+        unrealizedPL: 0, // No longer applicable
+        realizedPL: summary.totalPayouts,
+        openPositions: [], // No longer applicable
+        startOfDayBalance: summary.totalPortfolioValue,
+        todaysChange: 0, // Would need daily tracking
+        todaysChangePercent: '0.00'
+      };
     } catch (error) {
       console.error('Error calculating portfolio state:', error);
       return this.getEmptyPortfolioState();
     }
-  }
-
-  /**
-   * Calculate real-time portfolio state considering position sizing
-   * @param {number} startingBalance - Start of day balance
-   * @param {Array} trades - Today's trades
-   * @param {Date} currentTime - Current timestamp
-   * @returns {Object} Portfolio state
-   */
-  calculateRealTimeState(startingBalance, trades, currentTime) {
-    let cashBalance = startingBalance;
-    let openPositions = [];
-    let realizedPL = 0;
-    let totalInvested = 0;
-
-    trades.forEach(trade => {
-      const tradeOpen = new Date(trade.timestamp);
-      const tradeClose = new Date(tradeOpen.getTime() + (trade.duration * 60 * 1000)); // Add duration in minutes
-
-      if (tradeOpen <= currentTime) {
-        // Calculate position size (5-15% of current cash balance)
-        const positionSizePercent = 0.05 + (Math.random() * 0.10); // 5-15%
-        const positionSize = Math.min(cashBalance * positionSizePercent, cashBalance * 0.2); // Max 20%
-
-        if (tradeClose > currentTime) {
-          // Position is still open
-          cashBalance -= positionSize;
-          totalInvested += positionSize;
-
-          // Calculate current position value with some volatility
-          const timeOpen = (currentTime - tradeOpen) / (1000 * 60); // Minutes open
-          const volatilityFactor = 1 + (Math.sin(timeOpen / 10) * 0.02); // ±2% volatility
-          const currentValue = positionSize * volatilityFactor;
-          const unrealizedPL = currentValue - positionSize;
-
-          openPositions.push({
-            symbol: trade.cryptoSymbol,
-            type: trade.tradeType,
-            positionSize: Math.round(positionSize * 100) / 100,
-            currentValue: Math.round(currentValue * 100) / 100,
-            unrealizedPL: Math.round(unrealizedPL * 100) / 100,
-            openTime: trade.timestamp,
-            duration: Math.floor(timeOpen),
-            expectedClose: tradeClose.toISOString()
-          });
-        } else {
-          // Position has closed
-          realizedPL += trade.profitLoss;
-        }
-      }
-    });
-
-    const finalCashBalance = startingBalance + realizedPL - totalInvested;
-    const totalPositionValue = openPositions.reduce((sum, pos) => sum + pos.currentValue, 0);
-    const totalPortfolioValue = finalCashBalance + totalPositionValue;
-    const totalUnrealizedPL = openPositions.reduce((sum, pos) => sum + pos.unrealizedPL, 0);
-
-    return {
-      totalPortfolioValue: Math.round(totalPortfolioValue * 100) / 100,
-      cashBalance: Math.round(finalCashBalance * 100) / 100,
-      investedAmount: Math.round(totalInvested * 100) / 100,
-      unrealizedPL: Math.round(totalUnrealizedPL * 100) / 100,
-      realizedPL: Math.round(realizedPL * 100) / 100,
-      openPositions,
-      startOfDayBalance: startingBalance,
-      todaysChange: Math.round((totalPortfolioValue - startingBalance) * 100) / 100,
-      todaysChangePercent: ((totalPortfolioValue - startingBalance) / startingBalance * 100).toFixed(2)
-    };
-  }
-
-  /**
-   * Get balance timeline for charting
-   * @param {string} userId - User ID
-   * @param {string} date - Date (YYYY-MM-DD)
-   * @returns {Array} Timeline points
-   */
-  async getBalanceTimeline(userId, date = null) {
-    try {
-      if (!date) {
-        date = new Date().toISOString().split('T')[0];
-      }
-
-      const simulation = await this.compoundSim.getUserSimulation(userId);
-      if (!simulation) {
-        return [];
-      }
-
-      const currentMonth = simulation.months.find(m => m.status === 'active');
-      if (!currentMonth) {
-        return [];
-      }
-
-      const dailyTrades = await this.compoundSim.getDailyTrades(userId, date);
-      if (!dailyTrades || !dailyTrades.trades) {
-        return [{
-          time: `${date}T09:00:00.000Z`,
-          totalValue: currentMonth.startingBalance,
-          cashBalance: currentMonth.startingBalance,
-          investedAmount: 0,
-          openPositions: [],
-          event: 'Market Open'
-        }];
-      }
-
-      return this.generateTimelinePoints(
-        currentMonth.startingBalance,
-        dailyTrades.trades,
-        date
-      );
-
-    } catch (error) {
-      console.error('Error getting balance timeline:', error);
-      return [];
-    }
-  }
-
-  /**
-   * Generate timeline points for portfolio balance chart
-   * @param {number} startingBalance - Start of day balance
-   * @param {Array} trades - Today's trades
-   * @param {string} date - Date string
-   * @returns {Array} Timeline points
-   */
-  generateTimelinePoints(startingBalance, trades, date) {
-    const timeline = [];
-    
-    // Add market open point
-    timeline.push({
-      time: `${date}T09:00:00.000Z`,
-      totalValue: startingBalance,
-      cashBalance: startingBalance,
-      investedAmount: 0,
-      openPositions: [],
-      event: 'Market Open',
-      type: 'market_open'
-    });
-
-    // Sort trades by timestamp
-    const sortedTrades = trades.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-
-    let runningCash = startingBalance;
-    let runningInvested = 0;
-    let runningRealized = 0;
-    const activePositions = new Map();
-
-    // Generate points for each trade open and close
-    sortedTrades.forEach((trade, index) => {
-      const openTime = new Date(trade.timestamp);
-      const closeTime = new Date(openTime.getTime() + (trade.duration * 60 * 1000));
-      
-      // Position size calculation
-      const positionSizePercent = 0.05 + (Math.random() * 0.10);
-      const positionSize = Math.min(runningCash * positionSizePercent, runningCash * 0.2);
-
-      // Trade open point
-      runningCash -= positionSize;
-      runningInvested += positionSize;
-      activePositions.set(trade.id, {
-        symbol: trade.cryptoSymbol,
-        size: positionSize,
-        openTime: trade.timestamp
-      });
-
-      timeline.push({
-        time: trade.timestamp,
-        totalValue: runningCash + runningInvested, // Same total initially
-        cashBalance: runningCash,
-        investedAmount: runningInvested,
-        openPositions: Array.from(activePositions.values()),
-        event: `${trade.cryptoSymbol} ${trade.tradeType.toUpperCase()} Opened`,
-        type: 'position_open',
-        symbol: trade.cryptoSymbol,
-        amount: positionSize
-      });
-
-      // Trade close point
-      runningCash += positionSize + trade.profitLoss;
-      runningInvested -= positionSize;
-      runningRealized += trade.profitLoss;
-      activePositions.delete(trade.id);
-
-      timeline.push({
-        time: closeTime.toISOString(),
-        totalValue: runningCash + runningInvested,
-        cashBalance: runningCash,
-        investedAmount: runningInvested,
-        openPositions: Array.from(activePositions.values()),
-        event: `${trade.cryptoSymbol} ${trade.tradeType.toUpperCase()} Closed (${trade.profitLoss >= 0 ? '+' : ''}$${trade.profitLoss.toFixed(2)})`,
-        type: 'position_close',
-        symbol: trade.cryptoSymbol,
-        profitLoss: trade.profitLoss
-      });
-    });
-
-    return timeline;
   }
 
   /**
@@ -268,74 +129,40 @@ class PortfolioBalanceService {
   }
 
   /**
-   * Get start of day state for users with no trades yet
+   * Get current month progress from simulation
    */
-  getStartOfDayState(startingBalance) {
-    return {
-      totalPortfolioValue: startingBalance,
-      cashBalance: startingBalance,
-      investedAmount: 0,
-      unrealizedPL: 0,
-      realizedPL: 0,
-      openPositions: [],
-      startOfDayBalance: startingBalance,
-      todaysChange: 0,
-      todaysChangePercent: '0.00'
-    };
-  }
-
-  /**
-   * Get portfolio summary with historical context
-   * @param {string} userId - User ID
-   * @returns {Object} Portfolio summary
-   */
-  async getPortfolioSummary(userId) {
+  async getCurrentMonthProgress(userId) {
     try {
       const simulation = await this.compoundSim.getUserSimulation(userId);
-      if (!simulation) {
-        return null;
-      }
+      if (!simulation) return null;
 
-      const currentState = await this.calculatePortfolioState(userId);
-      
-      // Calculate total earned since joining
-      const totalEarned = simulation.months.reduce((sum, month) => {
-        return sum + (month.actualInterestPaid || 0);
-      }, 0);
+      const currentMonth = simulation.months.find(m => m.status === 'active');
+      if (!currentMonth) return null;
+
+      const today = new Date();
+      const dayOfMonth = today.getDate();
+      const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+      const progressPercent = (dayOfMonth / daysInMonth) * 100;
 
       return {
-        ...currentState,
-        totalEarnedSinceJoining: Math.round(totalEarned * 100) / 100,
-        joinDate: simulation.startDate,
-        monthsActive: simulation.months.length,
-        currentMonthProgress: this.getCurrentMonthProgress(simulation)
+        currentDay: dayOfMonth,
+        totalDays: daysInMonth,
+        progressPercent: Math.round(progressPercent * 100) / 100,
+        targetInterest: currentMonth.projectedInterest,
+        earnedInterest: currentMonth.totalPaid || 0
       };
-
     } catch (error) {
-      console.error('Error getting portfolio summary:', error);
+      console.error('Error getting month progress:', error);
       return null;
     }
   }
 
   /**
-   * Get current month progress
+   * Clear cache for user
    */
-  getCurrentMonthProgress(simulation) {
-    const currentMonth = simulation.months.find(m => m.status === 'active');
-    if (!currentMonth) return null;
-
-    const today = new Date();
-    const dayOfMonth = today.getDate();
-    const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
-    const progressPercent = (dayOfMonth / daysInMonth) * 100;
-
-    return {
-      currentDay: dayOfMonth,
-      totalDays: daysInMonth,
-      progressPercent: Math.round(progressPercent * 100) / 100,
-      targetInterest: currentMonth.projectedInterest,
-      earnedInterest: currentMonth.actualInterestPaid || 0
-    };
+  clearCache(userId) {
+    const cacheKey = `portfolio_${userId}`;
+    this.cache.delete(cacheKey);
   }
 }
 

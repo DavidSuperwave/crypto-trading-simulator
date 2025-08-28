@@ -1,5 +1,4 @@
 import React from 'react';
-import LiveTradingFeedDemo from './LiveTradingFeedDemo';
 
 const DemoPage: React.FC = () => {
   return (
@@ -45,7 +44,16 @@ const DemoPage: React.FC = () => {
         }}>
           {/* Demo Component */}
           <div>
-            <LiveTradingFeedDemo />
+            <div style={{
+              background: 'white',
+              borderRadius: '12px',
+              padding: '2rem',
+              textAlign: 'center',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)'
+            }}>
+              <h3>Live Trading Demo</h3>
+              <p>Live trading functionality has been removed from the application.</p>
+            </div>
           </div>
 
           {/* Information Panel */}

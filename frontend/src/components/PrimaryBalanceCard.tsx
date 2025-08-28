@@ -9,7 +9,6 @@ import {
   BarChart3
 } from 'lucide-react';
 import { usePortfolioData } from '../hooks/usePortfolioData';
-import { useLiveTradingData } from '../context/LiveTradingContext';
 
 // Helper functions outside component to avoid re-creation
 const formatCurrency = (value: number): string => {
@@ -29,7 +28,6 @@ const formatPercentage = (value: number): string => {
 
 const PrimaryBalanceCard: React.FC = () => {
   const { portfolioData, loading, error } = usePortfolioData();
-  const { liveTradingData } = useLiveTradingData();
   
   // Mobile detection
   const [isMobile, setIsMobile] = React.useState(false);
@@ -47,10 +45,9 @@ const PrimaryBalanceCard: React.FC = () => {
   // FIXED: Use backend's totalPortfolioValue as authoritative source (already includes trading P&L)
   // ALL HOOKS MUST BE CALLED BEFORE ANY EARLY RETURNS
   const livePnL = useMemo(() => {
-    // Only use live P&L for real-time fluctuations display, not for total calculation
-    const unrealizedPL = Number(liveTradingData?.unrealizedPL) || 0;
-    return unrealizedPL;
-  }, [liveTradingData?.unrealizedPL]);
+    // Live trading functionality removed
+    return 0;
+  }, []);
   
   const livePortfolioValue = useMemo(() => {
     if (!portfolioData) return 0;
@@ -72,7 +69,7 @@ const PrimaryBalanceCard: React.FC = () => {
   if (loading) {
     return (
       <div style={{
-        background: 'linear-gradient(135deg, #3B82F6 0%, #1E40AF 100%)',
+        background: 'linear-gradient(135deg, #008E60 0%, #006B47 100%)',
         borderRadius: '20px',
         padding: '2rem',
         color: 'white',
@@ -144,12 +141,12 @@ const PrimaryBalanceCard: React.FC = () => {
 
   return (
     <div style={{
-      background: 'linear-gradient(135deg, #3B82F6 0%, #1E40AF 100%)',
+      background: 'linear-gradient(135deg, #008E60 0%, #006B47 100%)',
       borderRadius: isMobile ? '16px' : '20px',
       padding: isMobile ? '1.5rem' : '2rem',
       color: 'white',
       marginBottom: isMobile ? '1rem' : '1.5rem',
-      boxShadow: '0 10px 30px rgba(59, 130, 246, 0.3)',
+      boxShadow: '0 10px 30px rgba(0, 142, 96, 0.3)',
       border: '1px solid rgba(255, 255, 255, 0.1)'
     }}>
       {/* Hero Balance */}

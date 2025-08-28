@@ -183,7 +183,8 @@ server.listen(PORT, HOST, () => {
   // Initialize scheduler for automated tasks
   try {
     scheduler.init();
-    console.log(`⏰ Scheduler initialized successfully`);
+    scheduler.startAll();
+    console.log(`⏰ Scheduler initialized and started successfully`);
   } catch (error) {
     console.error('❌ Failed to initialize scheduler:', error);
   }

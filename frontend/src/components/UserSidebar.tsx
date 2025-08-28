@@ -7,9 +7,10 @@ import { useNavigate } from 'react-router-dom';
 interface UserSidebarProps {
   activeView: string;
   onViewChange: (view: string) => void;
+  isMobile?: boolean;
 }
 
-const UserSidebar: React.FC<UserSidebarProps> = ({ activeView, onViewChange }) => {
+const UserSidebar: React.FC<UserSidebarProps> = ({ activeView, onViewChange, isMobile = false }) => {
   const { user, logout } = useAuth();
   const { portfolioData } = usePortfolioData();
   const navigate = useNavigate();
@@ -30,15 +31,20 @@ const UserSidebar: React.FC<UserSidebarProps> = ({ activeView, onViewChange }) =
     <div style={{
       width: '280px',
       height: '100vh',
-      background: 'linear-gradient(180deg, #00509d 0%, #003d7a 100%)',
+      background: 'linear-gradient(180deg, #008E60 0%, #10b981 100%)',
       color: 'white',
       display: 'flex',
       flexDirection: 'column',
-      position: 'fixed',
-      left: 0,
-      top: 0,
-      zIndex: 1000,
-      boxShadow: '4px 0 20px rgba(0, 0, 0, 0.1)'
+      overflowY: 'auto',
+      ...(isMobile ? {
+        // Mobile styles - no positioning
+      } : {
+        position: 'fixed',
+        left: 0,
+        top: 0,
+        zIndex: 1000,
+        boxShadow: '4px 0 20px rgba(0, 0, 0, 0.1)'
+      })
     }}>
       {/* Logo/Header */}
       <div style={{
@@ -59,8 +65,8 @@ const UserSidebar: React.FC<UserSidebarProps> = ({ activeView, onViewChange }) =
             justifyContent: 'center'
           }}>
             <img 
-              src="/logo.png" 
-              alt="Logo" 
+              src="/cfe-logo-official.png" 
+              alt="CFE Logo" 
               style={{
                 width: '220px',
                 height: '80px',

@@ -6,7 +6,6 @@ import './App.css';
 import Homepage from './components/Homepage';
 import UserDashboard from './components/UserDashboard';
 import AdminDashboard from './components/AdminDashboard';
-import DemoDashboard from './components/DemoDashboard';
 import DemoPage from './components/DemoPage';
 import DepositPage from './components/DepositPage';
 import PaymentMethodPage from './components/PaymentMethodPage';
@@ -123,16 +122,6 @@ function AppContent() {
               <DemoPage />
             </ErrorBoundary>
           } />
-          <Route 
-            path="/demo" 
-            element={
-              <PublicRoute>
-                <ErrorBoundary fallbackTitle="Demo Dashboard Error" showHome={true}>
-                  <DemoDashboard />
-                </ErrorBoundary>
-              </PublicRoute>
-            } 
-          />
           <Route 
             path="/user" 
             element={

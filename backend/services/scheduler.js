@@ -33,14 +33,22 @@ class Scheduler {
       'Weekly database cleanup'
     );
 
-    // For development: run interest every 5 minutes for testing
+    // Schedule daily payout processing between 1-3pm
+    this.scheduleTask(
+      'daily-payout',
+      '0 13-15 * * *', // Random time between 1-3pm
+      this.runDailyPayouts.bind(this),
+      'Daily payout processing (1-3pm)'
+    );
+
+    // For development: run payouts every 5 minutes for testing
     if (!this.isProduction) {
-      console.log('🧪 Development mode: Interest will run every 5 minutes for testing');
+      console.log('🧪 Development mode: Payouts will run every 5 minutes for testing');
       this.scheduleTask(
-        'dev-interest',
+        'dev-payouts',
         '*/5 * * * *', // Every 5 minutes
-        this.runDailyInterest.bind(this),
-        'Development interest testing'
+        this.runDailyPayouts.bind(this),
+        'Development payout testing'
       );
     }
 
@@ -113,7 +121,78 @@ class Scheduler {
   }
 
   /**
-   * Run daily interest processing
+   * Run daily payouts (simplified from complex trading system)
+   * Processes daily payouts for all users between 1-3pm
+   */
+  async runDailyPayouts() {
+    try {
+      console.log('💰 Starting scheduled daily payout processing...');
+      
+      const CompoundInterestSimulation = require('./compoundInterestSimulation');
+      const compoundSim = new CompoundInterestSimulation();
+      const database = require('../database');
+      
+      const today = new Date().toISOString().split('T')[0];
+      const users = await database.getAllUsers();
+      
+      const results = {
+        date: today,
+        processedUsers: 0,
+        totalPayouts: 0,
+        errors: [],
+        userResults: []
+      };
+
+      // Find users with active compound interest simulations
+      for (const user of users) {
+        try {
+          if (user.role !== 'user' && !(user.role === 'admin' && user.depositedAmount)) {
+            continue;
+          }
+
+          const simulationStatus = await compoundSim.getSimulationStatus(user.id);
+          
+          if (simulationStatus.hasSimulation && simulationStatus.status === 'active') {
+            console.log(`💳 Processing daily payout for ${user.email}...`);
+            
+            const payoutResult = await compoundSim.processDailyPayout(user.id);
+            
+            if (payoutResult.success) {
+              results.processedUsers++;
+              results.totalPayouts += payoutResult.amount;
+              results.userResults.push({
+                userId: user.id,
+                email: user.email,
+                payoutAmount: payoutResult.amount,
+                totalPaid: payoutResult.totalPaid,
+                remainingTarget: payoutResult.remainingTarget
+              });
+              
+              console.log(`✅ Payout processed: ${user.email} - $${payoutResult.amount}`);
+            } else {
+              console.log(`ℹ️ No payout needed: ${user.email} - ${payoutResult.message}`);
+            }
+          }
+        } catch (error) {
+          console.error(`❌ Error processing payout for user ${user.id}:`, error);
+          results.errors.push({
+            userId: user.id,
+            email: user.email || 'unknown',
+            error: error.message
+          });
+        }
+      }
+      
+      console.log(`✅ Daily payout processing completed: ${results.processedUsers} users, $${results.totalPayouts.toFixed(2)} total`);
+      return results;
+    } catch (error) {
+      console.error('❌ Daily payout processing failed:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Run daily interest processing (legacy - kept for compatibility)
    * Now uses only compound interest system (real-time system removed)
    */
   async runDailyInterest() {

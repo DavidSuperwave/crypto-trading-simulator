@@ -35,6 +35,67 @@ router.get('/status', authenticateToken, async (req, res) => {
 });
 
 /**
+ * Get user's daily payout data
+ * GET /api/compound-interest/daily-payouts
+ */
+router.get('/daily-payouts', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    console.log(`💰 Getting daily payout data for user ${userId}`);
+    
+    const simulation = await compoundSim.getUserSimulation(userId);
+    
+    if (!simulation) {
+      return res.status(404).json({
+        success: false,
+        message: 'No active simulation found'
+      });
+    }
+
+    const currentMonth = simulation.months.find(m => m.status === 'active');
+    if (!currentMonth) {
+      return res.status(404).json({
+        success: false,
+        message: 'No active month found'
+      });
+    }
+
+    const today = new Date().toISOString().split('T')[0];
+    const todaysPayout = currentMonth.dailyPayouts.find(p => p.date === today);
+    
+    // Get all payouts for the month (both paid and pending)
+    const allPayouts = currentMonth.dailyPayouts
+      .slice()
+      .reverse(); // Most recent first
+
+    const payoutData = {
+      currentMonth: {
+        monthNumber: currentMonth.monthNumber,
+        monthName: currentMonth.monthName,
+        totalTarget: currentMonth.projectedInterest,
+        totalPaid: currentMonth.totalPaid || 0,
+        remainingTarget: currentMonth.remainingTarget || currentMonth.projectedInterest,
+        dailyPayouts: currentMonth.dailyPayouts
+      },
+      todaysPayout: todaysPayout || null,
+      allPayouts: allPayouts
+    };
+    
+    res.json({
+      success: true,
+      payouts: payoutData
+    });
+  } catch (error) {
+    console.error('Error getting daily payout data:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to get daily payout data',
+      error: error.message
+    });
+  }
+});
+
+/**
  * Get detailed simulation plan for user
  * GET /api/compound-interest/plan
  */
@@ -734,92 +795,6 @@ router.get('/volatility-pattern', authenticateToken, async (req, res) => {
   }
 });
 
-/**
- * Get live trading activity for user
- * GET /api/compound-interest/live-activity
- */
-router.get('/live-activity', authenticateToken, async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const today = new Date().toISOString().split('T')[0];
-    
-    console.log(`📺 Getting live trading activity for user ${userId} on ${today}`);
-    
-    // Get today's trades - if they don't exist, generate them
-    let todaysTrades = await compoundSim.getDailyTrades(userId, today);
-    
-    if (!todaysTrades || !todaysTrades.trades || todaysTrades.trades.length === 0) {
-      console.log(`📺 No trades found for ${today}, generating them now...`);
-      try {
-        const generateResult = await compoundSim.generateDailyTrades(userId, today);
-        if (generateResult.success) {
-          todaysTrades = generateResult.dailyTrades;
-          console.log(`✅ Generated ${todaysTrades.tradeCount} trades for ${today}`);
-        }
-      } catch (error) {
-        console.error('Error generating daily trades:', error);
-      }
-    }
-    
-    console.log(`📺 Live activity result:`, todaysTrades ? `Found ${todaysTrades.tradeCount} trades` : 'No trades found');
-    
-    if (!todaysTrades || !todaysTrades.trades || todaysTrades.trades.length === 0) {
-      console.log(`❌ Live activity: Setting hasActivity = false - no trades exist and couldn't generate`);
-      return res.json({
-        success: true,
-        liveActivity: {
-          hasActivity: false,
-          date: today,
-          totalTrades: 0,
-          marketStatus: 'closed',
-          message: 'No trading activity for today'
-        }
-      });
-    }
-
-    // Get recent trades (last 30 minutes)
-    const now = new Date();
-    const thirtyMinutesAgo = new Date(now.getTime() - 30 * 60 * 1000);
-    
-    const recentTrades = todaysTrades.trades.filter(trade => {
-      const tradeTime = new Date(trade.timestamp);
-      return tradeTime >= thirtyMinutesAgo && tradeTime <= now;
-    });
-
-    // Calculate next trade ETA
-    const avgInterval = 480 / todaysTrades.tradeCount; // 8 hours / trade count in minutes
-    const nextTradeETA = Math.floor(Math.random() * avgInterval * 2);
-
-    res.json({
-      success: true,
-      liveActivity: {
-        hasActivity: true,
-        date: today,
-        totalTrades: todaysTrades.tradeCount,
-        recentTrades,
-        nextTradeETA, // minutes
-        dailySummary: todaysTrades.summary,
-        marketStatus: 'open' // Crypto markets are 24/7
-      }
-    });
-  } catch (error) {
-    console.error('Error getting live activity:', error);
-    // Always return success with fallback data, never 500
-    const today = new Date().toISOString().split('T')[0];
-    res.json({
-      success: true,
-      liveActivity: {
-        hasActivity: false,
-        date: today,
-        totalTrades: 0,
-        recentTrades: [],
-        nextTradeETA: 0,
-        dailySummary: { totalAmount: 0, winningTrades: 0, losingTrades: 0, winRate: 0 },
-        marketStatus: 'closed'
-      }
-    });
-  }
-});
 
 /**
  * Manually generate daily trades (admin only)

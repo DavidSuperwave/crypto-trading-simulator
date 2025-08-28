@@ -16,7 +16,7 @@ const getApiUrl = () => {
   }
   
   // Default to localhost for development
-  return 'http://localhost:5001/api';
+  return 'http://localhost:5000/api';
 };
 
 export const API_CONFIG = {

@@ -5,13 +5,12 @@ import WithdrawalPage from './WithdrawalPage';
 import UserSettings from './UserSettings';
 import PendingRequestsWidget from './PendingRequestsWidget';
 import UserSidebar from './UserSidebar';
-import LiveTradingFeed from './LiveTradingFeed';
 import FloatingChatBubble from './FloatingChatBubble';
 import PrimaryBalanceCard from './PrimaryBalanceCard';
+import DailyPayout from './DailyPayout';
 
 import { Menu, X } from 'lucide-react';
 import { useUserPolling } from '../hooks/useUserPolling';
-import { LiveTradingProvider } from '../context/LiveTradingContext';
 
 // Removed unused Transaction interface
 
@@ -45,8 +44,8 @@ const UserDashboard: React.FC = () => {
     setIsMobileMenuOpen(false);
   }, [activeView]);
 
-  // Simple polling for user notifications (2-minute intervals)
-  const { notifications, unreadCount, markAsRead, clearNotification } = useUserPolling((deposit) => {
+  // Memoize the callback to prevent infinite re-renders
+  const handleDepositStatusUpdate = useCallback((deposit: any) => {
     // Handle deposit status updates via polling
     console.log('🔔 Deposit status update via polling:', deposit);
     
@@ -57,7 +56,10 @@ const UserDashboard: React.FC = () => {
     } else if (deposit.status === 'rejected') {
       console.log('❌ Deposit rejected');
     }
-  });
+  }, [user]);
+
+  // Simple polling for user notifications (2-minute intervals)
+  const { notifications, unreadCount, markAsRead, clearNotification } = useUserPolling(handleDepositStatusUpdate);
 
   // Request notification permission on component mount
   useEffect(() => {
@@ -86,40 +88,12 @@ const UserDashboard: React.FC = () => {
       default:
         return (
           <div style={{ 
-            display: 'flex', 
-            flexDirection: isMobile ? 'column' : 'row',
-            gap: isMobile ? '1.5rem' : '2rem',
-            height: isMobile ? 'auto' : 'calc(100vh - 4rem)' // Full height minus padding
+            width: '100%',
+            maxWidth: '800px',
+            margin: '0 auto'
           }}>
-            {/* Left Column - User Info & Controls */}
-            <div style={{ 
-              flex: isMobile ? '1' : '0 0 60%', // 60% width on desktop, full on mobile
-              display: 'flex', 
-              flexDirection: 'column', 
-              gap: '1.5rem',
-              minWidth: 0 // Prevent overflow
-            }}>
-              {/* Primary Balance Card */}
-              <PrimaryBalanceCard />
-
-              {/* Pending Requests */}
-              <PendingRequestsWidget />
-            </div>
-
-            {/* Right Column - Live Trading Feed (Full Height) */}
-            {!isMobile && (
-              <div style={{ 
-                flex: '1', // Take remaining space (40%)
-                minHeight: '100%',
-                display: 'flex',
-                flexDirection: 'column'
-              }}>
-                <LiveTradingFeed />
-              </div>
-            )}
-
-            {/* Mobile: Show trading feed below other content */}
-            {isMobile && <LiveTradingFeed />}
+            {/* Daily Payout Card */}
+            <DailyPayout />
           </div>
         );
     }
@@ -132,7 +106,7 @@ const UserDashboard: React.FC = () => {
       alignItems: 'center',
       justifyContent: 'space-between',
       padding: '1rem',
-      background: 'linear-gradient(90deg, #00509d 0%, #003d7a 100%)',
+      background: 'linear-gradient(90deg, #008E60 0%, #10b981 100%)',
       color: 'white',
       position: 'sticky',
       top: 0,
@@ -146,8 +120,8 @@ const UserDashboard: React.FC = () => {
         gap: '0.5rem'
       }}>
         <img 
-          src="/logo.png" 
-          alt="Logo" 
+          src="/cfe-logo-official.png" 
+          alt="CFE Logo" 
           style={{
             height: '32px',
             objectFit: 'contain'
@@ -227,20 +201,16 @@ const UserDashboard: React.FC = () => {
                 bottom: 0,
                 backgroundColor: 'rgba(0, 0, 0, 0.5)',
                 zIndex: 1500,
-                display: 'flex'
+                display: 'flex',
+                justifyContent: 'flex-end'
               }}
               onClick={() => setIsMobileMenuOpen(false)}
             >
               {/* Mobile Sidebar */}
               <div
                 style={{
-                  width: '280px',
-                  height: '100vh',
-                  background: 'linear-gradient(180deg, #00509d 0%, #003d7a 100%)',
-                  color: 'white',
-                  transform: isMobileMenuOpen ? 'translateX(0)' : 'translateX(-100%)',
-                  transition: 'transform 0.3s ease-in-out',
-                  overflowY: 'auto'
+                  transform: isMobileMenuOpen ? 'translateX(0)' : 'translateX(100%)',
+                  transition: 'transform 0.3s ease-in-out'
                 }}
                 onClick={(e) => e.stopPropagation()}
               >
@@ -249,7 +219,8 @@ const UserDashboard: React.FC = () => {
                   onViewChange={(view) => {
                     setActiveView(view);
                     setIsMobileMenuOpen(false);
-                  }} 
+                  }}
+                  isMobile={true}
                 />
               </div>
             </div>
@@ -274,25 +245,19 @@ const UserDashboard: React.FC = () => {
           flex: 1
         }}>
           {/* Content Area */}
-          <LiveTradingProvider>
-            <div style={{
-              display: 'flex',
-              flexDirection: isMobile ? 'column' : 'row',
-              gap: isMobile ? '1rem' : '2rem',
-              height: '100%'
+          <div style={{
+            display: 'flex',
+            flexDirection: isMobile ? 'column' : 'row',
+            gap: isMobile ? '1rem' : '2rem'
+          }}>
+            {/* Main Content */}
+            <div style={{ 
+              flex: 1,
+              minWidth: 0 // Prevent flex item from overflowing
             }}>
-              {/* Main Content */}
-              <div style={{ 
-                flex: 1,
-                minWidth: 0 // Prevent flex item from overflowing
-              }}>
-                {renderMainContent()}
-              </div>
-              
-              {/* Right Sidebar - Live Trading Feed - Only show on home view */}
-              {/* Live Trading Feed removed - now shown in main content area only */}
+              {renderMainContent()}
             </div>
-          </LiveTradingProvider>
+          </div>
         </div>
       </div>
       

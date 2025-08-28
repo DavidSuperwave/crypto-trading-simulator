@@ -18,5 +18,15 @@
     "dailyPL": 105.95000000000437,
     "lastUpdated": "2025-08-12T14:18:59.298Z",
     "createdAt": "2025-08-12T14:18:59.245Z"
+  },
+  {
+    "userId": "5b30e95c-2d49-43be-9676-ebb52bd35daa",
+    "availableBalance": 395901.5315530912,
+    "openPositions": [],
+    "totalPortfolioValue": 395901.5315530912,
+    "dayStartBalance": 395901.5315530912,
+    "dailyPL": 0,
+    "lastUpdated": "2025-08-27T02:50:30.580Z",
+    "createdAt": "2025-08-27T02:50:30.580Z"
   }
 ]

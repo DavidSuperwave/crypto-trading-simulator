@@ -30,6 +30,168 @@ class CompoundInterestSimulation {
   }
 
   /**
+   * Generate daily payout schedule for a month
+   * @param {number} monthlyTarget - Total monthly profit target
+   * @param {number} daysInMonth - Number of days in the month
+   * @param {Date} monthDate - Start date of the month
+   * @returns {Array} Daily payout schedule
+   */
+  generateDailyPayouts(monthlyTarget, daysInMonth, monthDate) {
+    const baseDailyAmount = monthlyTarget / daysInMonth;
+    const payouts = [];
+    let totalGenerated = 0;
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(monthDate.getFullYear(), monthDate.getMonth(), day);
+      const dateString = date.toISOString().split('T')[0];
+      
+      // Add variance: ±10% for all days except the last
+      let amount;
+      if (day === daysInMonth) {
+        // Last day gets exact remainder to hit target
+        amount = monthlyTarget - totalGenerated;
+      } else {
+        amount = baseDailyAmount * (0.90 + Math.random() * 0.20);
+        totalGenerated += amount;
+      }
+
+      payouts.push({
+        day: day,
+        date: dateString,
+        amount: Math.round(amount * 100) / 100, // Round to 2 decimals
+        status: 'pending',
+        paidAt: null,
+        notificationSent: false
+      });
+    }
+
+    return payouts;
+  }
+
+  /**
+   * Adjust daily payouts when new deposit arrives mid-month
+   * Keeps original monthly target, redistributes remaining days
+   * @param {string} userId - User ID
+   * @param {number} newDepositAmount - New deposit amount
+   * @returns {Object} Updated simulation
+   */
+  async adjustForMidMonthDeposit(userId, newDepositAmount) {
+    try {
+      console.log(`💰 Adjusting payouts for mid-month deposit: User ${userId}, Amount $${newDepositAmount}`);
+      
+      const simulation = await this.getUserSimulation(userId);
+      if (!simulation) {
+        throw new Error('No active simulation found');
+      }
+
+      const currentMonth = simulation.months.find(m => m.status === 'active');
+      if (!currentMonth) {
+        throw new Error('No active month found');
+      }
+
+      const today = new Date().toISOString().split('T')[0];
+      const currentDayIndex = currentMonth.dailyPayouts.findIndex(p => p.date === today);
+      
+      if (currentDayIndex === -1) {
+        throw new Error('Current day not found in payout schedule');
+      }
+
+      // Add deposit to current month's deposits
+      currentMonth.actualDeposits.push({
+        amount: newDepositAmount,
+        date: today
+      });
+
+      // Keep original monthly target, redistribute remaining unpaid days
+      const remainingDays = currentMonth.dailyPayouts.filter((p, i) => i > currentDayIndex && p.status === 'pending');
+      const remainingAmount = currentMonth.remainingTarget;
+      
+      if (remainingDays.length > 0) {
+        const baseDailyAmount = remainingAmount / remainingDays.length;
+        let totalAdjusted = 0;
+        
+        remainingDays.forEach((payout, index) => {
+          if (index === remainingDays.length - 1) {
+            // Last day gets exact remainder
+            payout.amount = remainingAmount - totalAdjusted;
+          } else {
+            payout.amount = Math.round((baseDailyAmount * (0.90 + Math.random() * 0.20)) * 100) / 100;
+            totalAdjusted += payout.amount;
+          }
+        });
+      }
+
+      // Update starting balance for next month to include new deposit
+      const nextMonth = simulation.months.find(m => m.monthNumber === currentMonth.monthNumber + 1);
+      if (nextMonth) {
+        this.updateNextMonthStartingBalance(nextMonth, newDepositAmount);
+      }
+
+      await this.saveSimulationPlan(simulation);
+      
+      console.log(`✅ Payouts adjusted for mid-month deposit of $${newDepositAmount}`);
+      return simulation;
+    } catch (error) {
+      console.error('Error adjusting for mid-month deposit:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Process daily payout for a user
+   * @param {string} userId - User ID
+   * @returns {Object} Payout result
+   */
+  async processDailyPayout(userId) {
+    try {
+      const simulation = await this.getUserSimulation(userId);
+      if (!simulation) {
+        return { success: false, message: 'No active simulation found' };
+      }
+
+      const currentMonth = simulation.months.find(m => m.status === 'active');
+      if (!currentMonth) {
+        return { success: false, message: 'No active month found' };
+      }
+
+      const today = new Date().toISOString().split('T')[0];
+      const todayPayout = currentMonth.dailyPayouts.find(p => p.date === today);
+      
+      if (!todayPayout) {
+        return { success: false, message: 'No payout scheduled for today' };
+      }
+
+      if (todayPayout.status === 'paid') {
+        return { success: false, message: 'Payout already processed today' };
+      }
+
+      // Mark as paid
+      todayPayout.status = 'paid';
+      todayPayout.paidAt = new Date().toISOString();
+      
+      // Update month totals
+      currentMonth.totalPaid += todayPayout.amount;
+      currentMonth.remainingTarget -= todayPayout.amount;
+      currentMonth.lastPayoutDate = today;
+
+      await this.saveSimulationPlan(simulation);
+      
+      console.log(`✅ Daily payout processed: User ${userId}, Amount $${todayPayout.amount}`);
+      
+      return {
+        success: true,
+        amount: todayPayout.amount,
+        totalPaid: currentMonth.totalPaid,
+        remainingTarget: currentMonth.remainingTarget,
+        message: `Daily payout of $${todayPayout.amount} processed successfully`
+      };
+    } catch (error) {
+      console.error('Error processing daily payout:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Initialize 12-month compound interest simulation for a new user
    * Called when first deposit is approved
    * @param {string} userId - User ID
@@ -71,12 +233,8 @@ class CompoundInterestSimulation {
         
         const daysInMonth = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0).getDate();
         
-        // Generate daily volatility pattern for this month
-        const dailyVolatility = this.volatilityService.generateMonthlyVolatility({
-          monthlyTargetAmount: monthlyInterest,
-          daysInMonth: daysInMonth,
-          startingBalance: runningBalance
-        });
+        // Generate simple daily payout schedule
+        const dailyPayouts = this.generateDailyPayouts(monthlyInterest, daysInMonth, monthDate);
 
         const monthData = {
           id: uuidv4(),
@@ -90,12 +248,11 @@ class CompoundInterestSimulation {
           projectedInterest: monthlyInterest,
           endingBalance: runningBalance + monthlyInterest,
           daysInMonth: daysInMonth,
-          dailyPayoutSchedule: this.calculateDailyPayoutSchedule(monthlyInterest, daysInMonth),
-          dailyVolatility: dailyVolatility, // NEW: Add volatility pattern
-          tradeCount: this.tradeService.getTradeCount(runningBalance), // NEW: Account-based trade count
+          dailyPayouts: dailyPayouts,
           actualDeposits: monthIndex === 0 ? [{ amount: initialDeposit, date: startDate.toISOString().split('T')[0] }] : [],
-          actualInterestPaid: 0,
-          lastPayoutDate: null, // Simple tracking to prevent double payments
+          totalPaid: 0,
+          remainingTarget: monthlyInterest,
+          lastPayoutDate: null,
           status: monthIndex === 0 ? 'active' : 'scheduled'
         };
 
@@ -671,6 +828,141 @@ class CompoundInterestSimulation {
     } catch (error) {
       console.error('Error saving compound simulation plan:', error);
       throw error;
+    }
+  }
+
+  /**
+   * Generate simulation with custom start date
+   * @param {string} userId - User ID
+   * @param {number} initialDeposit - Initial deposit amount
+   * @param {Date} startDate - Custom start date
+   * @returns {Promise<Object>} Simulation plan
+   */
+  async generateSimulationWithStartDate(userId, initialDeposit, startDate) {
+    try {
+      console.log(`🎯 Generating simulation for user ${userId} starting from ${startDate.toISOString().split('T')[0]}`);
+      
+      const simulationPlan = {
+        userId,
+        startDate: startDate.toISOString(),
+        initialDeposit,
+        totalDeposited: initialDeposit,
+        currentBalance: initialDeposit,
+        months: [],
+        totalProjectedReturn: 0
+      };
+
+      let runningBalance = initialDeposit;
+
+      // Generate 12 months starting from the specified date
+      for (let monthIndex = 0; monthIndex < 12; monthIndex++) {
+        const monthDate = new Date(startDate.getFullYear(), startDate.getMonth() + monthIndex, 1);
+        const isFirstMonth = monthIndex === 0;
+        
+        // Generate locked monthly rate
+        const monthlyRate = this.generateLockedMonthlyRate(isFirstMonth);
+        const monthlyInterest = runningBalance * monthlyRate;
+        
+        const daysInMonth = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0).getDate();
+        
+        // Generate simple daily payout schedule
+        const dailyPayouts = this.generateDailyPayouts(monthlyInterest, daysInMonth, monthDate);
+
+        const monthData = {
+          id: uuidv4(),
+          monthNumber: monthIndex + 1,
+          year: monthDate.getFullYear(),
+          month: monthDate.getMonth() + 1,
+          monthName: monthDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
+          isFirstMonth,
+          lockedRate: monthlyRate,
+          startingBalance: runningBalance,
+          projectedInterest: monthlyInterest,
+          endingBalance: runningBalance + monthlyInterest,
+          daysInMonth: daysInMonth,
+          dailyPayouts: dailyPayouts,
+          actualDeposits: monthIndex === 0 ? [{ amount: initialDeposit, date: startDate.toISOString().split('T')[0] }] : [],
+          totalPaid: 0,
+          remainingTarget: monthlyInterest,
+          lastPayoutDate: null,
+          status: monthIndex === 0 ? 'active' : 'scheduled'
+        };
+
+        simulationPlan.months.push(monthData);
+        simulationPlan.totalProjectedReturn += monthlyInterest;
+        runningBalance += monthlyInterest;
+      }
+
+      // Save simulation
+      await this.saveSimulationPlan(simulationPlan);
+      console.log(`✅ Simulation generated and saved for user ${userId}`);
+      
+      return simulationPlan;
+
+    } catch (error) {
+      console.error('Error generating simulation with start date:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Catch up daily payouts from start date to current date
+   * @param {string} userId - User ID
+   * @param {Date} startDate - Start date for catch-up
+   */
+  async catchUpDailyPayouts(userId, startDate) {
+    try {
+      console.log(`📅 Catching up daily payouts for user ${userId} from ${startDate.toISOString().split('T')[0]}`);
+      
+      const simulation = await this.getUserSimulation(userId);
+      if (!simulation) {
+        console.log('No simulation found for catch-up');
+        return;
+      }
+
+      const today = new Date();
+      const currentDate = new Date(startDate);
+      let processedDays = 0;
+
+      while (currentDate <= today) {
+        const dateString = currentDate.toISOString().split('T')[0];
+        
+        // Find the month this date belongs to
+        const targetMonth = simulation.months.find(month => {
+          const monthStart = new Date(month.year, month.month - 1, 1);
+          const monthEnd = new Date(month.year, month.month, 0);
+          return currentDate >= monthStart && currentDate <= monthEnd;
+        });
+
+        if (targetMonth && targetMonth.status === 'active') {
+          // Find the daily payout for this date
+          const dayOfMonth = currentDate.getDate();
+          const dailyPayout = targetMonth.dailyPayouts.find(p => p.day === dayOfMonth);
+          
+          if (dailyPayout && dailyPayout.status === 'pending') {
+            // Mark as paid with a timestamp from that day
+            dailyPayout.status = 'paid';
+            dailyPayout.paidAt = new Date(currentDate.getTime() + 14 * 60 * 60 * 1000).toISOString(); // 2pm that day
+            dailyPayout.notificationSent = true;
+            
+            // Update month totals
+            targetMonth.totalPaid = (targetMonth.totalPaid || 0) + dailyPayout.amount;
+            targetMonth.remainingTarget = targetMonth.projectedInterest - targetMonth.totalPaid;
+            targetMonth.lastPayoutDate = dateString;
+            
+            processedDays++;
+          }
+        }
+
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+
+      // Save updated simulation
+      await this.saveSimulationPlan(simulation);
+      console.log(`✅ Caught up ${processedDays} daily payouts for user ${userId}`);
+
+    } catch (error) {
+      console.error('Error catching up daily payouts:', error);
     }
   }
 
