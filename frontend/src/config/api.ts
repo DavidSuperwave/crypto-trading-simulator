@@ -6,17 +6,20 @@ const getApiUrl = () => {
   }
   
   // Auto-detect production based on hostname
-  if (window.location.hostname.includes('railway.app')) {
-    // Railway: same domain, just add /api path
+  if (window.location.hostname.includes('railway.app') || 
+      window.location.hostname.includes('up.railway.app') ||
+      window.location.hostname.includes('ondigitalocean.app')) {
+    // Railway/DigitalOcean: same domain, just add /api path
     return `${window.location.protocol}//${window.location.hostname}/api`;
-  } else if (window.location.hostname.includes('vercel.app') || window.location.hostname.includes('crypto-trading-simulator')) {
-    // Vercel frontend + Railway backend setup
-    // Vercel frontend + Railway backend
+  } else if (window.location.hostname.includes('vercel.app') || 
+             window.location.hostname.includes('crypto-trading-simulator') ||
+             window.location.hostname !== 'localhost') {
+    // Vercel frontend + Railway backend setup OR any non-localhost production domain
     return 'https://crypto-trading-simulator-production.up.railway.app/api';
   }
   
   // Default to localhost for development
-  return 'http://localhost:5000/api';
+  return 'http://localhost:5001/api';
 };
 
 export const API_CONFIG = {
