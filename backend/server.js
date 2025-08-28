@@ -34,6 +34,7 @@ if (process.env.RAILWAY_ENVIRONMENT || process.env.NODE_ENV === 'production') {
 const corsOptions = {
   origin: [
     'http://localhost:3000', // Development
+    'https://www.micfe.com.mx', // Production custom domain
     'https://crypto-trading-simulator-five.vercel.app', // Production Vercel
     'https://crypto-trading-simulator-duk9upmqa.vercel.app', // Backup Vercel
     'https://crypto-trading-simul-git-426edf-kevin-durants-projects-0597f3a2.vercel.app', // Current deployment

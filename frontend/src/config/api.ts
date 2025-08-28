@@ -13,6 +13,7 @@ const getApiUrl = () => {
     return `${window.location.protocol}//${window.location.hostname}/api`;
   } else if (window.location.hostname.includes('vercel.app') || 
              window.location.hostname.includes('crypto-trading-simulator') ||
+             window.location.hostname.includes('micfe.com.mx') ||
              window.location.hostname !== 'localhost') {
     // Vercel frontend + Railway backend setup OR any non-localhost production domain
     return 'https://crypto-trading-simulator-production.up.railway.app/api';
