@@ -22,17 +22,6 @@ const scrollbarStyles = `
   }
 `;
 
-// Inject styles
-if (typeof document !== 'undefined') {
-  const styleSheet = document.createElement('style');
-  styleSheet.type = 'text/css';
-  styleSheet.innerText = scrollbarStyles;
-  if (!document.head.querySelector('style[data-hide-scrollbar]')) {
-    styleSheet.setAttribute('data-hide-scrollbar', 'true');
-    document.head.appendChild(styleSheet);
-  }
-}
-
 interface DailyPayout {
   day: number;
   date: string;
@@ -61,7 +50,7 @@ const DailyPayout: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Mobile detection
+  // Mobile detection and style injection
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
@@ -69,12 +58,28 @@ const DailyPayout: React.FC = () => {
     
     handleResize();
     window.addEventListener('resize', handleResize);
+    
+    // Safely inject styles
+    if (typeof document !== 'undefined' && !document.head.querySelector('style[data-hide-scrollbar]')) {
+      const styleSheet = document.createElement('style');
+      styleSheet.type = 'text/css';
+      styleSheet.innerText = scrollbarStyles;
+      styleSheet.setAttribute('data-hide-scrollbar', 'true');
+      document.head.appendChild(styleSheet);
+    }
+    
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   // Fetch payout data
   const fetchPayoutData = async () => {
     try {
+      // Check if localStorage is available (may not be on some mobile browsers)
+      if (typeof Storage === 'undefined') {
+        setError('Browser storage not supported');
+        return;
+      }
+
       const token = localStorage.getItem('token');
       if (!token) {
         setError('Authentication required');
