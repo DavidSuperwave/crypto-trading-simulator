@@ -93,7 +93,7 @@ const UserDashboard: React.FC = () => {
             margin: '0 auto'
           }}>
             {/* Daily Payout Card */}
-            <DailyPayout />
+            <DailyPayout onNavigateToDeposit={() => setActiveView('deposit')} />
           </div>
         );
     }

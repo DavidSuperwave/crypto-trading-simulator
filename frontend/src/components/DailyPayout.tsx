@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  TrendingUp, 
-  Calendar,
-  DollarSign,
-  Clock,
-  CheckCircle2,
-  PiggyBank,
-  ArrowUp
-} from 'lucide-react';
-import { buildApiUrl } from '../config/api';
 import axios from 'axios';
+import { buildApiUrl } from '../config/api';
+import { PiggyBank, CheckCircle2, Clock } from 'lucide-react';
+
+interface DailyPayoutProps {
+  onNavigateToDeposit?: () => void;
+}
 
 // Add CSS to hide scrollbar
 const scrollbarStyles = `
@@ -44,7 +40,7 @@ interface PayoutData {
   allPayouts: DailyPayout[];
 }
 
-const DailyPayout: React.FC = () => {
+const DailyPayout: React.FC<DailyPayoutProps> = ({ onNavigateToDeposit }) => {
   const [payoutData, setPayoutData] = useState<PayoutData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -166,6 +162,135 @@ const DailyPayout: React.FC = () => {
   }
 
   if (error) {
+    // Show welcome dashboard for new users without simulation
+    if (error.includes('No active simulation found')) {
+      return (
+        <div style={{
+          background: 'white',
+          borderRadius: isMobile ? '16px' : '20px',
+          padding: isMobile ? '1.5rem' : '2rem',
+          height: isMobile ? 'auto' : '100%',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+          border: '1px solid #e5e7eb',
+          minHeight: '400px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '2rem'
+        }}>
+          {/* Welcome Header */}
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>🎉</div>
+            <h2 style={{ 
+              fontSize: '1.5rem', 
+              fontWeight: '700', 
+              color: '#1f2937',
+              margin: '0 0 0.5rem 0'
+            }}>
+              Welcome to CFE Trading!
+            </h2>
+            <p style={{ 
+              color: '#6b7280', 
+              fontSize: '1rem',
+              margin: 0,
+              lineHeight: '1.5'
+            }}>
+              Start your investment journey with your first deposit
+            </p>
+          </div>
+
+          {/* Sample Dashboard Preview */}
+          <div style={{
+            background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)',
+            borderRadius: '12px',
+            padding: '1.5rem',
+            border: '2px dashed #059669'
+          }}>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+              gap: '1rem',
+              marginBottom: '1.5rem'
+            }}>
+              {/* Sample Balance Card */}
+              <div style={{
+                background: 'white',
+                padding: '1rem',
+                borderRadius: '8px',
+                textAlign: 'center',
+                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+              }}>
+                <div style={{ fontSize: '0.8rem', color: '#6b7280', marginBottom: '0.5rem' }}>
+                  YOUR PORTFOLIO VALUE
+                </div>
+                <div style={{ fontSize: '1.5rem', fontWeight: '700', color: '#059669' }}>
+                  $0.00
+                </div>
+              </div>
+
+              {/* Sample Earnings Card */}
+              <div style={{
+                background: 'white',
+                padding: '1rem',
+                borderRadius: '8px',
+                textAlign: 'center',
+                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+              }}>
+                <div style={{ fontSize: '0.8rem', color: '#6b7280', marginBottom: '0.5rem' }}>
+                  TOTAL EARNINGS
+                </div>
+                <div style={{ fontSize: '1.5rem', fontWeight: '700', color: '#10b981' }}>
+                  $0.00
+                </div>
+              </div>
+            </div>
+
+            <div style={{ textAlign: 'center', color: '#6b7280', fontSize: '0.9rem' }}>
+              📈 Your earnings dashboard will appear here after your first deposit
+            </div>
+          </div>
+
+          {/* Call to Action */}
+          <div style={{ textAlign: 'center' }}>
+            <button
+              onClick={() => onNavigateToDeposit && onNavigateToDeposit()}
+              style={{
+                background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
+                color: 'white',
+                border: 'none',
+                padding: '1rem 2rem',
+                borderRadius: '12px',
+                fontSize: '1.1rem',
+                fontWeight: '600',
+                cursor: 'pointer',
+                boxShadow: '0 4px 12px rgba(5, 150, 105, 0.3)',
+                transition: 'all 0.2s ease',
+                marginBottom: '1rem'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 6px 16px rgba(5, 150, 105, 0.4)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(5, 150, 105, 0.3)';
+              }}
+            >
+              💰 Make Your First Deposit
+            </button>
+            
+            <div style={{ 
+              fontSize: '0.9rem', 
+              color: '#6b7280',
+              lineHeight: '1.5'
+            }}>
+              Start with any amount and watch your portfolio grow with daily compound interest
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Show regular error for other errors
     return (
       <div style={{
         background: 'white',
