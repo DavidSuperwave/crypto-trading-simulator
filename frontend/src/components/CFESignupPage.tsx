@@ -67,7 +67,7 @@ const CFESignupPage: React.FC = () => {
         formData.password,
         formData.username,
         formData.username,
-        '',
+        '0000000000',
         'user',
         formData.codigoAcceso
       );
