@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { buildApiUrl } from '../config/api';
 import { PiggyBank, CheckCircle2, Clock } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { usePortfolioData } from '../hooks/usePortfolioData';
 
 interface DailyPayoutProps {
   onNavigateToDeposit?: () => void;
@@ -41,10 +43,12 @@ interface PayoutData {
 }
 
 const DailyPayout: React.FC<DailyPayoutProps> = ({ onNavigateToDeposit }) => {
-  const [payoutData, setPayoutData] = useState<PayoutData | null>(null);
+  const { user } = useAuth();
+  const { portfolioData } = usePortfolioData();
+  const [payoutData, setPayoutData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   // Mobile detection and style injection
   useEffect(() => {
@@ -410,11 +414,11 @@ const DailyPayout: React.FC<DailyPayoutProps> = ({ onNavigateToDeposit }) => {
           lineHeight: 1,
           marginBottom: '0.5rem'
         }}>
-          {formatCurrency(1000 + payoutData.currentMonth.totalPaid)}
+          {formatCurrency((portfolioData?.totalDeposited || user?.depositedAmount || user?.balance || 0) + payoutData.currentMonth.totalPaid)}
         </div>
         
         <div style={{ fontSize: '0.85rem', opacity: 0.8 }}>
-          $1,000.00 deposited + {formatCurrency(payoutData.currentMonth.totalPaid)} earned
+          ${(portfolioData?.totalDeposited || user?.depositedAmount || user?.balance || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} deposited + {formatCurrency(payoutData.currentMonth.totalPaid)} earned
         </div>
       </div>
 
