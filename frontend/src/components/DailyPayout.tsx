@@ -223,7 +223,10 @@ const DailyPayout: React.FC<DailyPayoutProps> = ({ onNavigateToDeposit }) => {
                   YOUR PORTFOLIO VALUE
                 </div>
                 <div style={{ fontSize: '1.5rem', fontWeight: '700', color: '#059669' }}>
-                  $0.00
+                  $2,500
+                </div>
+                <div style={{ fontSize: '0.7rem', color: '#9ca3af', marginTop: '0.2rem' }}>
+                  Minimum deposit
                 </div>
               </div>
 
@@ -239,7 +242,10 @@ const DailyPayout: React.FC<DailyPayoutProps> = ({ onNavigateToDeposit }) => {
                   TOTAL EARNINGS
                 </div>
                 <div style={{ fontSize: '1.5rem', fontWeight: '700', color: '#10b981' }}>
-                  $0.00
+                  10,000 pesos
+                </div>
+                <div style={{ fontSize: '0.7rem', color: '#9ca3af', marginTop: '0.2rem' }}>
+                  After 90 days
                 </div>
               </div>
             </div>
