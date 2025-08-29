@@ -1046,10 +1046,22 @@ router.get('/portfolio-state', authenticateToken, async (req, res) => {
     console.log(`👤 Found user:`, user ? {
       id: user.id,
       email: user.email,
+      balance: user.balance,
       depositedAmount: user.depositedAmount,
       simulatedInterest: user.simulatedInterest,
-      simulationActive: user.simulationActive
+      simulationActive: user.simulationActive,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt
     } : 'USER NOT FOUND');
+    
+    if (!user) {
+      console.error(`❌ User ${userId} not found in database - this could cause incorrect portfolio calculations`);
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+        userId: userId
+      });
+    }
     const simulation = await compoundSim.getUserSimulation(userId);
     
     // Calculate base portfolio from deposits + compound interest
@@ -1081,17 +1093,31 @@ router.get('/portfolio-state', authenticateToken, async (req, res) => {
         const expectedBaseValue = Number(basePortfolioValue);
         const positionManagerValue = Number(positionData.totalPortfolioValue);
         
-        console.log(`📊 Portfolio value comparison:`, {
+        console.log(`📊 Portfolio value comparison for ${user.email}:`, {
           expectedBaseValue: expectedBaseValue,
           positionManagerValue: positionManagerValue,
-          difference: positionManagerValue - expectedBaseValue
+          difference: positionManagerValue - expectedBaseValue,
+          positionManagerAvailableBalance: positionData.availableBalance
         });
         
         // If position manager's value is significantly different from our base calculation,
-        // only use the trading P&L component (dailyPL) instead of totalPortfolioValue
-        if (Math.abs(positionManagerValue - expectedBaseValue) > expectedBaseValue * 0.1) {
-          console.log(`⚠️ Position manager portfolio value mismatch, using dailyPL only`);
-          positionsPL = Number(positionData.dailyPL || 0); // Use only the trading P&L, not total value
+        // force reset position manager data and use only trading P&L
+        if (Math.abs(positionManagerValue - expectedBaseValue) > Math.max(expectedBaseValue * 0.1, 100)) {
+          console.log(`🔄 FORCING position manager reset for ${user.email} - expected: $${expectedBaseValue}, got: $${positionManagerValue}`);
+          
+          // Force update position manager with correct base value
+          try {
+            await positionBalanceManager.updateUserPortfolio(userId, {
+              availableBalance: expectedBaseValue * 0.2, // 20% available
+              totalPortfolioValue: expectedBaseValue,
+              dayStartBalance: expectedBaseValue
+            });
+            console.log(`✅ Reset position manager to correct base value: $${expectedBaseValue}`);
+          } catch (resetError) {
+            console.error(`❌ Failed to reset position manager:`, resetError);
+          }
+          
+          positionsPL = Number(positionData.dailyPL || 0); // Use only the trading P&L
         } else {
           positionsPL = positionManagerValue - expectedBaseValue; // Normal calculation
         }

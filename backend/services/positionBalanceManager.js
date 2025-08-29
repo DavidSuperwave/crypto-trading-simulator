@@ -83,7 +83,7 @@ class PositionBalanceManager {
       if (!userPortfolio) {
         // Initialize new user portfolio
         const user = this.database ? await this.database.getUserById(userId) : null;
-        const startingBalance = user ? (user.balance || 0) : 10000;
+        const startingBalance = user ? (user.depositedAmount || user.balance || 0) : 0;
         
         userPortfolio = {
           userId,
