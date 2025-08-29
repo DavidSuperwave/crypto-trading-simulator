@@ -485,7 +485,7 @@ const DailyPayout: React.FC<DailyPayoutProps> = ({ onNavigateToDeposit }) => {
                   const monthlyTarget = payoutData.currentMonth.totalTarget;
                   const daysInMonth = payoutData.currentMonth.dailyPayouts.length;
                   
-                  const points = payoutData.currentMonth.dailyPayouts.map((payout, index) => {
+                  const points = payoutData.allPayouts.slice(0, 8).map((payout: any, index: number) => {
                     if (payout.status === 'paid') {
                       cumulativeEarnings += payout.amount;
                     }
@@ -508,7 +508,7 @@ const DailyPayout: React.FC<DailyPayoutProps> = ({ onNavigateToDeposit }) => {
               {/* Current position dot */}
               <circle
                 cx={(() => {
-                  const paidDays = payoutData.currentMonth.dailyPayouts.filter(p => p.status === 'paid').length;
+                  const paidDays = payoutData.currentMonth.dailyPayouts.filter((p: any) => p.status === 'paid').length;
                   const daysInMonth = payoutData.currentMonth.dailyPayouts.length;
                   return (paidDays / daysInMonth) * 400;
                 })()}
