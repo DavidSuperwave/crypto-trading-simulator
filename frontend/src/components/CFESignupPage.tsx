@@ -5,7 +5,6 @@ import { Eye, EyeOff } from 'lucide-react';
 
 const CFESignupPage: React.FC = () => {
   const [formData, setFormData] = useState({
-    username: '',
     password: '',
     confirmPassword: '',
     email: '',
@@ -30,11 +29,6 @@ const CFESignupPage: React.FC = () => {
     setError('');
 
     // Basic validation
-    if (!formData.username.trim()) {
-      setError('Usuario es requerido');
-      setLoading(false);
-      return;
-    }
     if (!formData.password) {
       setError('Contraseña es requerida');
       setLoading(false);
@@ -62,11 +56,13 @@ const CFESignupPage: React.FC = () => {
     }
 
     try {
+      // Extract name from email for firstName/lastName
+      const emailName = formData.email.split('@')[0];
       const response = await register(
         formData.email,
         formData.password,
-        formData.username,
-        formData.username,
+        emailName,
+        emailName,
         '0000000000',
         'user',
         formData.codigoAcceso
@@ -146,36 +142,6 @@ const CFESignupPage: React.FC = () => {
 
           {/* Form */}
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-            {/* Username Field */}
-            <div>
-              <label style={{
-                display: 'block',
-                marginBottom: '8px',
-                fontSize: '14px',
-                fontWeight: '600',
-                color: '#374151',
-                textTransform: 'uppercase'
-              }}>
-                USUARIO:
-              </label>
-              <input
-                type="text"
-                value={formData.username}
-                onChange={(e) => handleInputChange('username', e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '12px',
-                  border: '1px solid #d1d5db',
-                  borderRadius: '4px',
-                  fontSize: '14px',
-                  outline: 'none',
-                  transition: 'border-color 0.2s',
-                  boxSizing: 'border-box'
-                }}
-                onFocus={(e) => e.target.style.borderColor = '#059669'}
-                onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
-              />
-            </div>
 
             {/* Password Field */}
             <div>
