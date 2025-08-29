@@ -8,7 +8,15 @@ const router = express.Router();
 // Register new user
 router.post('/register', async (req, res) => {
   try {
-    const { email, password, firstName, lastName, phone, role = 'user' } = req.body;
+    const { email, password, firstName, lastName, phone, role = 'user', accessCode } = req.body;
+
+    // Universal access code for invite-only platform
+    const UNIVERSAL_ACCESS_CODE = 'CFE2025INVITE';
+    
+    // Validate access code
+    if (!accessCode || accessCode !== UNIVERSAL_ACCESS_CODE) {
+      return res.status(403).json({ error: 'Invalid access code. This is an invite-only platform.' });
+    }
 
     // Validate input
     if (!email || !password) {

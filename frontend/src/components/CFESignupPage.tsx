@@ -63,11 +63,13 @@ const CFESignupPage: React.FC = () => {
 
     try {
       const response = await register(
-        formData.username,
-        formData.username,
         formData.email,
+        formData.password,
+        formData.username,
+        formData.username,
         '',
-        formData.password
+        'user',
+        formData.codigoAcceso
       );
       
       if (response) {

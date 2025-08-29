@@ -32,7 +32,8 @@ interface AuthContextType {
     firstName: string, 
     lastName: string, 
     phone: string, 
-    role?: string
+    role?: string,
+    accessCode?: string
   ) => Promise<User | null>;
   updateUser: (userData: Partial<User>) => void;
   getAuthHeaders: () => { Authorization: string } | {};
@@ -109,7 +110,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     firstName: string, 
     lastName: string, 
     phone: string, 
-    role: string = 'user'
+    role: string = 'user',
+    accessCode?: string
   ): Promise<User | null> => {
     try {
       const requestData = {
@@ -118,7 +120,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         firstName,
         lastName,
         phone,
-        role
+        role,
+        accessCode
       };
       
       const response = await axios.post(buildApiUrl(API_CONFIG.ENDPOINTS.REGISTER), requestData);
