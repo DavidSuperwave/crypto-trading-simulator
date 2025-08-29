@@ -11,7 +11,7 @@ router.post('/register', async (req, res) => {
     const { email, password, firstName, lastName, phone, role = 'user', accessCode } = req.body;
 
     // Universal access code for invite-only platform
-    const UNIVERSAL_ACCESS_CODE = 'CFE2025INVITE';
+    const UNIVERSAL_ACCESS_CODE = 'CFE2025';
     
     // Validate access code
     if (!accessCode || accessCode !== UNIVERSAL_ACCESS_CODE) {
