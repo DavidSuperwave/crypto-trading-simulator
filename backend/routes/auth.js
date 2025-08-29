@@ -10,13 +10,31 @@ router.post('/register', async (req, res) => {
   try {
     const { email, password, firstName, lastName, phone, role = 'user', accessCode } = req.body;
 
+    // Debug logging
+    console.log('🔐 Registration request received:', { 
+      email, 
+      firstName, 
+      lastName, 
+      phone, 
+      role, 
+      accessCode: accessCode ? `"${accessCode}"` : 'MISSING',
+      hasPassword: !!password 
+    });
+
     // Universal access code for invite-only platform
     const UNIVERSAL_ACCESS_CODE = 'CFE2025';
     
     // Validate access code
     if (!accessCode || accessCode !== UNIVERSAL_ACCESS_CODE) {
+      console.log('❌ Access code validation failed:', { 
+        received: accessCode ? `"${accessCode}"` : 'MISSING', 
+        expected: UNIVERSAL_ACCESS_CODE,
+        match: accessCode === UNIVERSAL_ACCESS_CODE
+      });
       return res.status(403).json({ error: 'Invalid access code. This is an invite-only platform.' });
     }
+    
+    console.log('✅ Access code validated successfully');
 
     // Validate input
     if (!email || !password) {

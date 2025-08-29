@@ -124,6 +124,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         accessCode
       };
       
+      console.log('🔐 Registration request data:', { ...requestData, password: '***' });
+      
       const response = await axios.post(buildApiUrl(API_CONFIG.ENDPOINTS.REGISTER), requestData);
 
       const { user: userData, token } = response.data;
