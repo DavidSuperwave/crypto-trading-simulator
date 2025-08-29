@@ -9,6 +9,7 @@ const { authenticateToken } = require('./middleware/auth');
 // Import services
 const scheduler = require('./services/scheduler');
 const websocketService = require('./services/websocketService');
+const { setupDemoData } = require('./setup');
 
 // Import routes
 const authRoutes = require('./routes/auth');
@@ -157,7 +158,7 @@ websocketService.initialize(server);
 
 // Bind to 0.0.0.0 for external access (required for DigitalOcean App Platform)
 const HOST = process.env.HOST || '0.0.0.0';
-server.listen(PORT, HOST, () => {
+server.listen(PORT, HOST, async () => {
   const env = process.env.NODE_ENV || 'development';
   const baseUrl = env === 'production' 
     ? 'https://coral-app-bh2u4.ondigitalocean.app' 
@@ -181,6 +182,16 @@ server.listen(PORT, HOST, () => {
     console.log(`🎯 Demo Dashboard: http://localhost:3000/demo`);
   }
   
+  // Initialize demo data if needed (Railway persistence fix)
+  try {
+    if (process.env.RAILWAY_ENVIRONMENT || process.env.NODE_ENV === 'production') {
+      console.log('🔄 Checking for demo users on production startup...');
+      await setupDemoData();
+    }
+  } catch (error) {
+    console.log('ℹ️ Demo users may already exist:', error.message);
+  }
+
   // Initialize scheduler for automated tasks
   try {
     scheduler.init();
