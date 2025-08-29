@@ -10,6 +10,7 @@ const { authenticateToken } = require('./middleware/auth');
 const scheduler = require('./services/scheduler');
 const websocketService = require('./services/websocketService');
 const { setupDemoData } = require('./setup');
+const database = require('./database');
 
 // Import routes
 const authRoutes = require('./routes/auth');
@@ -182,14 +183,20 @@ server.listen(PORT, HOST, async () => {
     console.log(`🎯 Demo Dashboard: http://localhost:3000/demo`);
   }
   
-  // Initialize demo data if needed (Railway persistence fix)
+  // Initialize database (PostgreSQL tables or JSON files)
   try {
+    console.log('🔄 Initializing database...');
+    await database.initialize();
+    console.log('✅ Database initialized successfully');
+    
+    // Set up demo data after database is ready
     if (process.env.RAILWAY_ENVIRONMENT || process.env.NODE_ENV === 'production') {
-      console.log('🔄 Checking for demo users on production startup...');
+      console.log('🔄 Setting up demo users...');
       await setupDemoData();
+      console.log('✅ Demo users setup complete');
     }
   } catch (error) {
-    console.log('ℹ️ Demo users may already exist:', error.message);
+    console.log('ℹ️ Database initialization note:', error.message);
   }
 
   // Initialize scheduler for automated tasks
